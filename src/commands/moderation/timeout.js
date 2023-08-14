@@ -1,12 +1,7 @@
-const { Client, Interaction, ApplicationCommandOptionType, PermissionFlagsBits } = require('discord.js');
+const { ApplicationCommandOptionType, PermissionFlagsBits } = require('discord.js');
 const ms = require('ms');
 
 module.exports = {
-  /**
-   *
-   * @param {Client} client
-   * @param {Interaction} interaction
-   */
 
   callback: async (client, interaction) => {
     const mentionable = interaction.options.get('target-user').value;
