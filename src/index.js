@@ -2,6 +2,8 @@ require('dotenv').config();
 const { Client, IntentsBitField } = require('discord.js');
 const eventHandler = require('./handlers/eventHandler');
 const mongoose = require('mongoose');
+const ticketHandler = require('./handlers/ticketHandler');
+const threadTesting = require('./commands/test/threadTesting');
 
 const client = new Client({
   intents: [
@@ -21,6 +23,11 @@ const client = new Client({
       console.log('Connected to MongoDB');
       
       eventHandler(client);
+      client.once('ready', () => {
+        console.log('Ready!');
+        ticketHandler(client);
+        //threadTesting(client);
+      });
 
       client.login(process.env.TOKEN);
   } catch (error) {

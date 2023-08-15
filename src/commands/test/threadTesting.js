@@ -1,24 +1,17 @@
-const path = require('path'); 
-const getAllFiles = require('../utils/getAllFiles');
+module.exports = {
+    name: 'threadtesting',
+    description: 'Adds the ticket listener to the channel',
+    devOnly: true,
+    callback: async (client, interaction) => {}
+}; 
+
+// Disabled until I can talk to Mars
+
+
+/*
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
 module.exports = (client) => {
-  const eventFolders = getAllFiles(path.join(__dirname, '..', 'events'), true);
-
-  for (const eventFolder of eventFolders) {
-    let eventFiles = getAllFiles(eventFolder);
-    eventFiles = eventFiles.sort();
-
-    const eventName = eventFolder.replace(/\\/g, '/').split('/').pop();
-
-    client.on(eventName, async (arg) => {
-      for (const eventFile of eventFiles) {
-        const eventFunction = require(eventFile);
-        await eventFunction(client, arg);
-      }
-    });
-  }
-
   // MessageCreate event
   client.on('messageCreate', async (message) => {
     if (message.guild.id === '989899054815281243') {
@@ -131,3 +124,4 @@ module.exports = (client) => {
   });
 };
 
+*/

@@ -25,18 +25,19 @@ module.exports = {
         const channel = interaction.channel;
         const ticketEmbed = new EmbedBuilder()
             .setColor([108,0,18])
-            .setTitle("Support Tickets")
-            .setDescription("Sanctuary's mod ticket bot!")
+            .setTitle("Need to Contact Staff?")
+            .setDescription("<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724><:icon_redline:1140786363277512724><:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>")
             .addFields(
-                { name: 'Regular field title', value: 'Some value here' },
-                { name: '\u200B', value: '\u200B' },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Regular field title', value: 'Some value here' },
-                { name: 'Regular field title', value: 'Some value here' },
-                { name: 'Regular field title', value: 'Some value here' },
+                { name: 'Please use the menu below to open up a support ticket with Sanctuary\'s Staff Team.', value: '\u200B' },
+                { name: '<:icon_report:1140779824793788486> Report A Member', value: '<:icon_red90:1140784199792599230> Use the Report A Member option if you need to report rule-breaking behavior within the walls of Sanctuary.' },
+                { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
+                { name: '<:icon_tech2:1140800254141268018> Technical Issues', value: '<:icon_tech90:1140800255261155348> Use the Technical Issues option if you require technical support regarding the Discord server: issues with roles, cannot access channels, etc.' },
+                { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
+                { name: '<:icon_vip2:1140799537942900799> Content Creator Inquiries', value: '<:icon_yell90:1140799538945327117> Use the Content Creator Inquiries option to inquire about receiving the Content Creator role in Sanctuary.' },
+                { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
+                { name: '<:icon_general2:1140799531496263700> General Support', value: '<:icon_green90:1140799533211730071> Use the General Support option if none of the above categories suit your questions or concerns!' },
             )
-            .setImage('attachment://600X150.png')
+            .setImage('attachment://bottombanner.png')
             //.setFooter("Footer Text")
             ;
 
@@ -49,119 +50,27 @@ module.exports = {
                 .setLabel("Report a User")
                 .setDescription("Do you need to report a user?")
                 .setValue("Report a User")
-                .setEmoji("1136239171703418900"),
+                .setEmoji("<:icon_report:1140779824793788486>"),
             new StringSelectMenuOptionBuilder()
                 .setLabel("Technical Support")
                 .setDescription("Are you having technical difficulties?")
                 .setValue("Technical Support")
-                .setEmoji("1136239186266038412"),
+                .setEmoji("<:icon_tech2:1140800254141268018>"),
             new StringSelectMenuOptionBuilder()
                 .setLabel("VIP Applications")
                 .setDescription("Apply for VIP / Content Creator status.")
                 .setValue("VIP Applications")
-                .setEmoji("🌟"),
+                .setEmoji("<:icon_vip2:1140799537942900799>"),
             new StringSelectMenuOptionBuilder()
                 .setLabel("General Support")
                 .setDescription("Have some general questions?")
                 .setValue("General Support")
-                .setEmoji("1136239180003938346"),
+                .setEmoji("<:icon_general2:1140799531496263700>"),
         );
 
         const row = new ActionRowBuilder().addComponents(menu);
         await interaction.deleteReply(); //  Delete command for cleanliness
-        await channel.send({ files: [{attachment: 'resources/700X250.png', name: '700X250.png'}] });
-        await channel.send({ embeds: [ticketEmbed], files: [{attachment: 'resources/600X150.png', name: '600X150.png'}], components: [row] });
-        
-        // Add the listener
-        client.on("interactionCreate", async (interaction) => {
-            if(!interaction.isSelectMenu()) return;
-            if(interaction.customId !== "Select") return;
-
-            // Modal Creation
-            const newTicketModal = new ModalBuilder()
-                .setCustomId("newTicketModal")
-                .setTitle("New Ticket")
-            
-            // Build Components based on the selection
-            // Report a User
-            const userToReport = new TextInputBuilder()
-                .setCustomId("userToReport")
-                .setLabel("Who would you like to report?")
-                .setStyle(TextInputStyle.Short)
-            const reasonForReport = new TextInputBuilder()
-                .setCustomId("reasonForReport")
-                .setLabel("Why are you reporting this user?")
-                .setStyle(TextInputStyle.Paragraph)
-            const reportFirstActionRow = new ActionRowBuilder().addComponents(userToReport);
-            const reportSecondActionRow = new ActionRowBuilder().addComponents(reasonForReport);
-
-            // Technical Support
-            const techReasonCatagory = new StringSelectMenuBuilder()
-                .setCustomId("techReasonCatagory")
-                .setMaxValues(1)
-                .setPlaceholder("Select a technical issue.")
-                .addOptions(
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel("Report a User")
-                        .setDescription("Do you need to report a user?")
-                        .setValue("Report a User")
-                        .setEmoji("1136239171703418900"),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel("Technical Support")
-                        .setDescription("Are you having technical difficulties?")
-                        .setValue("Technical Support")
-                        .setEmoji("1136239186266038412"),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel("VIP Applications")
-                        .setDescription("Apply for VIP / Content Creator status.")
-                        .setValue("VIP Applications")
-                        .setEmoji("🌟"),
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel("General Support")
-                        .setDescription("Have some general questions?")
-                        .setValue("General Support")
-                        .setEmoji("1136239180003938346"),
-                );
-            const techDescription = new TextInputBuilder()
-                .setCustomId("techDescription")
-                .setLabel("Please describe your issue.")
-                .setStyle(TextInputStyle.Paragraph)
-            const techFirstActionRow = new ActionRowBuilder().addComponents(techReasonCatagory);
-            const techSecondActionRow = new ActionRowBuilder().addComponents(techDescription);
-            // VIP Applications
-            const vipAppName = new TextInputBuilder()
-                .setCustomId("vipNameEntry")
-                .setLabel("What is your name across media platforms?")
-                .setStyle(TextInputStyle.Short)
-            const vipAppDescription = new TextInputBuilder()
-                .setCustomId("vipAppDescription")
-                .setLabel("Please describe why you should be considered for VIP status.")
-                .setStyle(TextInputStyle.Paragraph)
-            const vipAppSocials = new TextInputBuilder()
-                .setCustomId("vipAppSocials")
-                .setLabel("Please link your social media platforms.")
-                .setStyle(TextInputStyle.Paragraph)
-            const vipAppFirstActionRow = new ActionRowBuilder().addComponents(vipAppName);
-            const vipAppSecondActionRow = new ActionRowBuilder().addComponents(vipAppDescription);
-            const vipAppThirdActionRow = new ActionRowBuilder().addComponents(vipAppSocials);
-            // General Support
-
-            // Add the components to the modal
-            if (interaction.values[0] === "Report a User") {
-                newTicketModal.addComponents(reportFirstActionRow, reportSecondActionRow);
-            } else if (interaction.values[0] === "Technical Support") {
-                newTicketModal.addComponents();
-            } else if (interaction.values[0] === "VIP Applications") {
-                newTicketModal.addComponents();
-            } else if (interaction.values[0] === "General Support") {
-                newTicketModal.addComponents();
-            } else {
-                console.log("Something went wrong in the ticket listener.");
-            }
-
-            // Send the modal
-            await interaction.showModal(newTicketModal);
-        });
-
+        await channel.send({ files: [{attachment: 'resources/support.png', name: 'support.png'}] });
+        await channel.send({ embeds: [ticketEmbed], files: [{attachment: 'resources/bottombanner.png', name: 'bottombanner.png'}], components: [row] });
     }
 }
