@@ -15,6 +15,26 @@ const client = new Client({
   ],
 });
 
+// Button Listener
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isButton()) return;
+
+  switch (interaction.customId) {
+    case 'report_button':
+      require('./handlers/buttonHandlers/reportButton')(interaction);
+      break;
+    case 'technical_issues_button':
+      require('./handlers/buttonHandlers/technicalIssuesButton')(interaction);
+      break;
+    case 'creator_inquiries_button':
+      require('./handlers/buttonHandlers/creatorInquiriesButton')(interaction);
+      break;
+    case 'general_support_button':
+      require('./handlers/buttonHandlers/generalSupportButton')(interaction);
+      break;
+  }
+});
+
 //IIFE to connect to MongoDB
 (async() => {
   try {
@@ -23,11 +43,6 @@ const client = new Client({
       console.log('Connected to MongoDB');
       
       eventHandler(client);
-      client.once('ready', () => {
-        console.log('Ready!');
-        ticketHandler(client);
-        //threadTesting(client);
-      });
 
       client.login(process.env.TOKEN);
   } catch (error) {
