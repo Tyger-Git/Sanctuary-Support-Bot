@@ -32,6 +32,18 @@ client.on('interactionCreate', async interaction => {
     case 'general_support_button':
       require('./handlers/buttonHandlers/generalSupportButton')(interaction);
       break;
+    case 'hide_logs_button':
+      console.log('hide logs button pressed');
+      await interaction.channel.send("Hide logs...");
+      break;
+    case 'show_logs_button':
+      console.log('show logs button pressed');
+      await interaction.channel.send("Showing logs...");
+      break;
+    case 'show_full_logs_button':
+      console.log('show full logs button pressed');
+      await interaction.reply("Showing full logs...");
+      break;
   }
 });
 
