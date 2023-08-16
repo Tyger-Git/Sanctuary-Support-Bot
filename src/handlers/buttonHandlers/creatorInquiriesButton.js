@@ -6,6 +6,7 @@ module.exports = async (interaction) => {
     .setCustomId("newCreatorTicketModal")
     .setTitle("New Ticket");
 
+    // Try to build the modal
     try {
         const vipAppName = new TextInputBuilder()
             .setCustomId("vipNameEntry")

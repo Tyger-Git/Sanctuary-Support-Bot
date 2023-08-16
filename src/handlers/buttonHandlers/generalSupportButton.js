@@ -6,6 +6,7 @@ module.exports = async (interaction) => {
     .setCustomId("newGenSupTicketModal")
     .setTitle("New Ticket");
 
+    // Try to build the modal
     try {
         const genSupportDescription = new TextInputBuilder()
             .setCustomId("genSupportDescription")

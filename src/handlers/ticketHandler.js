@@ -1,5 +1,6 @@
 const { ModalBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 
+// This code is unused, but I'm keeping it here for reference.
 module.exports = (client) => {
     client.on('interactionCreate', async (interaction) => {
         if(!interaction.isStringSelectMenu()) {
