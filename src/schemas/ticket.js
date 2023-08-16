@@ -53,8 +53,8 @@ const ticketSchema = new Schema({
         type: Date,
         required: true,
     },
-    ticketTimer: {
-        type: Number,
+    lastUserResponse: { // Used with a listener to determine if a ticket is inactive and close
+        type: Date,
         required: true,
     },
 
