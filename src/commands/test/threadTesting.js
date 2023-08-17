@@ -4,10 +4,6 @@ module.exports = {
     devOnly: true,
     callback: async (client, interaction) => {}
 }; 
-
-// Disabled until I can talk to Mars
-
-
 /*
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
