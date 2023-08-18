@@ -44,6 +44,7 @@ module.exports = {
                 { name: '<:icon_redline:1140786363277512724>\n:shield: Abbot (User)', value: "Who."},
 
             )
+            .setFooter({text: "Ticket ID: 154413288", iconURL: 'https://i.imgur.com/AfFp7pu.png'})
             ;
         
         // Create Buttons
