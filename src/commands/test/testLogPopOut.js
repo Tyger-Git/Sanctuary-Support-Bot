@@ -1,80 +1,39 @@
-const { SlashCommandBuilder, PermissionFlagsBits, ButtonBuilder, EmbedBuilder, ActionRowBuilder, Message, MessageEmbed, Attachment } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 
-function chunkArray(array, chunkSize) {
-    const results = [];
-    while (array.length) {
-        results.push(array.splice(0, chunkSize));
+function chunkStringArrayByCharCount(array, charLimit) {
+    let chunk = "";
+    const result = [];
+
+    for (const log of array) {
+        const nextLog = `${log.name}\n${log.value}\n\n`;
+        if ((chunk.length + nextLog.length) <= charLimit) {
+            chunk += nextLog;
+        } else {
+            result.push(chunk);
+            chunk = nextLog;
+        }
     }
-    return results;
+
+    if (chunk) result.push(chunk);
+    return result;
 }
-
-
-function createEmbedsFromChunks(chunks) {
-    return chunks.map((chunk, index) => {
-        let totalPages = chunks.length;
-        const embed = new EmbedBuilder()
-            .setColor([255,255,255]) // White
-            .setTitle(`Full Logs: Page ${index + 1} of ${totalPages}`)
-            .setDescription('Logs for ticket #154413288')
-            .addFields(chunk)
-            .setFooter({text: `\n -- Page ${index + 1} of ${totalPages} --`});
-        return embed;
-    });
-}
-
 
 module.exports = {
-    name: 'tlogbook',
-    description: 'Test Log Book',
+    name: 'tlogpopout',
+    description: 'Test Log Pop Out',
     callback: async (client, interaction) => {
-        await interaction.deferReply();
+        await interaction.deferReply(/*{ ephemeral: true }*/);
 
-        const chunkedLogs = chunkArray(whosOnFirstSkitArray, 20);
-        const allEmbeds = createEmbedsFromChunks(chunkedLogs);
-        
-        // Create Buttons
-        const previous_button = new ButtonBuilder()
-            .setCustomId('previous_button')
-            .setLabel('⬅')
-            .setStyle('Primary');
-        const next_button = new ButtonBuilder()
-            .setCustomId('next_button')
-            .setLabel('➡')
-            .setStyle('Primary');
-        
-        // Create Action Row
-        const row = new ActionRowBuilder()
-            .addComponents(previous_button, next_button);
+        // Create a string representation of the logs and chunk them
+        const chunkedLogs = chunkStringArrayByCharCount(whosOnFirstSkitArray, 1900); // 1900 to allow room for potential other characters
 
-        let currentPage = 0;
-        await interaction.editReply({ embeds: [allEmbeds[currentPage]], components: [row] });
-
-        const filter = i => i.customId === 'previous_button' || i.customId === 'next_button';
-        const collector = interaction.channel.createMessageComponentCollector({ filter/*, time: 600000*/ }); // 10 minutes timer
-
-        collector.on('collect', async interaction => {
-            if (interaction.customId === 'previous_button' && currentPage > 0) {
-                currentPage--;
-            } else if (interaction.customId === 'next_button' && currentPage < allEmbeds.length - 1) {
-                currentPage++;
-            }
-            await interaction.update({ embeds: [allEmbeds[currentPage]], components: [row] });
-        });
-        
-        collector.on('end', (collected, reason) => {
-            // This will run after the collector has stopped.
-            // If you want to delete the message after the collector ends:
-            interaction.fetchReply().then(reply => reply.delete());
-        });
-    },
+        // Send each chunk as an individual message
+        for (const chunk of chunkedLogs) {
+            await interaction.followUp({ content: chunk/*, ephemeral: true */});
+        }
+    }
 }
 
-
-let redLine = "";
-let userEmoji = "";
-let modEmoji = "";
-let botEmoji = "";
-let convoEmoji = "";
 let whosOnFirstSkitArray = [ // GPT broke down mid array so this is just nonsense at this point:
     {
         "name": "<:icon_redline:1140786363277512724>\n:speech_balloon:  Abbot (User)",
