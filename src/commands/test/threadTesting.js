@@ -2,7 +2,9 @@ module.exports = {
     name: 'threadtesting',
     description: 'Adds the ticket listener to the channel',
     devOnly: true,
-    callback: async (client, interaction) => {}
+    callback: async (client, interaction) => {
+      
+    }
 }; 
 /*
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
