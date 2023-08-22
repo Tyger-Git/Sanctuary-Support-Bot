@@ -1,0 +1,17 @@
+[
+    {
+        "label": "Scam",
+        "value": "Scam",
+        "message": "We apologize for this poor trading experience. Can you provide evidence of the transaction through our server and then the failure to provide in game. We accept screenshots, videos and message links. Make sure to provide all relevant information, including usernames from both Discord and Diablo 4."
+    },
+    {
+        "label": "Disclosing",
+        "value": "Disclosing",
+        "message": "Thank you for reaching out to us. We understand your curiosity and concern regarding the punishments issued to users. However, it is our policy to maintain the privacy and confidentiality of such matters."
+    },
+    {
+        "label": "Investigating",
+        "value": "Investigating",
+        "message": "The Moderation team is investigating the issue described. We will be in-touch if we additional information from you regarding the issue. Once, our investigation has concluded, we will message here with our conclusion."
+    }
+]
