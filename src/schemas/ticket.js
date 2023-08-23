@@ -36,7 +36,7 @@ const ticketSchema = new Schema({
     /******************************************************************************************************************************************************/
     ticketId: { // Ticket ID
         type: Number,
-        unique: true,
+        default:0
     },
     isOpen: { // Is the ticket open?
         type: Boolean,
@@ -147,7 +147,5 @@ const ticketSchema = new Schema({
 
 
 });
-
-ticketSchema.plugin(AutoIncrement, { inc_field: 'ticketId' });
 
 module.exports = model('ticket', ticketSchema);

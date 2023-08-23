@@ -79,7 +79,6 @@ const createTicket = async (interaction, ticketType) => {
       ...specificFields 
     });
 
-    console.log(newTicket);
     // Save the new ticket to the database
     await newTicket.save();
   } catch (error) {
