@@ -4,6 +4,7 @@ const eventHandler = require('./handlers/eventHandler');
 const mongoose = require('mongoose');
 const ticketHandler = require('./handlers/ticketHandler');
 const threadTesting = require('./commands/test/threadTesting');
+const createTicket = require('./events/db/createTicket');
 
 const client = new Client({
   intents: [
@@ -51,6 +52,25 @@ client.on('interactionCreate', async interaction => {
     switch (interaction.customId) {
       case 'snippet_menu':
         require('./handlers/actionHandlers/snippetsConfirmation')(interaction);
+        break;
+    }
+  } else if (interaction.isModalSubmit){
+    switch (interaction.customId) {
+      case 'newReportTicketModal':
+        createTicket(interaction, 'reportTicket');
+        await interaction.reply({ content: 'You submitted a report ticket successfully!', ephemeral: true });
+        break;
+      case 'newTechTicketModal':
+        createTicket(interaction, 'technicalIssueTicket');
+        await interaction.reply({ content: 'You submitted a techical issue ticket successfully!', ephemeral: true });
+        break;
+      case 'newCreatorTicketModal':
+        createTicket(interaction, 'contentCreatorInquiryTicket');
+        await interaction.reply({ content: 'You submitted a content creator ticket successfully!', ephemeral: true });
+        break;
+      case 'newGenSupTicketModal':
+        createTicket(interaction, 'generalSupportTicket');
+        await interaction.reply({ content: 'You submitted a general support ticket successfully!', ephemeral: true });
         break;
     }
   } else {

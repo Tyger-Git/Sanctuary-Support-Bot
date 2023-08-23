@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, mongoose } = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const ticketSchema = new Schema({
