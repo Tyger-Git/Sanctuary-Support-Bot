@@ -26,38 +26,31 @@ const createTicket = async (interaction, ticketType) => {
     let specificFields = {};
     switch (ticketType) {
       case "reportTicket":
+        //console.log(interaction.fields.getTextInputValue('userToReport'));
         specificFields = {
-          reportTicket: {
-            reportedUserId: interaction.fields.getTextInputValue('userToReport'),
-            reportReason: interaction.fields.getTextInputValue('reasonForReport') 
-          },
+          reportedUser: interaction.fields.getTextInputValue('userToReport'),
+          playerReportReason: interaction.fields.getTextInputValue('reasonForReport') 
         };
         break;
 
       case "technicalIssueTicket":
         specificFields = {
-          technicalIssueTicket: {
-            issueType: interaction.fields.getTextInputValue('techReasonCatagory'),
-            technicalIssueDescription: interaction.fields.getTextInputValue('techDescription'),
-          },
+            techIssueType: interaction.fields.getTextInputValue('techReasonCatagory'),
+            techIssueDescription: interaction.fields.getTextInputValue('techDescription'),
         };
         break;
 
       case "contentCreatorInquiryTicket":
         specificFields = {
-          contentCreatorInquiryTicket: {
-            contentCreatorName: interaction.fields.getTextInputValue('vipNameEntry'),
-            inquiryDetails: interaction.fields.getTextInputValue('vipAppDescription'),
+            socialMediaName: interaction.fields.getTextInputValue('vipNameEntry'),
+            vipAppDescription: interaction.fields.getTextInputValue('vipAppDescription'),
             socialMediaLinks: interaction.fields.getTextInputValue('vipAppSocials'),
-          },
         };
         break;
 
       case "generalSupportTicket":
         specificFields = {
-          generalSupportTicket: {
-            issueDescription: interaction.fields.getTextInputValue('genSupportDescription'),
-          },
+            generalSupportDescription: interaction.fields.getTextInputValue('genSupportDescription'),
         };
         break;
 
@@ -86,6 +79,7 @@ const createTicket = async (interaction, ticketType) => {
       ...specificFields 
     });
 
+    console.log(newTicket);
     // Save the new ticket to the database
     await newTicket.save();
   } catch (error) {
