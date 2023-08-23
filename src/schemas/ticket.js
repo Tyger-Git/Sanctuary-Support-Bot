@@ -53,8 +53,9 @@ const ticketSchema = new Schema({
         default: false,
     },
     claimantModId: { // Discord ID of the mod who claimed the ticket
-        type: String,
+        type: Number,
         required: true,
+        default: 0,
     },
     lastModResponse: { // Used with a listener to determine when to ping the mod
         type: Date,
