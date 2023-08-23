@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const ticketHandler = require('./handlers/ticketHandler');
 const threadTesting = require('./commands/test/threadTesting');
 const createTicket = require('./events/db/createTicket');
+const TicketCounter = require('./schemas/ticketCounter.js');
 
 const client = new Client({
   intents: [
@@ -57,20 +58,16 @@ client.on('interactionCreate', async interaction => {
   } else if (interaction.isModalSubmit){
     switch (interaction.customId) {
       case 'newReportTicketModal':
-        createTicket(interaction, 'reportTicket');
-        await interaction.reply({ content: 'You submitted a report ticket successfully!', ephemeral: true });
+        handleTicketCreation(interaction, 'reportTicket', 'You submitted a report ticket successfully!');
         break;
-      case 'newTechTicketModal':
-        createTicket(interaction, 'technicalIssueTicket');
-        await interaction.reply({ content: 'You submitted a techical issue ticket successfully!', ephemeral: true });
+    case 'newTechTicketModal':
+        handleTicketCreation(interaction, 'technicalIssueTicket', 'You submitted a technical issue ticket successfully!');
         break;
-      case 'newCreatorTicketModal':
-        createTicket(interaction, 'contentCreatorInquiryTicket');
-        await interaction.reply({ content: 'You submitted a content creator ticket successfully!', ephemeral: true });
+    case 'newCreatorTicketModal':
+        handleTicketCreation(interaction, 'contentCreatorInquiryTicket', 'You submitted a content creator ticket successfully!');
         break;
-      case 'newGenSupTicketModal':
-        createTicket(interaction, 'generalSupportTicket');
-        await interaction.reply({ content: 'You submitted a general support ticket successfully!', ephemeral: true });
+    case 'newGenSupTicketModal':
+        handleTicketCreation(interaction, 'generalSupportTicket', 'You submitted a general support ticket successfully!');
         break;
     }
   } else {
@@ -78,6 +75,35 @@ client.on('interactionCreate', async interaction => {
   }
   
 });
+
+// Helper function to catch ticket creation errors and cleanly reply to the user if something goes wrong
+async function handleTicketCreation(interaction, ticketType, successMessage) {
+  try {
+      createTicket(interaction, ticketType);
+      await interaction.reply({ content: successMessage, ephemeral: true });
+  } catch (error) {
+      console.error('Error creating a ticket:', error);
+      await interaction.reply({ content: 'An error occurred while creating the ticket. Please try again later, or contact a staff member for assistance.', ephemeral: true });
+  }
+}
+
+// Initialize ticket counter collection in mongoDB. If it already exists, do nothing. This is here as to ensure things are set up across various testing environments.
+(async () => {
+  try {
+    const existingCounter = await TicketCounter.findById('ticketCounter');
+    
+    if (!existingCounter) {
+      const initialCounter = new TicketCounter();
+      await initialCounter.save();
+      console.log("TicketCounter initialized!");
+    } else {
+      console.log("TicketCounter already exists!");
+    }
+  } catch (error) {
+    console.error("Error checking TicketCounter initialization:", error);
+  }
+})();
+
 
 //IIFE to connect to MongoDB
 (async() => {

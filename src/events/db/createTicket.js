@@ -1,6 +1,22 @@
-const mongoose = require("../../index.js"); 
+const mongoose = require("../../index.js"); // Import the mongoose module for incrementing ticket IDs - Not working
 
 const Ticket = require("../../schemas/ticket.js"); 
+const TicketCounter = require('../../schemas/ticketCounter.js');
+
+async function getNewTicketID() {
+  try {
+    const ticketCounter = await TicketCounter.findByIdAndUpdate(
+      'ticketCounter',
+      { $inc: { currentTicketID: 1 } },
+      { new: true, upsert: true }
+    );
+
+    return ticketCounter.currentTicketID;
+  } catch (error) {
+    console.error('Error fetching latest ticket:', error);
+    throw new Error('Cannot generate a new ticket ID');
+  }
+}
 
 const createTicket = async (interaction, ticketType) => {
   try {
@@ -9,6 +25,8 @@ const createTicket = async (interaction, ticketType) => {
     const userAge = Math.floor((Date.now() - interaction.user.createdTimestamp) / (1000 * 60 * 60 * 24));
     const userTicketTotal = 0; // Assuming initial ticket total is 0
     const lastUserResponse = new Date();
+
+    const ticketId = await getNewTicketID();
 
     const guildId = interaction.guild.id;
     const guildAge = Math.floor((Date.now() - interaction.guild.joinedTimestamp) / (1000 * 60 * 60 * 24));
@@ -61,6 +79,7 @@ const createTicket = async (interaction, ticketType) => {
 
     // Create a new ticket object with combined fields
     const newTicket = new Ticket({
+      ticketId,
       userId,
       userAge,
       userTicketTotal,

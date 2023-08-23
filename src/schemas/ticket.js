@@ -133,7 +133,7 @@ const ticketSchema = new Schema({
     socialMediaLinks: { // Links to the user's social media
         type: Array, // Todo: parse string answer into array
         required: false,
-        default: 'N/A',
+        default: [],
     },
 
     // General Support
