@@ -26,19 +26,23 @@ module.exports = {
             .setDescription("<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724><:icon_redline:1140786363277512724><:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>")
             .addFields(
                 { name: 'Please use the menu below to open up a support ticket with Sanctuary\'s Staff Team.', value: '\u200B' },
-                { name: '<:icon_report:1140779824793788486> Report A Member', value: '<:icon_red90:1140784199792599230> Use the Report A Member option if you need to report rule-breaking behavior within the walls of Sanctuary.' },
+                { name: '<:icon_report:1140779824793788486> Report A Member', value: '<:icon_repline2:1140826151716143125> Use the Report A Member option if you need to report rule-breaking behavior within the walls of Sanctuary.' },
                 { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
                 { name: '<:icon_tech2:1140800254141268018> Technical Issues', value: '<:icon_tech90:1140800255261155348> Use the Technical Issues option if you require technical support regarding the Discord server: issues with roles, cannot access channels, etc.' },
                 { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
                 { name: '<:icon_vip2:1140799537942900799> Content Creator Inquiries', value: '<:icon_yell90:1140799538945327117> Use the Content Creator Inquiries option to inquire about receiving the Content Creator role in Sanctuary.' },
                 { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
+                { name: '<:icon_report:1140779824793788486> Report A Staff Member', value: '<:icon_repline2:1140826151716143125> Use the Report A Staff Member option if you need to report a staff member\'s behavior within the walls of Sanctuary.' },
+                { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
                 { name: '<:icon_general2:1140799531496263700> General Support', value: '<:icon_green90:1140799533211730071> Use the General Support option if none of the above categories suit your questions or concerns!' },
+                
             )
             .setImage('attachment://bottombanner.png')
-            //.setFooter("Footer Text")
+            .setFooter({text: "© Sanctuary Development Team - 2023"})
             ;
 
         // No longer using a dropdown menu, but keeping this code for future reference
+        /*
         const menu = new StringSelectMenuBuilder()
             .setCustomId("Select")
             .setMaxValues(1)
@@ -66,13 +70,19 @@ module.exports = {
                     .setEmoji("<:icon_general2:1140799531496263700>"),
             );
         const oldRow = new ActionRowBuilder().addComponents(menu);
+        */
 
         // Create Buttons
         const report_button = new ButtonBuilder()
         .setCustomId('report_button')
         .setLabel('Report A Member')
         .setEmoji('<:icon_report3:1140826083525132339>')
-        .setStyle('Danger'); // You can set this to SECONDARY, SUCCESS, DANGER, or LINK too
+        .setStyle('Danger');
+        const staff_report_button = new ButtonBuilder()
+        .setCustomId('staff_report_button')
+        .setLabel('Report A Staff Member')
+        .setEmoji('<:icon_report3:1140826083525132339>')
+        .setStyle('Danger');
         const technical_issues_button = new ButtonBuilder()
         .setCustomId('technical_issues_button')
         .setLabel('Technical Issues')
@@ -91,13 +101,15 @@ module.exports = {
 
         // Create Button Row
         const row1 = new ActionRowBuilder()
-            .addComponents(report_button, technical_issues_button);
+            .addComponents(report_button, staff_report_button);
         const row2 = new ActionRowBuilder()
-            .addComponents(creator_inquiries_button, general_support_button);
+            .addComponents(technical_issues_button, creator_inquiries_button);
+        const row3 = new ActionRowBuilder()
+            .addComponents(general_support_button);
 
 
         await interaction.deleteReply(); //  Delete command for cleanliness
         await channel.send({ files: [{attachment: './resources/support.png', name: 'support.png'}] });
-        await channel.send({ embeds: [ticketEmbed], files: [{attachment: './resources/bottombanner.png', name: 'bottombanner.png'}], components: [row1, row2] });
+        await channel.send({ embeds: [ticketEmbed], files: [{attachment: './resources/bottombanner.png', name: 'bottombanner.png'}], components: [row1, row2, row3] });
     }
 }

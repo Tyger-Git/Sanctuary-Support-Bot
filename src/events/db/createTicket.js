@@ -65,6 +65,13 @@ const createTicket = async (interaction, ticketType) => {
             socialMediaLinks: interaction.fields.getTextInputValue('vipAppSocials'),
         };
         break;
+      
+      case "staffReportTicket":
+        specificFields = {
+            reportedMod: interaction.fields.getTextInputValue('staffMemberToReport'),
+            modReportReason: interaction.fields.getTextInputValue('reasonForReport'),
+        };
+        break;
 
       case "generalSupportTicket":
         specificFields = {

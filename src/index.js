@@ -33,6 +33,9 @@ client.on('interactionCreate', async interaction => {
       case 'general_support_button':
         require('./handlers/buttonHandlers/generalSupportButton')(interaction);
         break;
+      case 'staff_report_button':
+        require('./handlers/buttonHandlers/staffReportButton')(interaction);
+        break;
       case 'hide_logs_button':
         console.log('hide logs button pressed');
         await interaction.channel.send("Hide logs...");
@@ -60,14 +63,17 @@ client.on('interactionCreate', async interaction => {
       case 'newReportTicketModal':
         handleTicketCreation(interaction, 'reportTicket', 'You submitted a report ticket successfully!');
         break;
-    case 'newTechTicketModal':
+      case 'newTechTicketModal':
         handleTicketCreation(interaction, 'technicalIssueTicket', 'You submitted a technical issue ticket successfully!');
         break;
-    case 'newCreatorTicketModal':
+      case 'newCreatorTicketModal':
         handleTicketCreation(interaction, 'contentCreatorInquiryTicket', 'You submitted a content creator ticket successfully!');
         break;
-    case 'newGenSupTicketModal':
+      case 'newGenSupTicketModal':
         handleTicketCreation(interaction, 'generalSupportTicket', 'You submitted a general support ticket successfully!');
+        break;
+      case 'newStaffReportTicketModal':
+        handleTicketCreation(interaction, 'staffReportTicket', 'You submitted a staff report ticket successfully!');
         break;
     }
   } else {
