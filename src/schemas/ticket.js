@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const ticketSchema = new Schema({
     // User information
@@ -35,7 +36,7 @@ const ticketSchema = new Schema({
     /******************************************************************************************************************************************************/
     ticketId: { // Ticket ID
         type: Number,
-        default: 0,
+        unique: true,
     },
     isOpen: { // Is the ticket open?
         type: Boolean,
@@ -146,5 +147,7 @@ const ticketSchema = new Schema({
 
 
 });
+
+ticketSchema.plugin(AutoIncrement, { inc_field: 'ticketId' });
 
 module.exports = model('ticket', ticketSchema);
