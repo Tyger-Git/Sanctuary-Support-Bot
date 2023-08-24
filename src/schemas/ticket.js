@@ -80,6 +80,17 @@ const ticketSchema = new Schema({
         required: false,
         default: [],
     },
+    alertsOn: { // Should the mod be alerted when the user responds?
+        type: Boolean,
+        required: true,
+        default: true,
+    },
+    ticketNotes: { // Notes added by the mod
+        type: String,
+        required: false,
+        default: '',
+    },
+
 
     // Ticket Content
     /******************************************************************************************************************************************************/
