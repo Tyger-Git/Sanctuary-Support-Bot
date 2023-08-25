@@ -6,6 +6,7 @@ const ticketHandler = require('./handlers/ticketHandler');
 const threadTesting = require('./commands/test/threadTesting');
 const createTicket = require('./events/db/createTicket');
 const TicketCounter = require('./schemas/ticketCounter.js');
+const handleThreadCreation = require('./handlers/handleThreadCreation.js');
 
 const client = new Client({
   intents: [
@@ -111,7 +112,7 @@ async function handleTicketCreation(interaction, ticketType, successMessage) {
 })();
 
 
-//IIFE to connect to MongoDB
+//MongoDB Connection
 (async() => {
   try {
       mongoose.set('strictQuery', false);
@@ -124,4 +125,16 @@ async function handleTicketCreation(interaction, ticketType, successMessage) {
   } catch (error) {
       console.log(`Error connecting to MongoDB: ${error}`);
   }
+  
+  // Listen to changes on the "tickets" collection
+  const ticketCollection = mongoose.connection.collection('tickets');
+  const changeStream = ticketCollection.watch();
+  
+  changeStream.on('change', async (change) => {
+      if (change.operationType === 'insert' && !change.fullDocument.threadCreated) {
+          // Call your logic to create a thread here
+          const ticketData = change.fullDocument;
+          await handleThreadCreation(client, ticketData);
+      }
+  });
 })();
