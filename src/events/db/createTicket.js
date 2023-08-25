@@ -22,6 +22,10 @@ const createTicket = async (interaction, ticketType) => {
   try {
     // Extract common data from the interaction object
     const userId = interaction.user.id;
+    const userName = interaction.user.username;
+    //Nickname logic
+    const member = interaction.guild.members.cache.get(userId);
+    const userDisplayName = member ? member.displayName : interaction.user.username;
     const userAge = Math.floor((Date.now() - interaction.user.createdTimestamp) / (1000 * 60 * 60 * 24));
     const userTicketTotal = 0; // Assuming initial ticket total is 0
     const lastUserResponse = new Date();
@@ -88,6 +92,8 @@ const createTicket = async (interaction, ticketType) => {
     const newTicket = new Ticket({
       ticketId,
       userId,
+      userName,
+      userDisplayName,
       userAge,
       userTicketTotal,
       lastUserResponse,

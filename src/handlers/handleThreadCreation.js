@@ -10,21 +10,27 @@ module.exports = async function handleThreadCreation(client, ticketData) {
     }
     // Get the correct parent forum ID based on ticket type
     let parentChannelId;
+    let threadEmoji;
     switch (ticket.ticketType) {
         case 'reportTicket':
             parentChannelId = forumIDs.PlayerReportForum;
+            threadEmoji = '<:icon_report:1140779824793788486>';
             break;
         case 'contentCreatorInquiryTicket':
             parentChannelId = forumIDs.VIPAppForum;
+            threadEmoji = '<:icon_vip2:1140799537942900799>';
             break;
         case 'technicalIssueTicket':
             parentChannelId = forumIDs.TechTicketForum;
+            threadEmoji = '<:icon_tech2:1140800254141268018>';
             break;
         case 'staffReportTicket':
             parentChannelId = forumIDs.StaffReportForum;
+            threadEmoji = '<:icon_report:1140779824793788486>';
             break;
         case 'generalSupportTicket':
             parentChannelId = forumIDs.GeneralSupportForum;
+            threadEmoji = '<:icon_general2:1140799531496263700>';
             break;
         default:
             console.error('Unsupported ticket type.');
@@ -45,10 +51,18 @@ module.exports = async function handleThreadCreation(client, ticketData) {
         return null;
     }
 
+    // This logic is here as a placeholder for future functionality
+    let claimedEmoji = '';
+    if (ticket.isClaimed) {
+        claimedEmoji = '🟢';
+    } else {
+        claimedEmoji = '🔴';
+    }
+
     // Create a new thread inside the parent channel
     const thread = await parentChannel.threads.create({
-        name: `Ticket-${ticket.ticketId}`,
-        message: `Thread created for Ticket ID: ${ticket.ticketId}`,
+        name: `${claimedEmoji} | ${ticket.userDisplayName} | #[${ticket.ticketId}]`,
+        message: `Thread created for Ticket #: ${ticket.ticketId}`,
         autoArchiveDuration: 60,
     });
 

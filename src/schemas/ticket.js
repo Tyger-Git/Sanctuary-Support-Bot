@@ -8,6 +8,14 @@ const ticketSchema = new Schema({
         type: String,
         required: true,
     },
+    userName: { // Discord username
+        type: String,
+        required: true,
+    },
+    userDisplayName: { // Discord nickname
+        type: String,
+        required: true,
+    },
     userAge: { // Days user has had a discord account
         type: Number, 
         required: true,
