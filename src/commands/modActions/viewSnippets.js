@@ -68,23 +68,36 @@ module.exports = {
             .setCustomId('next_button_snippets')
             .setLabel('➡')
             .setStyle('Primary');
+        const first_button_snippets = new ButtonBuilder()
+            .setCustomId('first_button_snippets')
+            .setLabel('⬅⬅⬅')
+            .setStyle('Primary');
+        const last_button_snippets = new ButtonBuilder()
+            .setCustomId('last_button_snippets')
+            .setLabel('➡➡➡')
+            .setStyle('Primary');
         
         // Create Action Row
         const row = new ActionRowBuilder()
-            .addComponents(previous_button, next_button);
+            .addComponents(first_button_snippets, previous_button, next_button, last_button_snippets);
 
         let currentPage = 0;
 
         await interaction.editReply({ embeds: [allEmbeds[currentPage]], components: [row] });
 
-        const filter = i => i.customId === 'previous_button_snippets' || i.customId === 'next_button_snippets';
-        const collector = interaction.channel.createMessageComponentCollector({ filter/*, time: 600000*/ }); // 10 minutes timer
+        const filter = i => i.customId === 'previous_button_snippets' || i.customId === 'next_button_snippets' || i.customId === 'first_button_snippets' || i.customId === 'last_button_snippets';
+        const msg = await interaction.fetchReply();
+        const collector = msg.createMessageComponentCollector({ filter/*, time: 600000*/ }); // 10 minutes timer
 
         collector.on('collect', async interaction => {
             if (interaction.customId === 'previous_button_snippets' && currentPage > 0) {
                 currentPage--;
             } else if (interaction.customId === 'next_button_snippets' && currentPage < allEmbeds.length - 1) {
                 currentPage++;
+            } else if (interaction.customId === 'first_button_snippets') {
+                currentPage = 0;
+            } else if (interaction.customId === 'last_button_snippets') {
+                currentPage = allEmbeds.length - 1;
             }
             await interaction.update({ embeds: [allEmbeds[currentPage]], components: [row] });
         });
