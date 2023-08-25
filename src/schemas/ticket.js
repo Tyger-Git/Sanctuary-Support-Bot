@@ -38,6 +38,11 @@ const ticketSchema = new Schema({
         type: Number,
         default:0
     },
+    threadCreated: { // Mainly for debugging and devs
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     isOpen: { // Is the ticket open?
         type: Boolean,
         required: true,
