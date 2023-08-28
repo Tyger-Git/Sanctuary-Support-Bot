@@ -1,3 +1,6 @@
+// Test command to write to the database with random values
+/*---------- Will Not Be In Final Product ----------*/
+
 const mongoose = require("../../index.js"); // Adjust the path as needed
 
 // Import the Ticket model

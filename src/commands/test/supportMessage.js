@@ -1,3 +1,6 @@
+// Test command to show the support message in normal message format with response buttons
+/*---------- Will Not Be In Final Product ----------*/
+
 const {
   MessageButton,
   ActionRowBuilder,

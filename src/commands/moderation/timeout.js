@@ -1,3 +1,6 @@
+// Command Disabled
+/*---------- Will Not Be In Final Product ----------*/
+
 const { ApplicationCommandOptionType, PermissionFlagsBits } = require('discord.js');
 const ms = require('ms');
 

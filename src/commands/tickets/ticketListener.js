@@ -1,14 +1,12 @@
+// Front facing UX for the ticket system. It is a button menu that allows users to select a ticket type and open a ticket.
+/*---- Dev Only ----*/
+
 const {
-    SlashCommandBuilder,
     PermissionFlagsBits,
     ButtonBuilder,
     EmbedBuilder,
     ActionRowBuilder,
-    StringSelectMenuBuilder,
-    StringSelectMenuOptionBuilder,
-    Message,
     MessageEmbed,
-    Attachment,
   } = require("discord.js");
   const ticketSchema = require("../../schemas/ticket");
 

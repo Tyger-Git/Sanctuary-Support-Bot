@@ -1,3 +1,5 @@
+// Old code, but I'm keeping it here for reference.
+/*---------- Will Not Be In Final Product ----------*/
 const { ModalBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 
 // This code is unused, but I'm keeping it here for reference.

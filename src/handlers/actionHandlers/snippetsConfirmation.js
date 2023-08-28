@@ -1,3 +1,5 @@
+// Confirmation message to reply with a previously selected snippet
+
 const { ActionRowBuilder, ButtonBuilder } = require("discord.js");
 
 module.exports = async (interaction) => {

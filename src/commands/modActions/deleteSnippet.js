@@ -1,3 +1,6 @@
+// This command is used to delete a snippet from the snippets.json file
+/*--- DEV ONLY ---*/
+
 const { ApplicationCommandOptionType } = require('discord.js');
 const fs = require('fs');
 

@@ -1,3 +1,6 @@
+// This is an example of a user response shown in ticket thread
+/*---------- Will Not Be In Final Product ----------*/
+
 module.exports = {
     name: 'testuserresponse',
     description: 'Example of a user response shown in ticket thread',

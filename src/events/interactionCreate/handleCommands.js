@@ -1,3 +1,5 @@
+//Handler for slash commands
+
 const { devs, testServer } = require('../../../config.json');
 const getLocalCommands = require('../../utils/getLocalCommands');
 

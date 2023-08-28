@@ -1,3 +1,6 @@
+// Initial testing with a thread and buttons
+/*---------- Will Not Be In Final Product ----------*/
+
 module.exports = {
     name: 'threadtesting',
     description: 'Adds the ticket listener to the channel',
@@ -21,7 +24,7 @@ module.exports = (client) => {
       const escalateMenu = new MessageSelectMenu()
         .setCustomId('escalate')
         .setPlaceholder('Select an option')
-        .addOptions([
+        .addOptions([ 
           
           {
             label: 'Senior Mods',

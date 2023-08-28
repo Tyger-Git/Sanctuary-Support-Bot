@@ -1,3 +1,6 @@
+// Test command to show logs in an embed booklet
+/*---------- Will Not Be In Final Product ----------*/
+
 const { SlashCommandBuilder, PermissionFlagsBits, ButtonBuilder, EmbedBuilder, ActionRowBuilder, Message, MessageEmbed, Attachment } = require("discord.js");
 
 function chunkArray(array, chunkSize) {

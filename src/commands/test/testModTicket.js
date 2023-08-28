@@ -1,3 +1,6 @@
+// This is a test command to show the mod ticket embed
+/*---------- Will Not Be In Final Product ----------*/
+
 const {
     SlashCommandBuilder,
     PermissionFlagsBits,

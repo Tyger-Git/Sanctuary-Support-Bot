@@ -1,3 +1,5 @@
+// Module to read a modal and create a ticket in the database
+
 const mongoose = require("../../index.js"); // Import the mongoose module for incrementing ticket IDs - Not working
 
 const Ticket = require("../../schemas/ticket.js"); 

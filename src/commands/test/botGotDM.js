@@ -1,12 +1,7 @@
-/*
+// Test function to call when the bot receives a DM
+/*---------- Will Not Be In Final Product ----------*/
+
 module.exports = async (client) => {
-    // Function to create a thread, then make the ticket stuffs
+
+    return;
 };
-*/
-module.exports = {
-    name: 'botgotdm',
-    description: 'Bot got DM',
-    callback: async (client, interaction) => {
-        
-    }
-}

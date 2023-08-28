@@ -1,3 +1,6 @@
+// This command adds a snippet to the snippets.json file
+/*--- DEV ONLY ---*/
+
 const { ApplicationCommandOptionType } = require('discord.js');
 const fs = require('fs');
 const path = require('path');

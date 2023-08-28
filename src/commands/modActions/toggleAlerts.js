@@ -1,3 +1,5 @@
+// This command is used to toggle alerts on or off for a ticket
+
 const { ApplicationCommandOptionType } = require('discord.js');
 
 module.exports = {
@@ -35,7 +37,7 @@ module.exports = {
         const toggle = interaction.options.getString('toggle');
         const ticketSchema = require("../../schemas/ticket");
 
-
+        // Logic not yet implemented
 
         await interaction.editReply(`Alerts successfully toggled to ${toggle}.`);
 

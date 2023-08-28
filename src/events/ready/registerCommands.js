@@ -1,3 +1,5 @@
+// Initial runthrough of all slash commands, reading through and initializing them
+
 const { testServer } = require('../../../config.json');
 const areCommandsDifferent = require('../../utils/areCommandsDifferent');
 const getApplicationCommands = require('../../utils/getApplicationCommands');

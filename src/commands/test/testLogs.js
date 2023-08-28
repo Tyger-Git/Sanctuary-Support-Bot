@@ -1,3 +1,6 @@
+// Testing some embeds and buttons for the logs embed
+/*---------- Will Not Be In Final Product ----------*/
+
 const {
     SlashCommandBuilder,
     PermissionFlagsBits,

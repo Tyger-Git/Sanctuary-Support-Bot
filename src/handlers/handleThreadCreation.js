@@ -1,3 +1,5 @@
+// Function to create a thread called on mongoose stream change listener
+
 const forumIDs = require('../parentThreads.json');
 const Ticket = require("../schemas/ticket.js");
 
@@ -51,7 +53,7 @@ module.exports = async function handleThreadCreation(client, ticketData) {
         return null;
     }
 
-    // This logic is here as a placeholder for future functionality
+    // Set thread title color based on ticket status
     let claimedEmoji = '';
     if (ticket.isClaimed) {
         claimedEmoji = '🟢';
@@ -61,9 +63,10 @@ module.exports = async function handleThreadCreation(client, ticketData) {
 
     // Create a new thread inside the parent channel
     const thread = await parentChannel.threads.create({
-        name: `${claimedEmoji} | ${ticket.userDisplayName} | #[${ticket.ticketId}]`,
-        message: `Thread created for Ticket #: ${ticket.ticketId}`,
+        name: `${claimedEmoji} | ${ticket.userDisplayName} | #${ticket.ticketId}`,
+        message: `Ticket #: ${ticket.ticketId}`,
         autoArchiveDuration: 60,
+        appliedTags: ['1145806104652161024', '1145806151770972270'],
     });
 
     if (!thread) {
@@ -74,6 +77,13 @@ module.exports = async function handleThreadCreation(client, ticketData) {
     // Update the ticket's threadCreated flag in MongoDB
     ticket.threadCreated = true;
     await ticket.save();
+
+    await thread.send('Thread created!'); // This will call the ticket maker
+
+    // To be removed - Reference for future development
+    await thread.edit({
+        appliedTags: ['1145806104652161024'],
+    });
 
     return thread;
 }

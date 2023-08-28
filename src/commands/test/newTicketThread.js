@@ -1,3 +1,6 @@
+// Test command to create a new ticket thread
+/*---------- Will Not Be In Final Product ----------*/
+
 const forumIDs = require('../../parentThreads.json');
 const Ticket = require("../../schemas/ticket.js");
 
