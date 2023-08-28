@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, IntentsBitField } = require('discord.js');
+const { Client, IntentsBitField, Partials } = require('discord.js');
 const eventHandler = require('./handlers/eventHandler');
 const mongoose = require('mongoose');
 const ticketHandler = require('./handlers/ticketHandler');
@@ -7,6 +7,7 @@ const threadTesting = require('./commands/test/threadTesting');
 const createTicket = require('./events/db/createTicket');
 const TicketCounter = require('./schemas/ticketCounter.js');
 const handleThreadCreation = require('./handlers/handleThreadCreation.js');
+const botGotDM = require('./handlers/botGotDM');
 
 const client = new Client({
   intents: [
@@ -14,8 +15,14 @@ const client = new Client({
     IntentsBitField.Flags.GuildMembers,
     IntentsBitField.Flags.GuildMessages,
     IntentsBitField.Flags.MessageContent,
-    IntentsBitField.Flags.GuildPresences
+    IntentsBitField.Flags.GuildPresences,
+    IntentsBitField.Flags.DirectMessages,
   ],
+  partials: [
+    Partials.Message,
+    Partials.Channel,
+    Partials.Reaction
+  ]
 });
 
 // Button Listener
@@ -81,6 +88,30 @@ client.on('interactionCreate', async interaction => {
     return;
   }
   
+});
+
+// Direct Message Listener
+client.on('messageCreate', async (message) => {
+  if (message.partial) { // Partial messages do not contain all message data, so fetch the full message (DM's aren't cached, always partial)
+    try {
+      await message.fetch();  // Fetch the full message data
+    } catch (error) {
+      console.error('Error fetching the message:', error);
+      return;
+    }
+  }
+  if (message.author.bot){
+    console.log(`Got message from a bot: ${message.author.tag}`);
+    return;  // Ignore messages from other bots
+  }
+  if (message.channel.type === 1){ // Type 1 is a DM channel
+    console.log(`Got DM from ${message.author.tag}`);
+    await botGotDM(message).catch(err => console.error("Error in botGotDM: ", err));
+  } else {
+    console.log(`Got message from ${message.author.tag} in ${message.channel.name}`);
+    // Future else if's for logging messages in the server
+    return;
+  }
 });
 
 // Helper function to catch ticket creation errors and cleanly reply to the user if something goes wrong

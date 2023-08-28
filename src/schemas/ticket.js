@@ -51,6 +51,11 @@ const ticketSchema = new Schema({
         required: true,
         default: false,
     },
+    threadDeleted: { // To be used when referencing an older ticket
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     isOpen: { // Is the ticket open?
         type: Boolean,
         required: true,
