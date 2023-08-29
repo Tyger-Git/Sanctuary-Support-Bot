@@ -17,6 +17,7 @@ module.exports = async (interaction) => {
     const sendReplyButton = new ButtonBuilder()
         .setLabel("Send Reply")
         .setCustomId("send_snippet_reply_button")
+        .setValue(selectedValue)
         .setStyle("Success");
 
     const cancelButton = new ButtonBuilder()

@@ -61,6 +61,7 @@ client.on('interactionCreate', async interaction => {
         require('./handlers/buttonHandlers/snippetsButton')(interaction);
         break;
       case 'send_snippet_reply_button':
+        require('./handlers/buttonHandlers/sendSnippetButton')(interaction);
         break;
       case 'cancel_snippet_reply_button':
         break;
