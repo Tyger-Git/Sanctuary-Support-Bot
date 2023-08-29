@@ -61,23 +61,19 @@ module.exports = async function handleThreadCreation(client, ticketData) {
         claimedEmoji = '🔴';
     }
 
-    try {
-        // Create a new thread inside the parent channel
-        const thread = await parentChannel.threads.create({
+    // Create a new thread inside the parent channel
+    const thread = await parentChannel.threads.create({
         name: `${claimedEmoji} | ${ticket.userDisplayName} | #${ticket.ticketId}`,
         message: `Ticket #: ${ticket.ticketId}`,
         autoArchiveDuration: 60,
         appliedTags: ['1145806104652161024', '1145806151770972270'],
     });
-    } catch (error) {
-        console.error('Error creating thread:', error);
-    }
 
     // Update the ticket's threadCreated flag in MongoDB
     ticket.threadCreated = true;
     await ticket.save();
 
-    await thread.send('Thread created!'); // This will call the ticket maker
+    await thread.send('Thread created!');
 
     // To be removed - Reference for future development
     await thread.edit({

@@ -8,6 +8,7 @@ const createTicket = require('./events/db/createTicket');
 const TicketCounter = require('./schemas/ticketCounter.js');
 const handleThreadCreation = require('./handlers/handleThreadCreation.js');
 const botGotDM = require('./handlers/botGotDM');
+const handleDMKickoff = require('./handlers/handleDMKickoff');
 
 const client = new Client({
   intents: [
@@ -58,6 +59,10 @@ client.on('interactionCreate', async interaction => {
         break;
       case 'snippets_button':
         require('./handlers/buttonHandlers/snippetsButton')(interaction);
+        break;
+      case 'send_snippet_reply_button':
+        break;
+      case 'cancel_snippet_reply_button':
         break;
     }
   } else if (interaction.isStringSelectMenu()) {
@@ -163,9 +168,10 @@ async function handleTicketCreation(interaction, ticketType, successMessage) {
   
   changeStream.on('change', async (change) => {
       if (change.operationType === 'insert' && !change.fullDocument.threadCreated) {
-          // Call your logic to create a thread here
+          // A new ticket has been detected in the DB, and it has not yet been processed by the bot
           const ticketData = change.fullDocument;
           await handleThreadCreation(client, ticketData);
+          await handleDMKickoff(client, ticketData);
       }
   });
 })();

@@ -1,5 +1,4 @@
 const { Schema, model, mongoose } = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const ticketSchema = new Schema({
     // User information
@@ -55,6 +54,11 @@ const ticketSchema = new Schema({
         type: Boolean,
         required: true,
         default: false,
+    },
+    ticketThread: { // Discord thread ID
+        type: String,
+        required: false,
+        default: '',
     },
     isOpen: { // Is the ticket open?
         type: Boolean,
