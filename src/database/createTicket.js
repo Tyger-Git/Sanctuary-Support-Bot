@@ -1,9 +1,9 @@
 // Module to read a modal and create a ticket in the database
 
-const mongoose = require("../../index.js"); // Import the mongoose module for incrementing ticket IDs - Not working
+const mongoose = require("../index.js"); // Import the mongoose module for incrementing ticket IDs - Not working
 
-const Ticket = require("../../schemas/ticket.js"); 
-const TicketCounter = require('../../schemas/ticketCounter.js');
+const Ticket = require("../schemas/ticket.js"); 
+const TicketCounter = require('../schemas/ticketCounter.js');
 
 async function getNewTicketID() {
   try {

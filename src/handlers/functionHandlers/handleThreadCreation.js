@@ -1,7 +1,7 @@
 // Function to create a thread called on mongoose stream change listener
 
-const forumIDs = require('../parentThreads.json');
-const Ticket = require("../schemas/ticket.js");
+const forumIDs = require('../../parentThreads.json');
+const Ticket = require("../../schemas/ticket.js");
 
 module.exports = async function handleThreadCreation(client, ticketData) {
     // Fetch the ticket as a Mongoose model instance

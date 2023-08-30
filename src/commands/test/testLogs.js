@@ -2,14 +2,9 @@
 /*---------- Will Not Be In Final Product ----------*/
 
 const {
-    SlashCommandBuilder,
-    PermissionFlagsBits,
     ButtonBuilder,
     EmbedBuilder,
     ActionRowBuilder,
-    Message,
-    MessageEmbed,
-    Attachment,
   } = require("discord.js");
 
 module.exports = {

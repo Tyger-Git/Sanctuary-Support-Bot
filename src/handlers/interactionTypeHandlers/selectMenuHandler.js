@@ -1,10 +1,8 @@
-// Confirmation message to reply with a previously selected snippet
+const { ButtonBuilder, ActionRowBuilder } = require("discord.js");
+const snippets = require("../../snippets.json");
+const modResponse = require("../../functions/modResponse");
 
-const { ActionRowBuilder, ButtonBuilder } = require("discord.js");
-
-module.exports = async (interaction) => {
-    //Import the snippets
-    const snippets = require("../../snippets.json");
+const snippetSelectMenu = async (interaction) => {
     const selectedValue = interaction.values[0];
     const selectedSnippet = snippets.find(snippet => snippet.value === selectedValue);
 
@@ -17,7 +15,7 @@ module.exports = async (interaction) => {
     const sendReplyButton = new ButtonBuilder()
         .setLabel("Send Reply")
         .setCustomId("send_snippet_reply_button")
-        .setValue(selectedValue)
+        //.setValue(selectedValue) Carry over the value from the select menu?
         .setStyle("Success");
 
     const cancelButton = new ButtonBuilder()
@@ -34,3 +32,7 @@ module.exports = async (interaction) => {
         //ephemeral: true
     });
 };
+
+module.exports = {
+    snippetSelectMenu,
+}

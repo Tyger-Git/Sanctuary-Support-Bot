@@ -63,7 +63,7 @@ module.exports = {
 
         const filter = i => i.customId === 'previous_button' || i.customId === 'next_button' || i.customId === 'first_button' || i.customId === 'last_button';
         const msg = await interaction.fetchReply();
-        const collector = msg.createMessageComponentCollector({ filter/*, time: 600000*/ }); // 10 minutes timer
+        const collector = msg.createMessageComponentCollector({ filter, time: 600000 }); // 10 minutes timer
 
         collector.on('collect', async interaction => {
             if (interaction.customId === 'previous_button' && currentPage > 0) {
