@@ -42,6 +42,8 @@ This discord bot collects support tickets from any number of discord servers dee
 6. Running the bot:
    ```sh
    node index.js
+   ```
+   Optionally, use "nodemon" for hot reloading during development.
 
 ## Contributing
 
