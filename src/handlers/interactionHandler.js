@@ -68,12 +68,7 @@ const handleInteractionCreate = async (interaction) => {
       if (handler) {
         await handler(interaction);
       }
-    } /*else if (interaction.isChatInputCommand()) {
-      const handler = commandHandlers[interaction.commandName];
-      if (handler) {
-        await handler(interaction);
-      }
-    }*/ else {
+    } else {
       return;
     }
   };
