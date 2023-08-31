@@ -18,7 +18,7 @@ This discord bot collects support tickets from any number of discord servers dee
 
 - Node.js
 - Discord.js v14 (or your specified version)
-- [Any other dependencies or tools]
+- MongoDB
 
 ### Installation
 
