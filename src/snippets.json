@@ -13,5 +13,10 @@
         "label": "Investigating",
         "value": "Investigating",
         "message": "The Moderation team is investigating the issue described. We will be in-touch if we additional information from you regarding the issue. Once, our investigation has concluded, we will message here with our conclusion."
+    },
+    {
+        "label": "test",
+        "value": "test",
+        "message": ":smile:"
     }
 ]
