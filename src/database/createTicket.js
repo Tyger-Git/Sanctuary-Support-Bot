@@ -25,26 +25,21 @@ const createTicket = async (interaction, ticketType) => {
     // Extract common data from the interaction object
     const userId = interaction.user.id;
     const userName = interaction.user.username;
+
     //Nickname logic
     const member = interaction.guild.members.cache.get(userId);
+
     const userDisplayName = member ? member.displayName : interaction.user.username;
     const userAge = Math.floor((Date.now() - interaction.user.createdTimestamp) / (1000 * 60 * 60 * 24));
     const userTicketTotal = 0; // Assuming initial ticket total is 0
     const lastUserResponse = new Date();
-
     const ticketId = await getNewTicketID();
-
     const guildId = interaction.guild.id;
     const guildAge = Math.floor((Date.now() - interaction.guild.joinedTimestamp) / (1000 * 60 * 60 * 24));
-
     const isOpen = true;
-    const isClaimed = false;
-    const claimantModId = "0";
     const lastModResponse = new Date();
     const ticketLevel = 0;
     const openDate = new Date();
-    const closeDate = null;
-    const ticketAttachments = [];
 
     // Define ticket-specific fields and values based on the ticketType
     let specificFields = {};
@@ -92,7 +87,6 @@ const createTicket = async (interaction, ticketType) => {
 
     // Create a new ticket object with combined fields
     const newTicket = new Ticket({
-      ticketId,
       userId,
       userName,
       userDisplayName,
@@ -101,15 +95,12 @@ const createTicket = async (interaction, ticketType) => {
       lastUserResponse,
       guildId,
       guildAge,
+      ticketId,
       ticketType,
       isOpen,
-      isClaimed,
-      claimantModId,
       lastModResponse,
       ticketLevel,
       openDate,
-      closeDate,
-      ticketAttachments,
       ...specificFields 
     });
 

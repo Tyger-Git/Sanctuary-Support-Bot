@@ -78,11 +78,11 @@ const ticketSchema = new Schema({
     claimantModId: { // Discord ID of the mod who claimed the ticket
         type: Number,
         required: true,
-        default: 0,
+        default: 0, // If modID = 0 then the ticket is unclaimed logic
     },
     lastModResponse: { // Used with a listener to determine when to ping the mod
         type: Date,
-        required: true,
+        required: false,
     },
     ticketLevel: { // 0 = normal, 1 = SeniorMod, 2 = HeadMod, 3 = Admin
         type: Number,

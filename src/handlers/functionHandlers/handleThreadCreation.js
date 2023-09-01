@@ -71,6 +71,7 @@ module.exports = async function handleThreadCreation(client, ticketData) {
 
     // Update the ticket's threadCreated flag in MongoDB
     ticket.threadCreated = true;
+    // threadID to be added to ticket object ***
     await ticket.save();
 
     await thread.send('Thread created!');
