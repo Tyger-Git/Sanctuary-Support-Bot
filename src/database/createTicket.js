@@ -30,9 +30,9 @@ const getUserTicketCount = async (userId) => {
 
 const createTicket = async (interaction, ticketType) => {
   try {
+    const userId = interaction.user.id;
     const member = interaction.guild.members.cache.get(userId);
     // Ticket fields that are common to all ticket types
-    const userId = interaction.user.id;
     const userName = interaction.user.username;
     const userDisplayName = member ? member.displayName : interaction.user.username;
     const userAge = Math.floor((Date.now() - interaction.user.createdTimestamp) / (1000 * 60 * 60 * 24)); // Age of user's account

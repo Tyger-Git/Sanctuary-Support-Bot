@@ -1,7 +1,8 @@
 // Function to create a thread called on mongoose stream change listener
 
-const forumIDs = require('../../parentThreads.json');
+const threadInfo = require('../../threadInformation.json');
 const Ticket = require("../../schemas/ticket.js");
+const emojis = require("../../emojis.json");
 
 module.exports = async function handleThreadCreation(client, ticketData) {
     // Fetch the ticket as a Mongoose model instance
@@ -13,26 +14,32 @@ module.exports = async function handleThreadCreation(client, ticketData) {
     // Get the correct parent forum ID based on ticket type
     let parentChannelId;
     let threadEmoji;
+    let threadUnclaimedTag;
     switch (ticket.ticketType) {
         case 'reportTicket':
-            parentChannelId = forumIDs.PlayerReportForum;
-            threadEmoji = '<:icon_report:1140779824793788486>';
+            parentChannelId = threadInfo.PlayerReportForum;
+            threadEmoji = emojis.reportEmoji;
+            threadUnclaimedTag = threadInfo.PlayerReportForumUnclaimedTag;
             break;
         case 'contentCreatorInquiryTicket':
-            parentChannelId = forumIDs.VIPAppForum;
-            threadEmoji = '<:icon_vip2:1140799537942900799>';
+            parentChannelId = threadInfo.VIPAppForum;
+            threadEmoji = emojis.creatorEmoji;
+            threadUnclaimedTag = threadInfo.VIPAppForumUnclaimedTag;
             break;
         case 'technicalIssueTicket':
-            parentChannelId = forumIDs.TechTicketForum;
-            threadEmoji = '<:icon_tech2:1140800254141268018>';
+            parentChannelId = threadInfo.TechTicketForum;
+            threadEmoji = emojis.techEmoji;
+            threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag;
             break;
         case 'staffReportTicket':
-            parentChannelId = forumIDs.StaffReportForum;
-            threadEmoji = '<:icon_report:1140779824793788486>';
+            parentChannelId = threadInfo.StaffReportForum;
+            threadEmoji = emojis.staffReportEmoji;
+            threadUnclaimedTag = threadInfo.StaffReportForumUnclaimedTag;
             break;
         case 'generalSupportTicket':
-            parentChannelId = forumIDs.GeneralSupportForum;
-            threadEmoji = '<:icon_general2:1140799531496263700>';
+            parentChannelId = threadInfo.GeneralSupportForum;
+            threadEmoji = emojis.generalEmoji;
+            threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag;
             break;
         default:
             console.error('Unsupported ticket type.');
@@ -54,19 +61,15 @@ module.exports = async function handleThreadCreation(client, ticketData) {
     }
 
     // Set thread title color based on ticket status
-    let claimedEmoji = '';
-    if (ticket.isClaimed) {
-        claimedEmoji = '🟢';
-    } else {
-        claimedEmoji = '🔴';
-    }
+    let statusEmoji = ticket.isClaimed ? emojis.claimedTicket : emojis.unclaimedTicket;
 
     // Create a new thread inside the parent channel
     const thread = await parentChannel.threads.create({
-        name: `${claimedEmoji} | ${threadEmoji} | ${ticket.userName} | #${ticket.ticketId}`,
+        //name: `${statusEmoji} | ${threadEmoji} | ${ticket.userName} | #${ticket.ticketId}`, // Thread Emoji not working in thread title.
+        name: `${statusEmoji} | ${ticket.userName} | #${ticket.ticketId}`,
         message: `${ticket.ticketId}`,
         autoArchiveDuration: 60,
-        appliedTags: ['1145806104652161024', '1145806151770972270'],
+        appliedTags: [threadUnclaimedTag],
     });
 
     // Update the ticket's threadCreated flag in MongoDB
@@ -74,12 +77,12 @@ module.exports = async function handleThreadCreation(client, ticketData) {
     // threadID to be added to ticket object ***
     await ticket.save();
 
-    await thread.send('Thread created!');
+    await thread.send('Thread created for ticket ' + ticket.ticketId + '. Ticket awaiting claim.');
 
-    // To be removed - Reference for future development
+    /*
     await thread.edit({
-        appliedTags: ['1145806104652161024'],
+        appliedTags: [],
     });
-
+    */
     return thread;
 }

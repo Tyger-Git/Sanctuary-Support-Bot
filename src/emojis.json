@@ -13,5 +13,7 @@
     "staffReportButtonEmoji" : "<:NEW_STAFF2:1146983901160538204>",
     "techButtonEmoji" : "<:icon_techWHITE:1141174795522814032>",
     "creatorButtonEmoji" : "<:icon_vipWHITE:1141174796743344138>",
-    "generalButtonEmoji" : "<:icon_generalWHITE:1141174792821669908>"
+    "generalButtonEmoji" : "<:icon_generalWHITE:1141174792821669908>",
+    "claimedTicket" : "🟢",
+    "unclaimedTicket" : "🔴"
 }

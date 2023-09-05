@@ -1,7 +1,7 @@
 // Test command to create a new ticket thread
 /*---------- Will Not Be In Final Product ----------*/
 
-const forumIDs = require('../../parentThreads.json');
+const forumIDs = require('../../threadInformation.json');
 const Ticket = require("../../schemas/ticket.js");
 
 module.exports = {
@@ -66,7 +66,6 @@ module.exports = {
         // Update the ticket's threadCreated flag in MongoDB
         ticket.threadCreated = true;
         await ticket.save();
-
         return interaction.reply(`Thread created for ticket ID: ${ticket.ticketId}\nTicket Type: ${ticket.ticketType}\n[Link to ticket](https://discord.com/channels/${ticket.guildId}/${newThreadID})`);
     }
 }
