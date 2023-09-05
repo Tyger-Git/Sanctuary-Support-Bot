@@ -1,0 +1,17 @@
+{
+    "reportEmoji" : "<:NEW_REPORT:1141177362751430796>",
+    "staffReportEmoji" : "<:NEW_STAFF:1146983898287452182>",
+    "techEmoji" : "<:NEW_TECH:1141177363758075954>",
+    "creatorEmoji" : "<:NEW_VIP:1141177365133799484>",
+    "generalEmoji" : "<:NEW_GENERAL:1141177473632051300>",
+    "redDash" : "<:icon_redline:1140786363277512724>",
+    "line90Report" : "<:LINE_REPORT:1141177883197456464>",
+    "line90Tech" : "<:LINE_TECH:1141177884246028309>",
+    "line90Creator" : "<:LINE_VIP:1141177886477402122>",
+    "line90General" : "<:LINE_GENERAL:1141177881398096023>",
+    "reportButtonEmoji" : "<:icon_reportWHITE:1141174793857683567>",
+    "staffReportButtonEmoji" : "<:NEW_STAFF2:1146983901160538204>",
+    "techButtonEmoji" : "<:icon_techWHITE:1141174795522814032>",
+    "creatorButtonEmoji" : "<:icon_vipWHITE:1141174796743344138>",
+    "generalButtonEmoji" : "<:icon_generalWHITE:1141174792821669908>"
+}

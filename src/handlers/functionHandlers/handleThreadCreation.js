@@ -63,8 +63,8 @@ module.exports = async function handleThreadCreation(client, ticketData) {
 
     // Create a new thread inside the parent channel
     const thread = await parentChannel.threads.create({
-        name: `${claimedEmoji} | ${ticket.userName} | #${ticket.ticketId}`,
-        message: `Ticket #: ${ticket.ticketId}`,
+        name: `${claimedEmoji} | ${threadEmoji} | ${ticket.userName} | #${ticket.ticketId}`,
+        message: `${ticket.ticketId}`,
         autoArchiveDuration: 60,
         appliedTags: ['1145806104652161024', '1145806151770972270'],
     });

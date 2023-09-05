@@ -9,6 +9,7 @@ const {
     MessageEmbed,
   } = require("discord.js");
   const ticketSchema = require("../../schemas/ticket");
+  const emojis = require("../../emojis.json");
 
 module.exports = {
     name: 'ticketlistener',
@@ -16,26 +17,26 @@ module.exports = {
     devOnly: true,
     callback: async (client, interaction) => {
         await interaction.deferReply();
-        
+
         const channel = interaction.channel;
         const ticketEmbed = new EmbedBuilder()
             .setColor([108,0,18])
             .setTitle("Need to Contact Staff?")
-            .setDescription("<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724><:icon_redline:1140786363277512724><:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>")
+            .setDescription(`${emojis.redDash}${emojis.redDash}${emojis.redDash}${emojis.redDash}${emojis.redDash}${emojis.redDash}`)
             .addFields(
                 { name: 'Please use the menu below to open up a support ticket with Sanctuary\'s Staff Team.', value: '\u200B' },
-                { name: '<:icon_report:1140779824793788486> Report A Member', value: '<:icon_repline2:1140826151716143125> Use the Report A Member option if you need to report rule-breaking behavior within the walls of Sanctuary.' },
-                { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
-                { name: '<:icon_tech2:1140800254141268018> Technical Issues', value: '<:icon_tech90:1140800255261155348> Use the Technical Issues option if you require technical support regarding the Discord server: issues with roles, cannot access channels, etc.' },
-                { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
-                { name: '<:icon_vip2:1140799537942900799> Content Creator Inquiries', value: '<:icon_yell90:1140799538945327117> Use the Content Creator Inquiries option to inquire about receiving the Content Creator role in Sanctuary.' },
-                { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
-                { name: '<:icon_report:1140779824793788486> Report A Staff Member', value: '<:icon_repline2:1140826151716143125> Use the Report A Staff Member option if you need to report a staff member\'s behavior within the walls of Sanctuary.' },
-                { name: '<:icon_redline:1140786363277512724><:icon_redline:1140786363277512724>', value: '\u200B'},
-                { name: '<:icon_general2:1140799531496263700> General Support', value: '<:icon_green90:1140799533211730071> Use the General Support option if none of the above categories suit your questions or concerns!' },
+                { name: `${emojis.reportEmoji} Report A Member`, value: `${emojis.line90Report} Use the Report A Member option if you need to report rule-breaking behavior within the walls of Sanctuary.` },
+                { name: `${emojis.redDash}${emojis.redDash}${emojis.redDash}`, value: '\u200B'},
+                { name: `${emojis.techEmoji} Technical Issues`, value: `${emojis.line90Tech} Use the Technical Issues option if you require technical support regarding the Discord server: issues with roles, cannot access channels, etc.`},
+                { name: `${emojis.redDash}${emojis.redDash}${emojis.redDash}`, value: '\u200B'},
+                { name: `${emojis.creatorEmoji} Content Creator Inquiries`, value: `${emojis.line90Creator} Use the Content Creator Inquiries option to inquire about receiving the Content Creator role in Sanctuary.`},
+                { name: `${emojis.redDash}${emojis.redDash}${emojis.redDash}`, value: '\u200B'},
+                { name: `${emojis.staffReportEmoji} Report A Staff Member`, value: `${emojis.line90Report} Use the Report A Staff Member option if you need to report a staff member\'s behavior within the walls of Sanctuary.`},
+                { name: `${emojis.redDash}${emojis.redDash}${emojis.redDash}`, value: '\u200B'},
+                { name: `${emojis.generalEmoji} General Support`, value: `${emojis.line90General} Use the General Support option if none of the above categories suit your questions or concerns!`},
                 
             )
-            .setImage('attachment://bottombanner.png')
+            .setImage('attachment://support.png')
             .setFooter({text: "© Sanctuary Development Team - 2023"})
             ;
 
@@ -69,32 +70,32 @@ module.exports = {
             );
         const oldRow = new ActionRowBuilder().addComponents(menu);
         */
-
+        
         // Create Buttons
         const report_button = new ButtonBuilder()
         .setCustomId('report_button')
         .setLabel('Report A Member')
-        .setEmoji('<:icon_report3:1140826083525132339>')
+        .setEmoji(`${emojis.reportButtonEmoji}`)
         .setStyle('Danger');
         const staff_report_button = new ButtonBuilder()
         .setCustomId('staff_report_button')
         .setLabel('Report A Staff Member')
-        .setEmoji('<:icon_report3:1140826083525132339>')
+        .setEmoji(`${emojis.staffReportButtonEmoji}`)
         .setStyle('Danger');
         const technical_issues_button = new ButtonBuilder()
         .setCustomId('technical_issues_button')
         .setLabel('Technical Issues')
-        .setEmoji('<:icon_tech3:1140826085311922266>')
+        .setEmoji(`${emojis.techButtonEmoji}`)
         .setStyle('Primary');
         const creator_inquiries_button = new ButtonBuilder()
         .setCustomId('creator_inquiries_button')
         .setLabel('Content Creator Inquiries')
-        .setEmoji('<:icon_vip3:1140826086394056764>')
+        .setEmoji(`${emojis.creatorButtonEmoji}`)
         .setStyle('Secondary');
         const general_support_button = new ButtonBuilder()
         .setCustomId('general_support_button')
         .setLabel('General Support')
-        .setEmoji('<:icon_general3:1140826082623365170>')
+        .setEmoji(`${emojis.generalButtonEmoji}`)
         .setStyle('Success');
 
         // Create Button Row
@@ -107,7 +108,7 @@ module.exports = {
 
 
         await interaction.deleteReply(); //  Delete command for cleanliness
-        await channel.send({ files: [{attachment: './resources/support.png', name: 'support.png'}] });
-        await channel.send({ embeds: [ticketEmbed], files: [{attachment: './resources/bottombanner.png', name: 'bottombanner.png'}], components: [row1, row2, row3] });
+        //await channel.send({ files: [{attachment: './resources/support.png', name: 'support.png'}] });
+        await channel.send({ embeds: [ticketEmbed], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [row1, row2, row3] });
     }
 }
