@@ -1,8 +1,9 @@
 // Function to create a thread called on mongoose stream change listener
-
+const { messageEmbed, ButtonBuilder, EmbedBuilder, ActionRowBuilder } = require('discord.js');
 const threadInfo = require('../../threadInformation.json');
 const Ticket = require("../../schemas/ticket.js");
 const emojis = require("../../emojis.json");
+const modTicket = require("../../functions/modTicket.js");
 
 module.exports = async function handleThreadCreation(client, ticketData) {
     // Fetch the ticket as a Mongoose model instance
@@ -16,27 +17,27 @@ module.exports = async function handleThreadCreation(client, ticketData) {
     let threadEmoji;
     let threadUnclaimedTag;
     switch (ticket.ticketType) {
-        case 'reportTicket':
+        case 'Player Report':
             parentChannelId = threadInfo.PlayerReportForum;
             threadEmoji = emojis.reportEmoji;
             threadUnclaimedTag = threadInfo.PlayerReportForumUnclaimedTag;
             break;
-        case 'contentCreatorInquiryTicket':
+        case 'VIP Application':
             parentChannelId = threadInfo.VIPAppForum;
             threadEmoji = emojis.creatorEmoji;
             threadUnclaimedTag = threadInfo.VIPAppForumUnclaimedTag;
             break;
-        case 'technicalIssueTicket':
+        case 'Technical Support':
             parentChannelId = threadInfo.TechTicketForum;
             threadEmoji = emojis.techEmoji;
             threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag;
             break;
-        case 'staffReportTicket':
+        case 'Staff Report':
             parentChannelId = threadInfo.StaffReportForum;
             threadEmoji = emojis.staffReportEmoji;
             threadUnclaimedTag = threadInfo.StaffReportForumUnclaimedTag;
             break;
-        case 'generalSupportTicket':
+        case 'General Support':
             parentChannelId = threadInfo.GeneralSupportForum;
             threadEmoji = emojis.generalEmoji;
             threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag;
@@ -78,6 +79,10 @@ module.exports = async function handleThreadCreation(client, ticketData) {
     await ticket.save();
 
     await thread.send('Thread created for ticket ' + ticket.ticketId + '. Ticket awaiting claim.');
+
+    //Testing async bug
+    const messageObj = await modTicket(ticket);
+    await thread.send(messageObj); 
 
     /*
     await thread.edit({

@@ -21,7 +21,7 @@ async function getNewTicketID() {
 const getUserTicketCount = async (userId) => {
   try {
       const count = await Ticket.countDocuments({ userId: userId });
-      return count;
+      return count + 1;
   } catch (error) {
       console.error("Error fetching user ticket count:", error);
       return 0; // default to 0 in case of an error
@@ -49,7 +49,7 @@ const createTicket = async (interaction, ticketType) => {
     // Define ticket-specific fields and values based on the ticketType
     let specificFields = {};
     switch (ticketType) {
-      case "reportTicket":
+      case "Player Report":
         //console.log(interaction.fields.getTextInputValue('userToReport'));
         specificFields = {
           reportedUser: interaction.fields.getTextInputValue('userToReport'),
@@ -57,14 +57,14 @@ const createTicket = async (interaction, ticketType) => {
         };
         break;
 
-      case "technicalIssueTicket":
+      case "Technical Support":
         specificFields = {
             techIssueType: interaction.fields.getTextInputValue('techReasonCatagory'),
             techIssueDescription: interaction.fields.getTextInputValue('techDescription'),
         };
         break;
 
-      case "contentCreatorInquiryTicket":
+      case "VIP Application":
         specificFields = {
             socialMediaName: interaction.fields.getTextInputValue('vipNameEntry'),
             vipAppDescription: interaction.fields.getTextInputValue('vipAppDescription'),
@@ -72,14 +72,14 @@ const createTicket = async (interaction, ticketType) => {
         };
         break;
       
-      case "staffReportTicket":
+      case "Staff Report":
         specificFields = {
             reportedMod: interaction.fields.getTextInputValue('staffMemberToReport'),
             modReportReason: interaction.fields.getTextInputValue('reasonForReport'),
         };
         break;
 
-      case "generalSupportTicket":
+      case "General Support":
         specificFields = {
             generalSupportDescription: interaction.fields.getTextInputValue('genSupportDescription'),
         };

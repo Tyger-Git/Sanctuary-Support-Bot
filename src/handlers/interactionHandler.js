@@ -30,11 +30,11 @@ const menuHandlers = {
 };
 
 const modalHandlers = {
-    'newReportTicketModal': (interaction) => handleTicketCreation(interaction, 'reportTicket', 'You submitted a report ticket successfully!'),
-    'newTechTicketModal': (interaction) => handleTicketCreation(interaction, 'technicalIssueTicket', 'You submitted a technical issue ticket successfully!'),
-    'newCreatorTicketModal': (interaction) => handleTicketCreation(interaction, 'contentCreatorInquiryTicket', 'You submitted a content creator ticket successfully!'),
-    'newGenSupTicketModal': (interaction) => handleTicketCreation(interaction, 'generalSupportTicket', 'You submitted a general support ticket successfully!'),
-    'newStaffReportTicketModal': (interaction) => handleTicketCreation(interaction, 'staffReportTicket', 'You submitted a staff report ticket successfully!'),
+    'newReportTicketModal': (interaction) => handleTicketCreation(interaction, 'Player Report', 'You submitted a report ticket successfully!'),
+    'newTechTicketModal': (interaction) => handleTicketCreation(interaction, 'Technical Support', 'You submitted a technical issue ticket successfully!'),
+    'newCreatorTicketModal': (interaction) => handleTicketCreation(interaction, 'VIP Application', 'You submitted a content creator ticket successfully!'),
+    'newGenSupTicketModal': (interaction) => handleTicketCreation(interaction, 'General Support', 'You submitted a general support ticket successfully!'),
+    'newStaffReportTicketModal': (interaction) => handleTicketCreation(interaction, 'Staff Report', 'You submitted a staff report ticket successfully!'),
 };
 
 const commandHandlers = {

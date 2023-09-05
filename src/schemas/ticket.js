@@ -67,6 +67,7 @@ const ticketSchema = new Schema({
     },
     ticketType: { // General Support, Technical Support, VIP Applications, Player Reports, Staff Reports
         type: String,
+        enum: ['General Support', 'Technical Support', 'VIP Application', 'Player Report', 'Staff Report'],
         required: true,
         default: 'General Support',
     },
@@ -76,9 +77,14 @@ const ticketSchema = new Schema({
         default: false,
     },
     claimantModId: { // Discord ID of the mod who claimed the ticket
-        type: Number,
-        required: true,
-        default: 0, // If modID = 0 then the ticket is unclaimed logic
+        type: String,
+        required: false,
+        default: 'N/A',
+    },
+    claimantModName: { // Discord username of the mod who claimed the ticket
+        type: String,
+        required: false,
+        default: 'N/A',
     },
     lastModResponse: { // Used with a listener to determine when to ping the mod
         type: Date,
@@ -98,19 +104,19 @@ const ticketSchema = new Schema({
         required: false,
     },
     ticketAttachments: { // Attachments submitted with the ticket
-        type: Array,
+        type: [String],
         required: false,
         default: [],
     },
-    alertsOn: { // Should the mod be alerted when the user responds?
+    isAlertOn: { // Should the mod be alerted when the user responds?
         type: Boolean,
         required: true,
         default: true,
     },
-    ticketNotes: { // Notes added by the mod
+    modNotes: { // Notes added by the mod
         type: String,
         required: false,
-        default: '',
+        default: 'Ticket Unresolved',
     },
 
 
@@ -166,7 +172,7 @@ const ticketSchema = new Schema({
     socialMediaLinks: { // Links to the user's social media
         type: Array, // Todo: parse string answer into array
         required: false,
-        default: [],
+        default: ["N/A"],
     },
 
     // General Support
