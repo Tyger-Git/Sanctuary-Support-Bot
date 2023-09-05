@@ -1,7 +1,5 @@
 // Module to read a modal and create a ticket in the database
 
-const mongoose = require("../index.js"); // Import the mongoose module for incrementing ticket IDs - Not working
-
 const Ticket = require("../schemas/ticket.js"); 
 const TicketCounter = require('../schemas/ticketCounter.js');
 
@@ -20,25 +18,32 @@ async function getNewTicketID() {
   }
 }
 
+const getUserTicketCount = async (userId) => {
+  try {
+      const count = await Ticket.countDocuments({ userId: userId });
+      return count;
+  } catch (error) {
+      console.error("Error fetching user ticket count:", error);
+      return 0; // default to 0 in case of an error
+  }
+}
+
 const createTicket = async (interaction, ticketType) => {
   try {
-    // Extract common data from the interaction object
+    const member = interaction.guild.members.cache.get(userId);
+    // Ticket fields that are common to all ticket types
     const userId = interaction.user.id;
     const userName = interaction.user.username;
-
-    //Nickname logic
-    const member = interaction.guild.members.cache.get(userId);
-
     const userDisplayName = member ? member.displayName : interaction.user.username;
-    const userAge = Math.floor((Date.now() - interaction.user.createdTimestamp) / (1000 * 60 * 60 * 24));
-    const userTicketTotal = 0; // Assuming initial ticket total is 0
-    const lastUserResponse = new Date();
-    const ticketId = await getNewTicketID();
-    const guildId = interaction.guild.id;
-    const guildAge = Math.floor((Date.now() - interaction.guild.joinedTimestamp) / (1000 * 60 * 60 * 24));
-    const isOpen = true;
-    const lastModResponse = new Date();
-    const ticketLevel = 0;
+    const userAge = Math.floor((Date.now() - interaction.user.createdTimestamp) / (1000 * 60 * 60 * 24)); // Age of user's account
+    const userTicketTotal = await getUserTicketCount(userId); // Query the database for the number of tickets the user has submitted, based on userId
+    const lastUserResponse = new Date(); // This is reset each time the user responds to the ticket
+    const ticketId = await getNewTicketID(); // Ticket ID using ticketID schema
+    const guildId = interaction.guild.id; // Server ID
+    const guildAge = Math.floor((Date.now() - member.joinedTimestamp) / (1000 * 60 * 60 * 24)); // Age of user in the server
+    const isOpen = true; 
+    const lastModResponse = new Date(); // This is reset each time a mod responds to the ticket
+    const ticketLevel = 0; 
     const openDate = new Date();
 
     // Define ticket-specific fields and values based on the ticketType
