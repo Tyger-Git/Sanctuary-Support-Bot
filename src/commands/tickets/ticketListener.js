@@ -22,17 +22,17 @@ module.exports = {
         const ticketEmbed = new EmbedBuilder()
             .setColor([108,0,18])
             .setTitle("Need to Contact Staff?")
-            .setDescription(`${emojis.redDash}${emojis.redDash}${emojis.redDash}${emojis.redDash}${emojis.redDash}${emojis.redDash}`)
+            .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
             .addFields(
                 { name: 'Please use the menu below to open up a support ticket with Sanctuary\'s Staff Team.', value: '\u200B' },
                 { name: `${emojis.reportEmoji} Report A Member`, value: `${emojis.line90Report} Use the Report A Member option if you need to report rule-breaking behavior within the walls of Sanctuary.` },
-                { name: `${emojis.redDash}${emojis.redDash}${emojis.redDash}`, value: '\u200B'},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B'},
                 { name: `${emojis.techEmoji} Technical Issues`, value: `${emojis.line90Tech} Use the Technical Issues option if you require technical support regarding the Discord server: issues with roles, cannot access channels, etc.`},
-                { name: `${emojis.redDash}${emojis.redDash}${emojis.redDash}`, value: '\u200B'},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B'},
                 { name: `${emojis.creatorEmoji} Content Creator Inquiries`, value: `${emojis.line90Creator} Use the Content Creator Inquiries option to inquire about receiving the Content Creator role in Sanctuary.`},
-                { name: `${emojis.redDash}${emojis.redDash}${emojis.redDash}`, value: '\u200B'},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B'},
                 { name: `${emojis.staffReportEmoji} Report A Staff Member`, value: `${emojis.line90Report} Use the Report A Staff Member option if you need to report a staff member\'s behavior within the walls of Sanctuary.`},
-                { name: `${emojis.redDash}${emojis.redDash}${emojis.redDash}`, value: '\u200B'},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B'},
                 { name: `${emojis.generalEmoji} General Support`, value: `${emojis.line90General} Use the General Support option if none of the above categories suit your questions or concerns!`},
                 
             )

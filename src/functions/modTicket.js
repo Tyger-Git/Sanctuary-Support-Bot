@@ -12,16 +12,38 @@ module.exports = async function modTicket(ticket) {
             ticketAttachments += attachment + '\n';
         });
     }
+    embedColor = [0,0,0] // Black
+    switch (ticket.ticketType) {
+        case 'Player Report':
+            embedColor = [219,53,62] // Red 
+            break;
+        case 'VIP Application':
+            embedColor = [78,79,88] // Grey
+            break;
+        case 'Technical Support':
+            embedColor = [88,100,241] // Blue
+            break;
+        case 'Staff Report':
+            embedColor = [219,53,62] // Red
+            break;
+        case 'General Support':
+            embedColor = [36,123,68] // Green
+            break;
+        default:
+            console.error('Unsupported ticket type.');
+            return null;
+    }
+
     const modTicketEmbed = new EmbedBuilder()
-        .setColor([96,0,169]) // Purple
+        .setColor(embedColor) // Purple
         .setTitle(`${ticket.ticketType} Ticket`)
-        .setDescription(`${emojis.redDash}${emojis.redDash}${emojis.redDash}${emojis.redDash}${emojis.redDash}`)
+        .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
         .addFields(
             { name: 'User Name:', value: ticket.userName},
             { name: 'User ID:', value: ticket.userId, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Membership Age:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
             { name: 'Ticket ID:', value: `${ticket.ticketId}`, inline: true },{ name: 'Total Tickets Opened:', value: `${ticket.userTicketTotal}`, inline: true },{ name: 'Ticket Status', value: ticketStatus, inline: true },
             { name: 'Mod Assigned:', value: ticket.claimantModName, inline: true },{ name: 'Ticket Level:', value: `${ticket.ticketLevel}`, inline: true },{ name: 'Created On:', value: formatDate(ticket.openDate), inline: true },
-            { name: `${emojis.redDash}${emojis.redDash}${emojis.redDash}${emojis.redDash}${emojis.redDash}`, value: '\u200B' },
+            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
             { name: 'Mod Notes:', value: ticket.modNotes },
             { name: 'Attachments:', value: ticketAttachments},
         )
@@ -61,7 +83,7 @@ module.exports = async function modTicket(ticket) {
         .addComponents(claim_button, escalate_button, logs_button, snippets_button, close_button);
 
     // Logic for what buttons to show
-    const ticketClaimed = true; // Placeholder for now, would pull from DB
+    const ticketClaimed = ticket.isClaimed; // Placeholder for now, would pull from DB
     if (ticketClaimed) {
         messageObject = { embeds: [modTicketEmbed], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [row1] };
     } else {
