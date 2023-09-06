@@ -34,16 +34,32 @@ module.exports = async function modTicket(ticket) {
             return null;
     }
 
-    const modTicketEmbed = new EmbedBuilder()
-        .setColor(embedColor) // Purple
+    const modTicketEmbedFront = new EmbedBuilder()
+        .setColor(embedColor)
+        .setTitle(`${ticket.ticketType} Ticket`)
+        .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
+        .addFields(
+            { name: 'User Name:', value: ticket.userName},
+            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+            { name: 'User ID:', value: ticket.userId, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Server Join Date:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
+            { name: 'Ticket ID:', value: `${ticket.ticketId}`, inline: true },{ name: 'Total Tickets Opened:', value: `${ticket.userTicketTotal}`, inline: true },{ name: 'Ticket Status', value: ticketStatus, inline: true },
+            { name: 'Mod Assigned:', value: ticket.claimantModName, inline: true },{ name: 'Ticket Level:', value: `${ticket.ticketLevel}`, inline: true },{ name: 'Opened On:', value: formatDate(ticket.openDate), inline: true },
+            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+        )
+        .setImage('attachment://support.png')
+        ;
+
+    const modTicketEmbedBack = new EmbedBuilder()
+        .setColor(embedColor)
         .setTitle(`${ticket.ticketType} Ticket`)
         .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
         .addFields(
             { name: 'User Name:', value: ticket.userName},
-            { name: 'User ID:', value: ticket.userId, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Membership Age:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
+            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+            { name: 'User ID:', value: ticket.userId, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Server Join Date:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
             { name: 'Ticket ID:', value: `${ticket.ticketId}`, inline: true },{ name: 'Total Tickets Opened:', value: `${ticket.userTicketTotal}`, inline: true },{ name: 'Ticket Status', value: ticketStatus, inline: true },
-            { name: 'Mod Assigned:', value: ticket.claimantModName, inline: true },{ name: 'Ticket Level:', value: `${ticket.ticketLevel}`, inline: true },{ name: 'Created On:', value: formatDate(ticket.openDate), inline: true },
-            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+            { name: 'Mod Assigned:', value: ticket.claimantModName, inline: true },{ name: 'Ticket Level:', value: `${ticket.ticketLevel}`, inline: true },{ name: 'Opened On:', value: formatDate(ticket.openDate), inline: true },
+            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
             { name: 'Mod Notes:', value: ticket.modNotes },
             { name: 'Attachments:', value: ticketAttachments},
         )
@@ -75,20 +91,33 @@ module.exports = async function modTicket(ticket) {
         .setCustomId('logs_button')
         .setLabel('Logs')
         .setStyle('Secondary');
+    const flip_button = new ButtonBuilder()
+        .setCustomId('flip_button')
+        .setLabel('Flip')
+        .setStyle('Secondary')
+        .setEmoji(emojis.flipTicket);
 
     // Create Button Row
-    const row1 = new ActionRowBuilder()
+    const claimedRow = new ActionRowBuilder()
         .addComponents(unclaim_button, escalate_button, logs_button, snippets_button, close_button);
-    const row2 = new ActionRowBuilder()
+    const unclaimedRow = new ActionRowBuilder()
         .addComponents(claim_button, escalate_button, logs_button, snippets_button, close_button);
 
-    // Logic for what buttons to show
-    const ticketClaimed = ticket.isClaimed; // Placeholder for now, would pull from DB
-    if (ticketClaimed) {
-        messageObject = { embeds: [modTicketEmbed], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [row1] };
-    } else {
-        messageObject = { embeds: [modTicketEmbed], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [row2] };
+    // Display Logic
+    const ticketClaimed = ticket.isClaimed;
+    const ticketSide = 0;
+    if (ticketClaimed && ticketSide === 0) {
+        messageObject = { embeds: [modTicketEmbedFront], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [claimedRow] };
+    } else if (ticketClaimed && ticketSide === 1) {
+        messageObject = { embeds: [modTicketEmbedBack], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [claimedRow] };
+    } else if (!ticketClaimed && ticketSide === 0) {
+        messageObject = { embeds: [modTicketEmbedFront], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [unclaimedRow] };
+    } else if (!ticketClaimed && ticketSide === 1) {
+        messageObject = { embeds: [modTicketEmbedBack], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [unclaimedRow] };
     }
+
+    // This for testing
+    messageObject = { embeds: [modTicketEmbedFront, modTicketEmbedBack], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [unclaimedRow] };
     return messageObject;
 };
 

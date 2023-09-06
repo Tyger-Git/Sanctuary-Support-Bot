@@ -56,9 +56,9 @@ const ticketSchema = new Schema({
         default: false,
     },
     ticketThread: { // Discord thread ID
-        type: String,
+        type: Number,
         required: false,
-        default: '',
+        default: 0,
     },
     isOpen: { // Is the ticket open?
         type: Boolean,

@@ -33,7 +33,7 @@ module.exports = {
                 { name: 'Mod Notes:', value: "Another idiot that can't read the rate limit pings" },
                 { name: 'Attachments:', value: '[link1](https://imgur.com/t/rickastley/vBEgTM1)'}, // Gather all links mods put into an array and then loop through them to add them to the embed
             )
-            .setImage('attachment://support.png')
+            .setImage('attachment://FlC3.gif')
             ;
         
         // Create Buttons
@@ -74,9 +74,9 @@ module.exports = {
         // Logic for what buttons to show
         const ticketClaimed = true; // Placeholder for now, would pull from DB
         if (ticketClaimed) {
-            await channel.send({ embeds: [testModTicket], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [row1] });
+            await channel.send({ embeds: [testModTicket], files: [{attachment: './resources/FlC3.gif', name: 'FlC3.gif'}], components: [row1] });
         } else {
-            await channel.send({ embeds: [testModTicket], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [row2] });
+            await channel.send({ embeds: [testModTicket], files: [{attachment: './resources/FlC3.gif', name: 'FlC3.gif'}], components: [row2] });
         }
     }
 }; 

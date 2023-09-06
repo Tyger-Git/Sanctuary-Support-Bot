@@ -75,10 +75,12 @@ module.exports = async function handleThreadCreation(client, ticketData) {
 
     // Update the ticket's threadCreated flag in MongoDB
     ticket.threadCreated = true;
-    // threadID to be added to ticket object ***
+    ticket.ticketThread = thread.id;
     await ticket.save();
 
     await thread.send('Thread created for ticket ' + ticket.ticketId + '. Ticket awaiting claim.');
+
+    // this is where threadHandler.js would be called
 
     //Testing async bug
     const messageObj = await modTicket(ticket);
