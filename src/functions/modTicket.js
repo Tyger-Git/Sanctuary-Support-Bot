@@ -4,6 +4,11 @@ const emojis = require("../emojis.json");
 module.exports = async function modTicket(ticket) {
     let messageObject = {};
     let ticketStatus = ticket.isOpen ? 'Open' : 'Closed';
+    let ticketCloseDate = ticket.closeDate;
+    if (ticketCloseDate === null) {ticketCloseDate = 'Ticket Unresolved';}
+
+    // Turn attachment array's into strings
+    // Format of masked links: [Guide](https://discordjs.guide/ 'optional hovertext')
     let ticketAttachments = '';
     if (ticket.ticketAttachments.length === 0) {
         ticketAttachments = 'No attachments';
@@ -12,58 +17,95 @@ module.exports = async function modTicket(ticket) {
             ticketAttachments += attachment + '\n';
         });
     }
-    embedColor = [0,0,0] // Black
+    let socialLinks = '';
+    if (ticket.socialMediaLinks.length === 0) {
+        socialLinks = 'No links provided';
+    } else {
+        ticket.socialMediaLinks.forEach(link => {
+            socialLinks += link + '\n';
+        });
+    }
+
+    let embedColor = [0,0,0] // Black
+    let contentName1 = '\u200B';
+    let contentValue1 = '\u200B';
+    let contentName2 = '\u200B';
+    let contentValue2 = '\u200B';
+    let contentName3 = '\u200B';
+    let contentValue3 = '\u200B';
     switch (ticket.ticketType) {
         case 'Player Report':
             embedColor = [219,53,62] // Red 
+            contentName1 = "Reported User:";
+            contentValue1 = ticket.reportedUser;
+            contentName2 = "Report Reason:";
+            contentValue2 = ticket.playerReportReason;
             break;
         case 'VIP Application':
             embedColor = [78,79,88] // Grey
+            contentName1 = "Social Media Name:";
+            contentValue1 = ticket.socialMediaName;
+            contentName2 = "Application Description:";
+            contentValue2 = ticket.vipAppDescription;
+            contentName3 = "Social Media Links:";
+            contentValue3 = socialLinks;
             break;
         case 'Technical Support':
             embedColor = [88,100,241] // Blue
+            contentName1 = "Issue Type:";
+            contentValue1 = ticket.techIssueType;
+            contentName2 = "Issue Description:";
+            contentValue2 = ticket.techIssueDescription;
             break;
         case 'Staff Report':
             embedColor = [219,53,62] // Red
+            contentName1 = "Reported Mod:";
+            contentValue1 = ticket.reportedMod;
+            contentName2 = "Report Reason:";
+            contentValue2 = ticket.modReportReason;
             break;
         case 'General Support':
             embedColor = [36,123,68] // Green
+            contentName1 = "Support Description:";
+            contentValue1 = ticket.generalSupportDescription;
             break;
         default:
             console.error('Unsupported ticket type.');
             return null;
     }
 
-    const modTicketEmbedFront = new EmbedBuilder()
+    const modTicketEmbedTop = new EmbedBuilder()
         .setColor(embedColor)
         .setTitle(`${ticket.ticketType} Ticket`)
         .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
         .addFields(
-            { name: 'User Name:', value: ticket.userName},
+            { name: 'Display Name:', value: ticket.userDisplayName, inline: true},{ name: 'User Name:', value: ticket.userName, inline: true},{ name: 'User ID:', value: ticket.userId, inline: true },
+            { name: 'Total Tickets:', value: `${ticket.userTicketTotal}`, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Server Join Date:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-            { name: 'User ID:', value: ticket.userId, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Server Join Date:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
-            { name: 'Ticket ID:', value: `${ticket.ticketId}`, inline: true },{ name: 'Total Tickets Opened:', value: `${ticket.userTicketTotal}`, inline: true },{ name: 'Ticket Status', value: ticketStatus, inline: true },
+            { name: 'Ticket ID:', value: `${ticket.ticketId}`, inline: true },{ name: '\u200B', value: '\u200B', inline: true },{ name: 'Ticket Status', value: ticketStatus, inline: true },
             { name: 'Mod Assigned:', value: ticket.claimantModName, inline: true },{ name: 'Ticket Level:', value: `${ticket.ticketLevel}`, inline: true },{ name: 'Opened On:', value: formatDate(ticket.openDate), inline: true },
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
         )
-        .setImage('attachment://support.png')
+        .setImage('attachment://1px.png')
         ;
 
-    const modTicketEmbedBack = new EmbedBuilder()
+    const modTicketEmbedBottom = new EmbedBuilder()
         .setColor(embedColor)
-        .setTitle(`${ticket.ticketType} Ticket`)
-        .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
+        .setTitle(`${ticket.ticketType} Ticket Information`)
+        .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
         .addFields(
-            { name: 'User Name:', value: ticket.userName},
+            { name: contentName1, value: contentValue1},
+            { name: contentName2, value: contentValue2},
+            { name: contentName3, value: contentValue3},
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-            { name: 'User ID:', value: ticket.userId, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Server Join Date:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
-            { name: 'Ticket ID:', value: `${ticket.ticketId}`, inline: true },{ name: 'Total Tickets Opened:', value: `${ticket.userTicketTotal}`, inline: true },{ name: 'Ticket Status', value: ticketStatus, inline: true },
-            { name: 'Mod Assigned:', value: ticket.claimantModName, inline: true },{ name: 'Ticket Level:', value: `${ticket.ticketLevel}`, inline: true },{ name: 'Opened On:', value: formatDate(ticket.openDate), inline: true },
+            { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+            { name: 'Ticket Close Date:', value: ticket.modNotes},
             { name: 'Mod Notes:', value: ticket.modNotes },
+            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
             { name: 'Attachments:', value: ticketAttachments},
         )
-        .setImage('attachment://support.png')
+        .setImage('attachment://1px.png')
         ;
     
     // Create Buttons
@@ -107,17 +149,17 @@ module.exports = async function modTicket(ticket) {
     const ticketClaimed = ticket.isClaimed;
     const ticketSide = 0;
     if (ticketClaimed && ticketSide === 0) {
-        messageObject = { embeds: [modTicketEmbedFront], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [claimedRow] };
+        messageObject = { embeds: [modTicketEmbedTop], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [claimedRow] };
     } else if (ticketClaimed && ticketSide === 1) {
-        messageObject = { embeds: [modTicketEmbedBack], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [claimedRow] };
+        messageObject = { embeds: [modTicketEmbedBottom], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [claimedRow] };
     } else if (!ticketClaimed && ticketSide === 0) {
-        messageObject = { embeds: [modTicketEmbedFront], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [unclaimedRow] };
+        messageObject = { embeds: [modTicketEmbedTop], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [unclaimedRow] };
     } else if (!ticketClaimed && ticketSide === 1) {
-        messageObject = { embeds: [modTicketEmbedBack], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [unclaimedRow] };
+        messageObject = { embeds: [modTicketEmbedBottom], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [unclaimedRow] };
     }
 
     // This for testing
-    messageObject = { embeds: [modTicketEmbedFront, modTicketEmbedBack], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [unclaimedRow] };
+    messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [unclaimedRow] };
     return messageObject;
 };
 
