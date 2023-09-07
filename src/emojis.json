@@ -17,5 +17,6 @@
     "generalButtonEmoji" : "<:icon_generalWHITE:1141174792821669908>",
     "claimedTicket" : "🟢",
     "unclaimedTicket" : "🔴",
+    "closedTicket" : "⚫",
     "flipTicket" : "🔁"
 }

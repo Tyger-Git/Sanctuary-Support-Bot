@@ -7,12 +7,17 @@
     
     "PlayerReportForumClaimedTag": "1145806104652161024",
     "PlayerReportForumUnclaimedTag": "1145806151770972270",
+    "PlayerReportForumClosingTag": "1149474102357278883",
     "StaffReportForumClaimedTag": "1148708704590499903",
     "StaffReportForumUnclaimedTag": "1148708734948868136",
+    "StaffReportForumClosingTag": "1149474324391141456",
     "TechTicketForumClaimedTag": "1148704452421894164",
     "TechTicketForumUnclaimedTag": "1148704471979933817",
+    "TechTicketForumClosingTag": "1149474214949158992",
     "GeneralSupportForumClaimedTag": "1148708443188904028",
     "GeneralSupportForumUnclaimedTag": "1148708477364088962",
+    "GeneralSupportForumClosingTag": "1149474267830960168",
     "VIPAppForumClaimedTag": "1148709047386787910",
-    "VIPAppForumUnclaimedTag": "1148709085039034368"
+    "VIPAppForumUnclaimedTag": "1148709085039034368",
+    "VIPAppForumClosingTag": "1149474368305512448"
 }

@@ -10,7 +10,8 @@ const {
     snippetsButton,
     sendSnippetButton,
     claimButton,
-    unclaimButton
+    unclaimButton,
+    closeButton
 } = require('./interactionTypeHandlers/buttonHandler');
 
 const {
@@ -26,7 +27,8 @@ const buttonHandlers = {
     'snippets_button': snippetsButton,
     'send_snippet_reply_button': sendSnippetButton,
     'claim_button': claimButton,
-    'unclaim_button': unclaimButton
+    'unclaim_button': unclaimButton,
+    'close_button': closeButton,
 };
 
 const menuHandlers = {

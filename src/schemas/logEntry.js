@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const logSchema = new Schema({
-    ticketID: {
+    ticketId: {
         type: Number,
         required: true,
     },

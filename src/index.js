@@ -3,6 +3,7 @@ const slashCommandHandler = require('./handlers/commandHandlers/slashCommandHand
 const db = require('./database/database');
 const { handleInteractionCreate, handleMessageCreate } = require('./handlers/interactionHandler');
 const clientSingleton = require('./utils/DiscordClientInstance');
+const taskScheduler = require('./utils/taskScheduler');
 
 // Get the Discord client
 const client = clientSingleton.getClient();
@@ -22,3 +23,5 @@ async function initBot() {
 }
 
 initBot();
+
+setInterval(taskScheduler.deleteOldThreads, 60 * 1000); // Run every minute

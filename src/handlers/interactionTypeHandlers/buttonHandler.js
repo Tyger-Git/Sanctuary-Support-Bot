@@ -2,7 +2,7 @@ const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, String
 const modResponse = require("../../functions/modResponse");
 const snippets = require("../../snippets.json");
 const Ticket = require("../../schemas/ticket.js");
-const ticket = require("../../schemas/ticket.js");
+const DyingTicket = require('../../schemas/dyingTicket.js');
 const { handleThreadName, handleTicketMessageUpdate, getThreadTag } = require("../../functions/threadFunctions.js");
 
 // Creator Inquiries Button
@@ -274,6 +274,45 @@ const unclaimButton = async (interaction) => {
     }
 };
 
+// Close Button (ModTicket)
+/*------------------------------------------------------------------------------------------------------------------------*/
+const closeButton = async (interaction) => {
+    const threadId = interaction.channel.id;
+    const thread = interaction.channel;
+    try {
+        const ticket = await Ticket.findOne({ ticketThread: threadId });
+        // Update the ticket's info in MongoDB and save
+        ticket.isOpen = false;
+        ticket.closeDate = new Date();
+        await ticket.save();
+
+        // Create a new dying ticket entry
+        const dyingTicket = new DyingTicket({
+            ticketId: ticket.ticketId,  // Assuming ticket has a unique _id field
+            ticketThread: ticket.ticketThread,
+            closeDate: ticket.closeDate
+        });
+        await dyingTicket.save();
+
+        // Get the thread and edit the thread name
+        const newThreadName = await handleThreadName(ticket);
+        const threadTag = await getThreadTag(ticket);
+        await thread.edit({
+            name: newThreadName,
+            appliedTags: [threadTag],
+        });
+
+        //Update Ticket Message
+        await handleTicketMessageUpdate(ticket);
+
+        // Reply to the interaction
+        await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion."});
+    } catch (error) {
+        console.error('Error closing ticket:', error);
+    }
+};
+
+
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Export the functions
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -286,5 +325,6 @@ module.exports = {
     snippetsButton,
     sendSnippetButton,
     claimButton,
-    unclaimButton
+    unclaimButton,
+    closeButton
 }

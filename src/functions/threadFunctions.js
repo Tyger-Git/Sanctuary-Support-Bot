@@ -34,6 +34,9 @@ async function handleTicketMessageUpdate(ticket) {
 async function handleThreadName(ticket) {
     // Set thread emoji based on ticket status
     let statusEmoji = ticket.isClaimed ? emojis.claimedTicket : emojis.unclaimedTicket;
+    if (ticket.isClosed) {
+        statusEmoji = emojis.closedTicket;
+    }
     const name = `${statusEmoji} | ${ticket.userDisplayName} (${ticket.userName}) | #${ticket.ticketId}`;
     
     return name;
@@ -68,32 +71,44 @@ async function getParentChannelID(ticket) {
 async function getThreadTag(ticket) {
     let threadClaimedTag;
     let threadUnclaimedTag;
+    let threadClosingTag;
     switch (ticket.ticketType) {
         case 'Player Report':
             threadClaimedTag = threadInfo.PlayerReportForumClaimedTag;
             threadUnclaimedTag = threadInfo.PlayerReportForumUnclaimedTag;
+            threadClosingTag = threadInfo.PlayerReportForumClosingTag;
             break;
         case 'VIP Application':
             threadClaimedTag = threadInfo.VIPAppForumClaimedTag;
             threadUnclaimedTag = threadInfo.VIPAppForumUnclaimedTag;
+            threadClosingTag = threadInfo.VIPAppForumClosingTag;
             break;
         case 'Technical Support':
             threadClaimedTag = threadInfo.TechTicketForumClaimedTag;
             threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag;
+            threadClosingTag = threadInfo.TechTicketForumClosingTag;
             break;
         case 'Staff Report':
             threadClaimedTag = threadInfo.StaffReportForumClaimedTag;
             threadUnclaimedTag = threadInfo.StaffReportForumUnclaimedTag;
+            threadClosingTag = threadInfo.StaffReportForumClosingTag;
             break;
         case 'General Support':
             threadClaimedTag = threadInfo.GeneralSupportForumClaimedTag;
             threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag;
+            threadClosingTag = threadInfo.GeneralSupportForumClosingTag;
             break;
         default:
             console.error('Error getting thread tag.');
             return null;
     }
-    return ticket.isClaimed ? threadClaimedTag : threadUnclaimedTag;
+    let tag;
+    if (!ticket.isOpen) {
+        tag = threadClosingTag;
+    } else {
+        tag = ticket.isClaimed ? threadClaimedTag : threadUnclaimedTag;
+    }
+    return tag;
 }
 
 module.exports = {

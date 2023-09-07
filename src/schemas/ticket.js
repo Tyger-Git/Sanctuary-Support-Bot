@@ -186,10 +186,6 @@ const ticketSchema = new Schema({
         required: false,
         default: 'N/A',
     },
-
-
-
-
 });
 
 module.exports = model('ticket', ticketSchema);
