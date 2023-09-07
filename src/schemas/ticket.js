@@ -56,9 +56,14 @@ const ticketSchema = new Schema({
         default: false,
     },
     ticketThread: { // Discord thread ID
-        type: Number,
+        type: String,
         required: false,
-        default: 0,
+        default: '',
+    },
+    ticketThreadMessage: { // Discord message ID
+        type: String,
+        required: false,
+        default: '',
     },
     isOpen: { // Is the ticket open?
         type: Boolean,
@@ -77,14 +82,14 @@ const ticketSchema = new Schema({
         default: false,
     },
     claimantModId: { // Discord ID of the mod who claimed the ticket
-        type: String,
+        type: Number,
         required: false,
-        default: 'N/A',
+        default: 0,
     },
     claimantModName: { // Discord username of the mod who claimed the ticket
         type: String,
         required: false,
-        default: 'N/A',
+        default: 'Unclaimed',
     },
     lastModResponse: { // Used with a listener to determine when to ping the mod
         type: Date,

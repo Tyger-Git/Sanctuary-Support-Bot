@@ -8,7 +8,9 @@ const {
     technicalIssuesButton,
     staffReportButton,
     snippetsButton,
-    sendSnippetButton
+    sendSnippetButton,
+    claimButton,
+    unclaimButton
 } = require('./interactionTypeHandlers/buttonHandler');
 
 const {
@@ -22,7 +24,9 @@ const buttonHandlers = {
     'general_support_button': generalSupportButton,
     'staff_report_button': staffReportButton,
     'snippets_button': snippetsButton,
-    'send_snippet_reply_button': sendSnippetButton
+    'send_snippet_reply_button': sendSnippetButton,
+    'claim_button': claimButton,
+    'unclaim_button': unclaimButton
 };
 
 const menuHandlers = {

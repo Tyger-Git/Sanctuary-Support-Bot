@@ -133,11 +133,6 @@ module.exports = async function modTicket(ticket) {
         .setCustomId('logs_button')
         .setLabel('Logs')
         .setStyle('Secondary');
-    const flip_button = new ButtonBuilder()
-        .setCustomId('flip_button')
-        .setLabel('Flip')
-        .setStyle('Secondary')
-        .setEmoji(emojis.flipTicket);
 
     // Create Button Row
     const claimedRow = new ActionRowBuilder()
@@ -147,19 +142,11 @@ module.exports = async function modTicket(ticket) {
 
     // Display Logic
     const ticketClaimed = ticket.isClaimed;
-    const ticketSide = 0;
-    if (ticketClaimed && ticketSide === 0) {
-        messageObject = { embeds: [modTicketEmbedTop], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [claimedRow] };
-    } else if (ticketClaimed && ticketSide === 1) {
-        messageObject = { embeds: [modTicketEmbedBottom], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [claimedRow] };
-    } else if (!ticketClaimed && ticketSide === 0) {
-        messageObject = { embeds: [modTicketEmbedTop], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [unclaimedRow] };
-    } else if (!ticketClaimed && ticketSide === 1) {
-        messageObject = { embeds: [modTicketEmbedBottom], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [unclaimedRow] };
+    if (!ticketClaimed) {
+        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [unclaimedRow] };
+    } else {
+        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [claimedRow] };
     }
-
-    // This for testing
-    messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [unclaimedRow] };
     return messageObject;
 };
 

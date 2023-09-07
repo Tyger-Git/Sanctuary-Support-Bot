@@ -1,24 +1,11 @@
 require('dotenv').config();
-const { Client, IntentsBitField, Partials } = require('discord.js');
 const slashCommandHandler = require('./handlers/commandHandlers/slashCommandHandler');
 const db = require('./database/database');
 const { handleInteractionCreate, handleMessageCreate } = require('./handlers/interactionHandler');
+const clientSingleton = require('./utils/DiscordClientInstance');
 
-const client = new Client({
-  intents: [
-    IntentsBitField.Flags.Guilds,
-    IntentsBitField.Flags.GuildMembers,
-    IntentsBitField.Flags.GuildMessages,
-    IntentsBitField.Flags.MessageContent,
-    IntentsBitField.Flags.GuildPresences,
-    IntentsBitField.Flags.DirectMessages,
-  ],
-  partials: [
-    Partials.Message,
-    Partials.Channel,
-    Partials.Reaction
-  ]
-});
+// Get the Discord client
+const client = clientSingleton.getClient();
 
 // Interaction Listener
 client.on('interactionCreate', handleInteractionCreate);

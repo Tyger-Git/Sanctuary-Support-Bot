@@ -1,6 +1,9 @@
 const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, } = require("discord.js");
 const modResponse = require("../../functions/modResponse");
 const snippets = require("../../snippets.json");
+const Ticket = require("../../schemas/ticket.js");
+const ticket = require("../../schemas/ticket.js");
+const { handleThreadName, handleTicketMessageUpdate, getThreadTag } = require("../../functions/threadFunctions.js");
 
 // Creator Inquiries Button
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -207,6 +210,70 @@ const sendSnippetButton = async (interaction) => {
     await interaction.reply({ content: "Not yet coded", ephemeral: true });
 };
 
+// Claim Button (ModTicket)
+/*------------------------------------------------------------------------------------------------------------------------*/
+const claimButton = async (interaction) => {
+    const threadId = interaction.channel.id;
+    const claimantMod = interaction.user.username;
+    const claimantModId = interaction.user.id;
+    const thread = interaction.channel;
+    try {
+        const ticket = await Ticket.findOne({ ticketThread: threadId });
+        // Update the ticket's info in MongoDB and save
+        ticket.isClaimed = true;
+        ticket.claimantModId = claimantModId;
+        ticket.claimantModName = claimantMod;
+        await ticket.save();
+
+        // Get the thread and edit the thread name
+        const newThreadName = await handleThreadName(ticket);
+        const threadTag = await getThreadTag(ticket);
+        await thread.edit({
+            name: newThreadName,
+            appliedTags: [threadTag],
+        });
+
+        //Update Ticket Message
+        await handleTicketMessageUpdate(ticket);
+
+        // Reply to the interaction
+        await interaction.reply({ content: "Ticket Claimed by " + claimantMod});
+    } catch (error) {
+        console.error('Error claiming ticket:', error);
+    }
+};
+
+// Unclaim Button (ModTicket)
+/*------------------------------------------------------------------------------------------------------------------------*/
+const unclaimButton = async (interaction) => {
+    const threadId = interaction.channel.id;
+    const thread = interaction.channel;
+    try {
+        const ticket = await Ticket.findOne({ ticketThread: threadId });
+        // Update the ticket's info in MongoDB and save
+        ticket.isClaimed = false;
+        ticket.claimantModId = 0;
+        ticket.claimantModName = 'Unclaimed';
+        await ticket.save();
+
+        // Get the thread and edit the thread name
+        const newThreadName = await handleThreadName(ticket);
+        const threadTag = await getThreadTag(ticket);
+        await thread.edit({
+            name: newThreadName,
+            appliedTags: [threadTag],
+        });
+
+        //Update Ticket Message
+        await handleTicketMessageUpdate(ticket);
+
+        // Reply to the interaction
+        await interaction.reply({ content: "Ticket Unclaimed"});
+    } catch (error) {
+        console.error('Error unclaiming ticket:', error);
+    }
+};
+
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Export the functions
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -217,5 +284,7 @@ module.exports = {
     technicalIssuesButton,
     staffReportButton,
     snippetsButton,
-    sendSnippetButton
+    sendSnippetButton,
+    claimButton,
+    unclaimButton
 }
