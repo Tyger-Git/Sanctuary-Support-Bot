@@ -1,5 +1,6 @@
 const createTicket = require('../database/createTicket');
 const directMessageHandler = require('./interactionTypeHandlers/directMessageHandler');
+const { closeThread } = require('../functions/threadFunctions');
 
 const {
     creatorInquiriesButton,
@@ -41,6 +42,7 @@ const modalHandlers = {
     'newCreatorTicketModal': (interaction) => handleTicketCreation(interaction, 'VIP Application', 'You submitted a content creator ticket successfully!'),
     'newGenSupTicketModal': (interaction) => handleTicketCreation(interaction, 'General Support', 'You submitted a general support ticket successfully!'),
     'newStaffReportTicketModal': (interaction) => handleTicketCreation(interaction, 'Staff Report', 'You submitted a staff report ticket successfully!'),
+    'closeTicketModal': (interaction) => closeThread(interaction),
 };
 
 const commandHandlers = {

@@ -237,7 +237,7 @@ const claimButton = async (interaction) => {
         await handleTicketMessageUpdate(ticket);
 
         // Reply to the interaction
-        await interaction.reply({ content: "Ticket Claimed by " + claimantMod});
+        await interaction.reply({ content: "Ticket Claimed by **" + claimantMod + "**"});
     } catch (error) {
         console.error('Error claiming ticket:', error);
     }
@@ -253,6 +253,7 @@ const unclaimButton = async (interaction) => {
         // Update the ticket's info in MongoDB and save
         ticket.isClaimed = false;
         ticket.claimantModId = 0;
+        let modUnclaiming = ticket.claimantModName;
         ticket.claimantModName = 'Unclaimed';
         await ticket.save();
 
@@ -268,7 +269,7 @@ const unclaimButton = async (interaction) => {
         await handleTicketMessageUpdate(ticket);
 
         // Reply to the interaction
-        await interaction.reply({ content: "Ticket Unclaimed"});
+        await interaction.reply({ content: modUnclaiming + " unclaimed the ticket."});
     } catch (error) {
         console.error('Error unclaiming ticket:', error);
     }
@@ -277,38 +278,34 @@ const unclaimButton = async (interaction) => {
 // Close Button (ModTicket)
 /*------------------------------------------------------------------------------------------------------------------------*/
 const closeButton = async (interaction) => {
-    const threadId = interaction.channel.id;
-    const thread = interaction.channel;
+    // Modal Creation
+    let closeTicketModal= new ModalBuilder()
+    .setCustomId("closeTicketModal")
+    .setTitle("Mod Notes");
+
+    // Try to build the modal
     try {
-        const ticket = await Ticket.findOne({ ticketThread: threadId });
-        // Update the ticket's info in MongoDB and save
-        ticket.isOpen = false;
-        ticket.closeDate = new Date();
-        await ticket.save();
-
-        // Create a new dying ticket entry
-        const dyingTicket = new DyingTicket({
-            ticketId: ticket.ticketId,  // Assuming ticket has a unique _id field
-            ticketThread: ticket.ticketThread,
-            closeDate: ticket.closeDate
-        });
-        await dyingTicket.save();
-
-        // Get the thread and edit the thread name
-        const newThreadName = await handleThreadName(ticket);
-        const threadTag = await getThreadTag(ticket);
-        await thread.edit({
-            name: newThreadName,
-            appliedTags: [threadTag],
-        });
-
-        //Update Ticket Message
-        await handleTicketMessageUpdate(ticket);
-
-        // Reply to the interaction
-        await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion."});
+        const closeTimer = new TextInputBuilder()
+            .setCustomId("closeTimer")
+            .setLabel("Set Close Timer (In Hours) :")
+            .setStyle(TextInputStyle.Short);
+        const modNotes = new TextInputBuilder()
+            .setCustomId("modNotes")
+            .setLabel("Ticket Mod Notes :")
+            .setStyle(TextInputStyle.Paragraph);
+        const actionRow = new ActionRowBuilder().addComponents(closeTimer);
+        const actionRow2 = new ActionRowBuilder().addComponents(modNotes);
+        // Add the components to the modal
+        closeTicketModal.addComponents(actionRow, actionRow2);
     } catch (error) {
-        console.error('Error closing ticket:', error);
+        console.log("Something went wrong while building the close ticket modal. Error: " + error);
+    }
+
+    // Try to send the modal
+    try {
+        await interaction.showModal(closeTicketModal);
+    } catch (error) {
+            console.log("Something went wrong while sending the modal. Error: " + error);
     }
 };
 

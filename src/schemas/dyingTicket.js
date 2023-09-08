@@ -15,6 +15,13 @@ const dyingTicketSchema = new Schema({
     closeDate: { // Date the ticket was closed
         type: Date,
         required: false,
+        index: true,
+    },
+    closeTimer: { // How long until the ticket is closed, in hours
+        type: String,
+        required: false,
+        default: '.5',
+        index: true,
     },
 });
 

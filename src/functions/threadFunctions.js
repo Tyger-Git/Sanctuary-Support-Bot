@@ -2,7 +2,8 @@ const modTicket = require('./modTicket.js');
 const clientSingleton = require('../utils/DiscordClientInstance.js');
 const emojis = require('../emojis.json');
 const threadInfo = require('../threadInformation.json');
-const { MessageManager } = require('discord.js');
+const Ticket = require('../schemas/ticket.js');
+const DyingTicket = require('../schemas/dyingTicket.js');
 
 async function handleTicketMessageUpdate(ticket) {
     // Get the Discord client
@@ -14,15 +15,14 @@ async function handleTicketMessageUpdate(ticket) {
     const parentChannelID = await getParentChannelID(ticket);
     const parentChannel = await client.channels.fetch(parentChannelID);
     const thread = await parentChannel.threads.fetch(threadId);
-    //const thread = await parentChannel.threads.fetch(threadId);
-    console.log(thread);
+    // Check if the thread exists and is not partial
     if (!thread || thread.partial) {
         console.error('Thread not found or partial.');
         return;
     }
     try {
+        // Fetch the message
         const message = await thread.messages.fetch(messageId);
-        //const message = await thread.messages.fetch({id : messageId});
         // Modify the message
         const messageObject = await modTicket(ticket);
         await message.edit(messageObject);
@@ -34,7 +34,7 @@ async function handleTicketMessageUpdate(ticket) {
 async function handleThreadName(ticket) {
     // Set thread emoji based on ticket status
     let statusEmoji = ticket.isClaimed ? emojis.claimedTicket : emojis.unclaimedTicket;
-    if (ticket.isClosed) {
+    if (!ticket.isOpen) {
         statusEmoji = emojis.closedTicket;
     }
     const name = `${statusEmoji} | ${ticket.userDisplayName} (${ticket.userName}) | #${ticket.ticketId}`;
@@ -111,9 +111,59 @@ async function getThreadTag(ticket) {
     return tag;
 }
 
+async function closeThread(interaction) {
+    const threadId = interaction.channel.id;
+    const thread = interaction.channel;
+    const closeTimer = interaction.fields.getTextInputValue('closeTimer');
+    const modNotes = interaction.fields.getTextInputValue('modNotes');
+    try {
+        const ticket = await Ticket.findOne({ ticketThread: threadId });
+        // Update the ticket's info in MongoDB and save
+        ticket.isOpen = false;
+        ticket.isArchiving = true;
+        ticket.closeDate = new Date();
+        ticket.modNotes = modNotes;
+        ticket.closeTimer = closeTimer;
+        await ticket.save();
+
+        // Update the ticket embed
+        await handleTicketMessageUpdate(ticket);
+
+        // Create a new dying ticket entry
+        const dyingTicket = new DyingTicket({
+            ticketId: ticket.ticketId,  // Assuming ticket has a unique _id field
+            ticketThread: ticket.ticketThread,
+            closeDate: ticket.closeDate,
+            closeTimer: ticket.closeTimer
+        });
+        await dyingTicket.save();
+
+        // Get the thread and edit the thread name
+        const newThreadName = await handleThreadName(ticket);
+        const threadTag = await getThreadTag(ticket);
+        await thread.edit({
+            name: newThreadName,
+            appliedTags: [threadTag],
+        });
+
+        //Update Ticket Message
+        await handleTicketMessageUpdate(ticket);
+
+        // Reply to the interaction
+        if (closeTimer === 0) {
+            await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion immediately."});
+        } else {
+            await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion in " + closeTimer + " hours."});
+        }
+    } catch (error) {
+        console.error('Error closing ticket:', error);
+    }
+}
+
 module.exports = {
     handleTicketMessageUpdate,
     handleThreadName,
     getThreadTag,
-    getParentChannelID
+    getParentChannelID,
+    closeThread
 }

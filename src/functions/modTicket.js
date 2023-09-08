@@ -100,7 +100,7 @@ module.exports = async function modTicket(ticket) {
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
             { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-            { name: 'Ticket Close Date:', value: ticket.modNotes},
+            { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
             { name: 'Mod Notes:', value: ticket.modNotes },
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
             { name: 'Attachments:', value: ticketAttachments},
@@ -133,21 +133,28 @@ module.exports = async function modTicket(ticket) {
         .setCustomId('logs_button')
         .setLabel('Logs')
         .setStyle('Secondary');
+    const reopen_button = new ButtonBuilder()
+        .setCustomId('reopen_button')
+        .setLabel('Reopen')
+        .setStyle('Success');
 
     // Create Button Row
     const claimedRow = new ActionRowBuilder()
         .addComponents(unclaim_button, escalate_button, logs_button, snippets_button, close_button);
     const unclaimedRow = new ActionRowBuilder()
         .addComponents(claim_button, escalate_button, logs_button, snippets_button, close_button);
+    const closingRow = new ActionRowBuilder()
+        .addComponents(reopen_button, logs_button);
 
     // Display Logic
-    const ticketClaimed = ticket.isClaimed;
-    if (!ticketClaimed) {
+    if (!ticket.isClaimed && ticket.isOpen) {
         messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [unclaimedRow] };
-    } else {
+    } else if (ticket.isClaimed && ticket.isOpen) {
         messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [claimedRow] };
+    } else if (!ticket.isOpen) {
+        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [closingRow] };
     }
-    return messageObject;
+        return messageObject;
 };
 
 function daysToYearsMonthsDays(age) {
@@ -169,6 +176,10 @@ function daysToYearsMonthsDays(age) {
 }
 
 function formatDate(date) {
+    // Check if the date is valid
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+        return 'Ticket Unresolved';
+    }
     // Get the day, month, and year
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based

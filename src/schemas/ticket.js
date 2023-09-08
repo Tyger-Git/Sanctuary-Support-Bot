@@ -43,7 +43,8 @@ const ticketSchema = new Schema({
     /******************************************************************************************************************************************************/
     ticketId: { // Ticket ID
         type: Number,
-        default:0
+        default:0,
+        index: true,
     },
     threadCreated: { // Mainly for debugging and devs
         type: Boolean,
@@ -59,6 +60,7 @@ const ticketSchema = new Schema({
         type: String,
         required: false,
         default: '',
+        index: true,
     },
     ticketThreadMessage: { // Discord message ID
         type: String,
@@ -69,6 +71,11 @@ const ticketSchema = new Schema({
         type: Boolean,
         required: true,
         default: true,
+    },
+    isArchiving: { // Is the ticket closing?
+        type: Boolean,
+        required: true,
+        default: false,
     },
     ticketType: { // General Support, Technical Support, VIP Applications, Player Reports, Staff Reports
         type: String,
@@ -107,6 +114,11 @@ const ticketSchema = new Schema({
     closeDate: { // Date the ticket was closed
         type: Date,
         required: false,
+    },
+    closeTimer: { // How long until the ticket is closed, in hours
+        type: String,
+        required: false,
+        default: '.5',
     },
     ticketAttachments: { // Attachments submitted with the ticket
         type: [String],

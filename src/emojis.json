@@ -15,8 +15,8 @@
     "techButtonEmoji" : "<:icon_techWHITE:1141174795522814032>",
     "creatorButtonEmoji" : "<:icon_vipWHITE:1141174796743344138>",
     "generalButtonEmoji" : "<:icon_generalWHITE:1141174792821669908>",
-    "claimedTicket" : "🟢",
+    "claimedTicket" : "🟡",
     "unclaimedTicket" : "🔴",
-    "closedTicket" : "⚫",
+    "closedTicket" : "🟢",
     "flipTicket" : "🔁"
 }
