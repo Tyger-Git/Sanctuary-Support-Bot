@@ -31,7 +31,8 @@ This discord bot collects support tickets from any number of discord servers dee
 3. Enter your config:
    ```sh
    {
-    "testServer": "[SERVERID]",
+    "listenerServer": "[SERVERID]",
+    "modServer": "[SERVERID]",
     "clientId": "[BOTID]",
     "devs": ["[DEVUSERID]", "[DEVUSERID]", "[DEVUSERID]", "[DEVUSERID]"]
    }
