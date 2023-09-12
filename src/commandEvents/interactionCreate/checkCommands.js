@@ -1,6 +1,6 @@
 //Handler for slash commands
 
-const { devs, testServer } = require('../../../config.json');
+const { devs, modServer } = require('../../../config.json');
 const getLocalCommands = require('../../commandUtils/getLocalCommands');
 
 module.exports = async (client, interaction) => {
@@ -24,8 +24,8 @@ module.exports = async (client, interaction) => {
       }
     }
 
-    if (commandObject.testOnly) {
-      if (!(interaction.guild.id === testServer)) {
+    if (commandObject.modServerOnly) {
+      if (!(interaction.guild.id === modServer)) {
         interaction.reply({
           content: 'This command cannot be ran here.',
           ephemeral: true,

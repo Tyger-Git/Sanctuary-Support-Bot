@@ -102,7 +102,7 @@ const ticketSchema = new Schema({
         type: Date,
         required: false,
     },
-    ticketLevel: { // 0 = Helper, 1 = Mod, 2 = SeniorMod, 3 = Admin
+    ticketLevel: { // 0 = Helper, 1 = Mod, 2 = SeniorMod, 3 = Head Mods, 4 = Admin, 5 = Goji, 6 = Demonly, 7 = Ket, 8 = Developer
         type: Number,
         required: true,
         default: 0,

@@ -45,63 +45,183 @@ async function handleThreadName(ticket) {
 async function getParentChannelID(ticket) {
     // Get the correct parent forum ID based on ticket type
     let parentChannelId;
-    switch (ticket.ticketType) {
-        case 'Player Report':
-            parentChannelId = threadInfo.PlayerReportForum;
-            break;
-        case 'VIP Application':
-            parentChannelId = threadInfo.VIPAppForum;
-            break;
-        case 'Technical Support':
-            parentChannelId = threadInfo.TechTicketForum;
-            break;
-        case 'Staff Report':
-            parentChannelId = threadInfo.StaffReportForum;
-            break;
-        case 'General Support':
-            parentChannelId = threadInfo.GeneralSupportForum;
-            break;
-        default:
-            console.error('Issue getting parent channel ID.');
-            return null;
+    if (ticket.ticketLevel === 0) { // Helper Catagory
+        switch (ticket.ticketType) {
+            case 'General Support':
+                parentChannelId = threadInfo.GeneralSupportForum0;
+                break;
+            case 'Technical Support':
+                parentChannelId = threadInfo.TechTicketForum0;
+                break;
+            default:
+                console.error('Issue getting parent channel ID.');
+                return null;
+        }
+    } else if (ticket.ticketLevel === 1) { // Moderator Catagory
+        switch (ticket.ticketType) {
+            case 'General Support':
+                parentChannelId = threadInfo.GeneralSupportForum1;
+                break;
+            case 'Technical Support':
+                parentChannelId = threadInfo.TechTicketForum1;
+                break;
+            case 'Player Report':
+                parentChannelId = threadInfo.PlayerReportForum1;
+                break;
+            default:
+                console.error('Issue getting parent channel ID.');
+                return null;
+        }
+    } else if (ticket.ticketLevel === 2) { // Senior Moderator Catagory
+        switch (ticket.ticketType) {
+            case 'General Support':
+                parentChannelId = threadInfo.GeneralSupportForum2;
+                break;
+            case 'Technical Support':
+                parentChannelId = threadInfo.TechTicketForum2;
+                break;
+            case 'Player Report':
+                parentChannelId = threadInfo.PlayerReportForum2;
+                break;
+            case 'Staff Report':
+                parentChannelId = threadInfo.StaffReportForum2;
+                break;
+            default:
+                console.error('Issue getting parent channel ID.');
+                return null;
+        }
+    } else if (ticket.ticketLevel === 3) { // Head Moderator Catagory
+        switch (ticket.ticketType) {
+            case 'Player Report':
+                parentChannelId = threadInfo.GojiForum;
+                break;
+            case 'VIP Application':
+                parentChannelId = threadInfo.KetForum;
+                break;
+            case 'Technical Support':
+                parentChannelId = threadInfo.GojiForum;
+                break;
+            case 'Staff Report':
+                parentChannelId = threadInfo.StaffReportForum3;
+                break;
+            case 'General Support':
+                parentChannelId = threadInfo.GeneralSupportForum3;
+                break;
+            default:
+                console.error('Issue getting parent channel ID.');
+                return null;
+        }
+    } else {
+        console.error('Issue getting parent channel ID.');
+        return null;
     }
     return parentChannelId;
 }
+
 
 async function getThreadTag(ticket) {
     let threadClaimedTag;
     let threadUnclaimedTag;
     let threadClosingTag;
-    switch (ticket.ticketType) {
-        case 'Player Report':
-            threadClaimedTag = threadInfo.PlayerReportForumClaimedTag;
-            threadUnclaimedTag = threadInfo.PlayerReportForumUnclaimedTag;
-            threadClosingTag = threadInfo.PlayerReportForumClosingTag;
-            break;
-        case 'VIP Application':
-            threadClaimedTag = threadInfo.VIPAppForumClaimedTag;
-            threadUnclaimedTag = threadInfo.VIPAppForumUnclaimedTag;
-            threadClosingTag = threadInfo.VIPAppForumClosingTag;
-            break;
-        case 'Technical Support':
-            threadClaimedTag = threadInfo.TechTicketForumClaimedTag;
-            threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag;
-            threadClosingTag = threadInfo.TechTicketForumClosingTag;
-            break;
-        case 'Staff Report':
-            threadClaimedTag = threadInfo.StaffReportForumClaimedTag;
-            threadUnclaimedTag = threadInfo.StaffReportForumUnclaimedTag;
-            threadClosingTag = threadInfo.StaffReportForumClosingTag;
-            break;
-        case 'General Support':
-            threadClaimedTag = threadInfo.GeneralSupportForumClaimedTag;
-            threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag;
-            threadClosingTag = threadInfo.GeneralSupportForumClosingTag;
-            break;
-        default:
-            console.error('Error getting thread tag.');
-            return null;
+    if (ticket.ticketLevel === 0) { // Helper Catagory
+        switch (ticket.ticketType) {
+            case 'General Support':
+                threadClaimedTag = threadInfo.GeneralSupportForumClaimedTag0;
+                threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag0;
+                threadClosingTag = threadInfo.GeneralSupportForumClosingTag0;
+                break;
+            case 'Technical Support':
+                threadClaimedTag = threadInfo.TechTicketForumClaimedTag0;
+                threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag0;
+                threadClosingTag = threadInfo.TechTicketForumClosingTag0;
+                break;
+            default:
+                console.error('Error getting thread tag.');
+                return null;
+        }
+    } else if (ticket.ticketLevel === 1) { // Moderator Catagory
+        switch (ticket.ticketType) {
+            case 'General Support':
+                threadClaimedTag = threadInfo.GeneralSupportForumClaimedTag1;
+                threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag1;
+                threadClosingTag = threadInfo.GeneralSupportForumClosingTag1;
+                break;
+            case 'Technical Support':
+                threadClaimedTag = threadInfo.TechTicketForumClaimedTag1;
+                threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag1;
+                threadClosingTag = threadInfo.TechTicketForumClosingTag1;
+                break;
+            case 'Player Report':
+                threadClaimedTag = threadInfo.PlayerReportForumClaimedTag1;
+                threadUnclaimedTag = threadInfo.PlayerReportForumUnclaimedTag1;
+                threadClosingTag = threadInfo.PlayerReportForumClosingTag1;
+                break;
+            default:
+                console.error('Error getting thread tag.');
+                return null;
+        }
+    } else if (ticket.ticketLevel === 2) { // Senior Moderator Catagory
+        switch (ticket.ticketType) {
+            case 'General Support':
+                threadClaimedTag = threadInfo.GeneralSupportForumClaimedTag2;
+                threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag2;
+                threadClosingTag = threadInfo.GeneralSupportForumClosingTag2;
+                break;
+            case 'Technical Support':
+                threadClaimedTag = threadInfo.TechTicketForumClaimedTag2;
+                threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag2;
+                threadClosingTag = threadInfo.TechTicketForumClosingTag2;
+                break;
+            case 'Player Report':
+                threadClaimedTag = threadInfo.PlayerReportForumClaimedTag2;
+                threadUnclaimedTag = threadInfo.PlayerReportForumUnclaimedTag2;
+                threadClosingTag = threadInfo.PlayerReportForumClosingTag2;
+                break;
+            case 'Staff Report':
+                threadClaimedTag = threadInfo.StaffReportForumClaimedTag2;
+                threadUnclaimedTag = threadInfo.StaffReportForumUnclaimedTag2;
+                threadClosingTag = threadInfo.StaffReportForumClosingTag2;
+                break;
+            default:
+                console.error('Error getting thread tag.');
+                return null;
+        }
+    } else if (ticket.ticketLevel === 3) { // Admin Catagory
+        switch (ticket.ticketType) {
+            case 'Player Report':
+                threadClaimedTag = threadInfo.PlayerReportForumClaimedTag3;
+                threadUnclaimedTag = threadInfo.PlayerReportForumUnclaimedTag3;
+                threadClosingTag = threadInfo.PlayerReportForumClosingTag;
+                break;
+            case 'VIP Application':
+                threadClaimedTag = threadInfo.VIPAppForumClaimedTag3;
+                threadUnclaimedTag = threadInfo.VIPAppForumUnclaimedTag3;
+                threadClosingTag = threadInfo.VIPAppForumClosingTag3;
+                break;
+            case 'Technical Support':
+                threadClaimedTag = threadInfo.TechTicketForumClaimedTag3;
+                threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag3;
+                threadClosingTag = threadInfo.TechTicketForumClosingTag3;
+                break;
+            case 'Staff Report':
+                threadClaimedTag = threadInfo.StaffReportForumClaimedTag3;
+                threadUnclaimedTag = threadInfo.StaffReportForumUnclaimedTag3;
+                threadClosingTag = threadInfo.StaffReportForumClosingTag3;
+                break;
+            case 'General Support':
+                threadClaimedTag = threadInfo.GeneralSupportForumClaimedTag3;
+                threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag3;
+                threadClosingTag = threadInfo.GeneralSupportForumClosingTag3;
+                break;
+            default:
+                console.error('Error getting thread tag.');
+                return null;
+        }
+    } else {
+        console.error('Error getting thread tag.');
+        return null;
     }
+    
     let tag;
     if (!ticket.isOpen) {
         tag = threadClosingTag;

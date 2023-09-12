@@ -4,6 +4,14 @@ const emojis = require("../emojis.json");
 module.exports = async function modTicket(ticket) {
     let messageObject = {};
     let ticketStatus = ticket.isOpen ? 'Open' : 'Closed';
+    // Turn ticketLevel into a string
+    let ticketLevel;
+    if (ticket.ticketLevel === 0) {ticketLevel = 'Helper';}
+    else if (ticket.ticketLevel === 1) {ticketLevel = 'Mod';}
+    else if (ticket.ticketLevel === 2) {ticketLevel = 'Senior Mod';}
+    else if (ticket.ticketLevel === 3) {ticketLevel = 'Head Mod';}
+    else if (ticket.ticketLevel >= 4) {ticketLevel = 'Admin';}
+
     let ticketCloseDate = ticket.closeDate;
     if (ticketCloseDate === null) {ticketCloseDate = 'Ticket Unresolved';}
 
@@ -83,7 +91,7 @@ module.exports = async function modTicket(ticket) {
             { name: 'Total Tickets:', value: `${ticket.userTicketTotal}`, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Server Join Date:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
             { name: 'Ticket ID:', value: `${ticket.ticketId}`, inline: true },{ name: '\u200B', value: '\u200B', inline: true },{ name: 'Ticket Status', value: ticketStatus, inline: true },
-            { name: 'Mod Assigned:', value: ticket.claimantModName, inline: true },{ name: 'Ticket Level:', value: `${ticket.ticketLevel}`, inline: true },{ name: 'Opened On:', value: formatDate(ticket.openDate), inline: true },
+            { name: 'Mod Assigned:', value: ticket.claimantModName, inline: true },{ name: 'Ticket Level:', value: ticketLevel, inline: true },{ name: 'Opened On:', value: formatDate(ticket.openDate), inline: true },
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
         )
         .setImage('attachment://1px.png')

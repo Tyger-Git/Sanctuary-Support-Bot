@@ -1,6 +1,6 @@
 // Initial runthrough of all slash commands, reading through and initializing them
 
-const { testServer } = require('../../../config.json');
+const { modServer } = require('../../../config.json');
 const areCommandsDifferent = require('../../commandUtils/areCommandsDifferent');
 const getApplicationCommands = require('../../commandUtils/getApplicationCommands');
 const getLocalCommands = require('../../commandUtils/getLocalCommands');
@@ -10,7 +10,7 @@ module.exports = async (client) => {
     const localCommands = getLocalCommands();
     const applicationCommands = await getApplicationCommands(
       client,
-      testServer
+      modServer
     );
     
     for (const localCommand of localCommands) {

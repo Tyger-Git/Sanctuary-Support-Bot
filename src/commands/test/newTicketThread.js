@@ -1,8 +1,8 @@
 // Test command to create a new ticket thread
 /*---------- Will Not Be In Final Product ----------*/
 
-const forumIDs = require('../../threadInformation.json');
 const Ticket = require("../../schemas/ticket.js");
+const { getParentChannelID } = require('../../functions/threadFunctions.js');
 
 module.exports = {
     name: 'newticketthread',
@@ -17,26 +17,7 @@ module.exports = {
         }
 
         // Get the correct parent forum ID based on ticket type
-        let parentChannelId;
-        switch (ticket.ticketType) {
-            case 'reportTicket':
-                parentChannelId = forumIDs.PlayerReportForum;
-                break;
-            case 'contentCreatorInquiryTicket':
-                parentChannelId = forumIDs.VIPAppForum;
-                break;
-            case 'technicalIssueTicket':
-                parentChannelId = forumIDs.TechTicketForum;
-                break;
-            case 'staffReportTicket':
-                parentChannelId = forumIDs.StaffReportForum;
-                break;
-            case 'generalSupportTicket':
-                parentChannelId = forumIDs.GeneralSupportForum;
-                break;
-            default:
-                return interaction.reply('Unsupported ticket type.');
-        }
+        let parentChannelId = getParentChannelID(ticket);
 
         // Fetch the parent channel using the Discord.js client
         let parentChannel;
