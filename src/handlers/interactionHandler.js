@@ -1,6 +1,7 @@
 const createTicket = require('../database/createTicket');
-const directMessageHandler = require('./interactionTypeHandlers/directMessageHandler');
+const { incomingDirectMessage } = require('./interactionTypeHandlers/directMessageHandler');
 const { closeThread } = require('../functions/threadFunctions');
+const { snippetWorkflow } = require('./functionHandlers/snippetWorkflow');
 
 const {
     creatorInquiriesButton,
@@ -9,15 +10,10 @@ const {
     technicalIssuesButton,
     staffReportButton,
     snippetsButton,
-    sendSnippetButton,
     claimButton,
     unclaimButton,
     closeButton
 } = require('./interactionTypeHandlers/buttonHandler');
-
-const {
-    snippetSelectMenu
-} = require('./interactionTypeHandlers/selectMenuHandler');
 
 const buttonHandlers = {
     'report_button': reportButton,
@@ -26,14 +22,15 @@ const buttonHandlers = {
     'general_support_button': generalSupportButton,
     'staff_report_button': staffReportButton,
     'snippets_button': snippetsButton,
-    'send_snippet_reply_button': sendSnippetButton,
+    'send_snippet_reply_button': snippetWorkflow,
+    'cancel_snippet_reply_button': snippetWorkflow,
     'claim_button': claimButton,
     'unclaim_button': unclaimButton,
     'close_button': closeButton,
 };
 
 const menuHandlers = {
-    'snippet_menu': snippetSelectMenu,
+    'snippet_menu': snippetWorkflow,
 };
 
 const modalHandlers = {
@@ -62,9 +59,13 @@ async function handleTicketCreation(interaction, ticketType, successMessage) {
 
 const handleInteractionCreate = async (interaction) => {
     if (interaction.isButton()) {
-      const handler = buttonHandlers[interaction.customId];
-      if (handler) {
-        await handler(interaction);
+      if (interaction.customId.startsWith('send_snippet_reply_button')) {
+        await snippetWorkflow(interaction);
+      } else {
+        const handler = buttonHandlers[interaction.customId];
+        if (handler) {
+          await handler(interaction);
+        }
       }
     } else if (interaction.isStringSelectMenu()) {
       const handler = menuHandlers[interaction.customId];
@@ -96,7 +97,7 @@ const handleInteractionCreate = async (interaction) => {
       }
       if (message.channel.type === 1){ // Type 1 is a DM channel
         console.log(`See DM from ${message.author.tag}`);
-        await directMessageHandler(message).catch(err => console.error("Error in directMessageHandler: ", err));
+        await incomingDirectMessage(message).catch(err => console.error("Error in directMessageHandler: ", err));
       } else {
         console.log(`See message from ${message.author.tag} in ${message.channel.name}`);
         // Future else if's for logging messages in the server

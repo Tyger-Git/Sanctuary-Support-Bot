@@ -1,5 +1,6 @@
 const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, } = require("discord.js");
 const modResponse = require("../../functions/modResponse");
+const { outgoingDirectMessage } = require("./directMessageHandler.js");
 const snippets = require("../../snippets.json");
 const Ticket = require("../../schemas/ticket.js");
 const DyingTicket = require('../../schemas/dyingTicket.js');
@@ -8,22 +9,23 @@ const { handleThreadName, handleTicketMessageUpdate, getThreadTag } = require(".
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Helper functions
 /*------------------------------------------------------------------------------------------------------------------------*/
-function checkExistingTicket(interaction) {
+const checkExistingTicket = async (interaction) => {
     // Check if user already has an active ticket
-    const existingTicket = Ticket.findOne({ userId: interaction.user.id, isOpen: true });
+    const existingTicket = await Ticket.findOne({ userId: interaction.user.id, isOpen: true });
     if (existingTicket) {
         // Reply to the user that they can only have one active ticket
-        interaction.reply('You can only have one active ticket at a time. Please resolve your existing ticket before creating a new one.');
+        interaction.reply({ content : 'You can only have one active ticket at a time. Please resolve your existing ticket before creating a new one.', ephemeral: true });
         return true;
     }
     return false;
-}
+};
 
 // Creator Inquiries Button
 /*------------------------------------------------------------------------------------------------------------------------*/
 const creatorInquiriesButton = async (interaction) => {
     // Check if user already has an active ticket
-    checkExistingTicket(interaction);
+    const hasExistingTicket = await checkExistingTicket(interaction);
+    if (hasExistingTicket) return;
 
     // Modal Creation
     let newCreatorTicketModal= new ModalBuilder()
@@ -66,7 +68,8 @@ const creatorInquiriesButton = async (interaction) => {
 /*------------------------------------------------------------------------------------------------------------------------*/
 const generalSupportButton = async (interaction) => {
     // Check if user already has an active ticket
-    checkExistingTicket(interaction);
+    const hasExistingTicket = await checkExistingTicket(interaction);
+    if (hasExistingTicket) return;
 
     // Modal Creation
     let newGenSupTicketModal= new ModalBuilder()
@@ -98,7 +101,8 @@ const generalSupportButton = async (interaction) => {
 /*------------------------------------------------------------------------------------------------------------------------*/
 const reportButton = async (interaction) => {
     // Check if user already has an active ticket
-    checkExistingTicket(interaction);
+    const hasExistingTicket = await checkExistingTicket(interaction);
+    if (hasExistingTicket) return;
 
     // Modal Creation
     let newReportTicketModal= new ModalBuilder()
@@ -135,7 +139,8 @@ const reportButton = async (interaction) => {
 /*------------------------------------------------------------------------------------------------------------------------*/
 const technicalIssuesButton = async (interaction) => {
     // Check if user already has an active ticket
-    checkExistingTicket(interaction);
+    const hasExistingTicket = await checkExistingTicket(interaction);
+    if (hasExistingTicket) return;
 
     // Modal Creation
     let newTechTicketModal= new ModalBuilder()
@@ -172,7 +177,8 @@ const technicalIssuesButton = async (interaction) => {
 /*------------------------------------------------------------------------------------------------------------------------*/
 const staffReportButton = async (interaction) => {
     // Check if user already has an active ticket
-    checkExistingTicket(interaction);
+    const hasExistingTicket = await checkExistingTicket(interaction);
+    if (hasExistingTicket) return;
     
     // Modal Creation
     let newStaffReportTicketModal= new ModalBuilder()
@@ -230,14 +236,6 @@ const snippetsButton = async (interaction) => {
     });
 };
 
-// Send Snippet Button (ModTicket) [After a snippet is selected and confirmed]
-/*------------------------------------------------------------------------------------------------------------------------*/
-const sendSnippetButton = async (interaction) => {
-    //const snippetIdentifier = interaction.values[0];
-    //const selectedSnippet = snippets.find(snippet => snippet.value === snippetIdentifier);
-    //modResponse();
-    await interaction.reply({ content: "Not yet coded", ephemeral: true });
-};
 
 // Claim Button (ModTicket)
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -349,7 +347,6 @@ module.exports = {
     technicalIssuesButton,
     staffReportButton,
     snippetsButton,
-    sendSnippetButton,
     claimButton,
     unclaimButton,
     closeButton
