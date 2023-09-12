@@ -5,9 +5,26 @@ const Ticket = require("../../schemas/ticket.js");
 const DyingTicket = require('../../schemas/dyingTicket.js');
 const { handleThreadName, handleTicketMessageUpdate, getThreadTag } = require("../../functions/threadFunctions.js");
 
+/*------------------------------------------------------------------------------------------------------------------------*/
+// Helper functions
+/*------------------------------------------------------------------------------------------------------------------------*/
+function checkExistingTicket(interaction) {
+    // Check if user already has an active ticket
+    const existingTicket = Ticket.findOne({ userId: interaction.user.id, isOpen: true });
+    if (existingTicket) {
+        // Reply to the user that they can only have one active ticket
+        interaction.reply('You can only have one active ticket at a time. Please resolve your existing ticket before creating a new one.');
+        return true;
+    }
+    return false;
+}
+
 // Creator Inquiries Button
 /*------------------------------------------------------------------------------------------------------------------------*/
 const creatorInquiriesButton = async (interaction) => {
+    // Check if user already has an active ticket
+    checkExistingTicket(interaction);
+
     // Modal Creation
     let newCreatorTicketModal= new ModalBuilder()
     .setCustomId("newCreatorTicketModal")
@@ -48,6 +65,9 @@ const creatorInquiriesButton = async (interaction) => {
 // General Support Button
 /*------------------------------------------------------------------------------------------------------------------------*/
 const generalSupportButton = async (interaction) => {
+    // Check if user already has an active ticket
+    checkExistingTicket(interaction);
+
     // Modal Creation
     let newGenSupTicketModal= new ModalBuilder()
     .setCustomId("newGenSupTicketModal")
@@ -77,6 +97,9 @@ const generalSupportButton = async (interaction) => {
 // Report Button
 /*------------------------------------------------------------------------------------------------------------------------*/
 const reportButton = async (interaction) => {
+    // Check if user already has an active ticket
+    checkExistingTicket(interaction);
+
     // Modal Creation
     let newReportTicketModal= new ModalBuilder()
     .setCustomId("newReportTicketModal")
@@ -111,6 +134,9 @@ const reportButton = async (interaction) => {
 // Technical Issues Button
 /*------------------------------------------------------------------------------------------------------------------------*/
 const technicalIssuesButton = async (interaction) => {
+    // Check if user already has an active ticket
+    checkExistingTicket(interaction);
+
     // Modal Creation
     let newTechTicketModal= new ModalBuilder()
     .setCustomId("newTechTicketModal")
@@ -145,6 +171,9 @@ const technicalIssuesButton = async (interaction) => {
 // Staff Report Button
 /*------------------------------------------------------------------------------------------------------------------------*/
 const staffReportButton = async (interaction) => {
+    // Check if user already has an active ticket
+    checkExistingTicket(interaction);
+    
     // Modal Creation
     let newStaffReportTicketModal= new ModalBuilder()
     .setCustomId("newStaffReportTicketModal")

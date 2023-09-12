@@ -153,7 +153,7 @@ async function closeThread(interaction) {
         if (closeTimer === 0) {
             await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion immediately."});
         } else {
-            await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion in " + closeTimer + " hours."});
+            await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion in " + closeTimer + " hour(s)."});
         }
     } catch (error) {
         console.error('Error closing ticket:', error);

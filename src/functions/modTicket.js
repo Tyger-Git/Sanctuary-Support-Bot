@@ -88,26 +88,62 @@ module.exports = async function modTicket(ticket) {
         )
         .setImage('attachment://1px.png')
         ;
-
     const modTicketEmbedBottom = new EmbedBuilder()
-        .setColor(embedColor)
-        .setTitle(`${ticket.ticketType} Ticket Information`)
-        .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
-        .addFields(
-            { name: contentName1, value: contentValue1},
-            { name: contentName2, value: contentValue2},
-            { name: contentName3, value: contentValue3},
-            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-            { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
-            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-            { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
-            { name: 'Mod Notes:', value: ticket.modNotes },
-            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-            { name: 'Attachments:', value: ticketAttachments},
-        )
-        .setImage('attachment://1px.png')
-        ;
-    
+    if (ticket.ticketType === 'VIP Application') {
+        modTicketEmbedBottom
+            .setColor(embedColor)
+            .setTitle(`${ticket.ticketType} Ticket Information`)
+            .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
+            .addFields(
+                { name: contentName1, value: contentValue1},
+                { name: contentName2, value: contentValue2},
+                { name: contentName3, value: contentValue3},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+                { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+                { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
+                { name: 'Mod Notes:', value: ticket.modNotes },
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+                { name: 'Attachments:', value: ticketAttachments},
+            )
+            .setImage('attachment://1px.png')
+            ;
+    } else if (ticket.ticketType === 'General Support') {
+        modTicketEmbedBottom
+            .setColor(embedColor)
+            .setTitle(`${ticket.ticketType} Ticket Information`)
+            .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
+            .addFields(
+                { name: contentName1, value: contentValue1},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+                { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+                { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
+                { name: 'Mod Notes:', value: ticket.modNotes },
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+                { name: 'Attachments:', value: ticketAttachments},
+            )
+            .setImage('attachment://1px.png')
+            ;
+    } else {
+        modTicketEmbedBottom
+            .setColor(embedColor)
+            .setTitle(`${ticket.ticketType} Ticket Information`)
+            .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
+            .addFields(
+                { name: contentName1, value: contentValue1},
+                { name: contentName2, value: contentValue2},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+                { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+                { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
+                { name: 'Mod Notes:', value: ticket.modNotes },
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+                { name: 'Attachments:', value: ticketAttachments},
+            )
+            .setImage('attachment://1px.png')
+            ;
+    }
     // Create Buttons
     const claim_button = new ButtonBuilder()
         .setCustomId('claim_button')
