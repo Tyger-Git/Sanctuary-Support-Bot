@@ -42,12 +42,12 @@ module.exports = async function modTicket(ticket) {
     let contentName3 = '\u200B';
     let contentValue3 = '\u200B';
     switch (ticket.ticketType) {
-        case 'Player Report':
+        case 'User Report':
             embedColor = [219,53,62] // Red 
             contentName1 = "Reported User:";
             contentValue1 = ticket.reportedUser;
             contentName2 = "Report Reason:";
-            contentValue2 = ticket.playerReportReason;
+            contentValue2 = ticket.userReportReason;
             break;
         case 'VIP Application':
             embedColor = [78,79,88] // Grey

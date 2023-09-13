@@ -1,5 +1,6 @@
 // Module to read a modal and create a ticket in the database
 
+const ticket = require("../schemas/ticket.js");
 const Ticket = require("../schemas/ticket.js"); 
 const TicketCounter = require('../schemas/ticketCounter.js');
 
@@ -43,18 +44,19 @@ const createTicket = async (interaction, ticketType) => {
     const guildAge = Math.floor((Date.now() - member.joinedTimestamp) / (1000 * 60 * 60 * 24)); // Age of user in the server
     const isOpen = true; 
     const lastModResponse = new Date(); // This is reset each time a mod responds to the ticket
-    const ticketLevel = 0; 
+    let ticketLevel = 0; 
     const openDate = new Date();
 
     // Define ticket-specific fields and values based on the ticketType
     let specificFields = {};
     switch (ticketType) {
-      case "Player Report":
+      case "User Report":
         //console.log(interaction.fields.getTextInputValue('userToReport'));
         specificFields = {
           reportedUser: interaction.fields.getTextInputValue('userToReport'),
-          playerReportReason: interaction.fields.getTextInputValue('reasonForReport') 
+          userReportReason: interaction.fields.getTextInputValue('reasonForReport') 
         };
+        ticketLevel = 1;
         break;
 
       case "Technical Support":
@@ -70,6 +72,7 @@ const createTicket = async (interaction, ticketType) => {
             vipAppDescription: interaction.fields.getTextInputValue('vipAppDescription'),
             socialMediaLinks: interaction.fields.getTextInputValue('vipAppSocials'),
         };
+        ticketLevel = 4;
         break;
       
       case "Staff Report":
@@ -77,6 +80,7 @@ const createTicket = async (interaction, ticketType) => {
             reportedMod: interaction.fields.getTextInputValue('staffMemberToReport'),
             modReportReason: interaction.fields.getTextInputValue('reasonForReport'),
         };
+        ticketLevel = 2;
         break;
 
       case "General Support":

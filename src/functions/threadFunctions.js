@@ -42,194 +42,196 @@ async function handleThreadName(ticket) {
     return name;
 }
 
+// Map for parent channel IDs
+const threadMapping = {
+    0: { // Helper Category
+        'General Support': 'GeneralSupportForum0',
+        'Technical Support': 'TechSupportForum0'
+    },
+    1: { // Moderator Category
+        'General Support': 'GeneralSupportForum1',
+        'Technical Support': 'TechSupportForum1',
+        'User Report': 'UserReportForum1'
+    },
+    2: { // Senior Moderator Category
+        'General Support': 'GeneralSupportForum2',
+        'Technical Support': 'TechSupportForum2',
+        'User Report': 'UserReportForum2',
+        'Staff Report': 'StaffReportForum2'
+    },
+    3: { // Head Moderator Category
+        'General Support': 'GeneralSupportForum3',
+        'Technical Support': 'TechSupportForum3',
+        'User Report': 'UserReportForum3',
+        'Staff Report': 'StaffReportForum3'
+    },
+    4: { // Admin Category
+        'VIP Application': 'VIPAppForum4',
+        'Staff Report': 'StaffReportForum4'
+    },
+    5: 'StaffSupportForum', // Staff Support Category
+    6: 'DemonlyForum',     // Demonly Category
+    7: 'KetForum',         // Ket Category
+    8: 'DevSupportForum'   // Dev Category
+};
+
 async function getParentChannelID(ticket) {
-    // Get the correct parent forum ID based on ticket type
-    let parentChannelId;
-    if (ticket.ticketLevel === 0) { // Helper Catagory
-        switch (ticket.ticketType) {
-            case 'General Support':
-                parentChannelId = threadInfo.GeneralSupportForum0;
-                break;
-            case 'Technical Support':
-                parentChannelId = threadInfo.TechTicketForum0;
-                break;
-            default:
-                console.error('Issue getting parent channel ID.');
-                return null;
-        }
-    } else if (ticket.ticketLevel === 1) { // Moderator Catagory
-        switch (ticket.ticketType) {
-            case 'General Support':
-                parentChannelId = threadInfo.GeneralSupportForum1;
-                break;
-            case 'Technical Support':
-                parentChannelId = threadInfo.TechTicketForum1;
-                break;
-            case 'Player Report':
-                parentChannelId = threadInfo.PlayerReportForum1;
-                break;
-            default:
-                console.error('Issue getting parent channel ID.');
-                return null;
-        }
-    } else if (ticket.ticketLevel === 2) { // Senior Moderator Catagory
-        switch (ticket.ticketType) {
-            case 'General Support':
-                parentChannelId = threadInfo.GeneralSupportForum2;
-                break;
-            case 'Technical Support':
-                parentChannelId = threadInfo.TechTicketForum2;
-                break;
-            case 'Player Report':
-                parentChannelId = threadInfo.PlayerReportForum2;
-                break;
-            case 'Staff Report':
-                parentChannelId = threadInfo.StaffReportForum2;
-                break;
-            default:
-                console.error('Issue getting parent channel ID.');
-                return null;
-        }
-    } else if (ticket.ticketLevel === 3) { // Head Moderator Catagory
-        switch (ticket.ticketType) {
-            case 'Player Report':
-                parentChannelId = threadInfo.GojiForum;
-                break;
-            case 'VIP Application':
-                parentChannelId = threadInfo.KetForum;
-                break;
-            case 'Technical Support':
-                parentChannelId = threadInfo.GojiForum;
-                break;
-            case 'Staff Report':
-                parentChannelId = threadInfo.StaffReportForum3;
-                break;
-            case 'General Support':
-                parentChannelId = threadInfo.GeneralSupportForum3;
-                break;
-            default:
-                console.error('Issue getting parent channel ID.');
-                return null;
-        }
-    } else {
+    const levelMapping = threadMapping[ticket.ticketLevel];
+    
+    if (!levelMapping) {
         console.error('Issue getting parent channel ID.');
         return null;
     }
-    return parentChannelId;
+
+    if (typeof levelMapping === 'string') {
+        return threadInfo[levelMapping];
+    }
+
+    const channelID = levelMapping[ticket.ticketType];
+    if (!channelID) {
+        console.error('Issue getting parent channel ID.');
+        return null;
+    }
+
+    return threadInfo[channelID];
 }
+
+// Map for thread tags
+const tagMapping = {
+    0: {  // Helper Category
+        'General Support': {
+            claimed: 'GeneralSupportForumClaimedTag0',
+            unclaimed: 'GeneralSupportForumUnclaimedTag0',
+            archiving: 'GeneralSupportForumArchivingTag0'
+        },
+        'Technical Support': {
+            claimed: 'TechSupportForumClaimedTag0',
+            unclaimed: 'TechSupportForumUnclaimedTag0',
+            archiving: 'TechSupportForumArchivingTag0'
+        }
+    },
+    1: {  // Moderator Category
+        'General Support': {
+            claimed: 'GeneralSupportForumClaimedTag1',
+            unclaimed: 'GeneralSupportForumUnclaimedTag1',
+            archiving: 'GeneralSupportForumArchivingTag1'
+        },
+        'Technical Support': {
+            claimed: 'TechSupportForumClaimedTag1',
+            unclaimed: 'TechSupportForumUnclaimedTag1',
+            archiving: 'TechSupportForumArchivingTag1'
+        },
+        'User Report': {
+            claimed: 'UserReportForumClaimedTag1',
+            unclaimed: 'UserReportForumUnclaimedTag1',
+            archiving: 'UserReportForumArchivingTag1'
+        }
+    },
+    2: {  // Senior Moderator Category
+        'General Support': {
+            claimed: 'GeneralSupportForumClaimedTag2',
+            unclaimed: 'GeneralSupportForumUnclaimedTag2',
+            archiving: 'GeneralSupportForumArchivingTag2'
+        },
+        'Technical Support': {
+            claimed: 'TechSupportForumClaimedTag2',
+            unclaimed: 'TechSupportForumUnclaimedTag2',
+            archiving: 'TechSupportForumArchivingTag2'
+        },
+        'User Report': {
+            claimed: 'UserReportForumClaimedTag2',
+            unclaimed: 'UserReportForumUnclaimedTag2',
+            archiving: 'UserReportForumArchivingTag2'
+        },
+        'Staff Report': {
+            claimed: 'StaffReportForumClaimedTag2',
+            unclaimed: 'StaffReportForumUnclaimedTag2',
+            archiving: 'StaffReportForumArchivingTag2'
+        }
+    },
+    3: {  // Head Moderator Category
+        'General Support': {
+            claimed: 'GeneralSupportForumClaimedTag3',
+            unclaimed: 'GeneralSupportForumUnclaimedTag3',
+            archiving: 'GeneralSupportForumArchivingTag3'
+        },
+        'Technical Support': {
+            claimed: 'TechSupportForumClaimedTag3',
+            unclaimed: 'TechSupportForumUnclaimedTag3',
+            archiving: 'TechSupportForumArchivingTag3'
+        },
+        'User Report': {
+            claimed: 'UserReportForumClaimedTag3',
+            unclaimed: 'UserReportForumUnclaimedTag3',
+            archiving: 'UserReportForumArchivingTag3'
+        },
+        'Staff Report': {
+            claimed: 'StaffReportForumClaimedTag3',
+            unclaimed: 'StaffReportForumUnclaimedTag3',
+            archiving: 'StaffReportForumArchivingTag3'
+        }
+    },
+    4: {  // Admin Category
+        'Staff Report': {
+            claimed: 'StaffReportForumClaimedTag4',
+            unclaimed: 'StaffReportForumUnclaimedTag4',
+            archiving: 'StaffReportForumArchivingTag4'
+        },
+        'VIP Application': {
+            claimed: 'VIPAppForumClaimedTag4',
+            unclaimed: 'VIPAppForumUnclaimedTag4',
+            archiving: 'VIPAppForumArchivingTag4'
+        }
+    },
+    5: { // Staff Support Category
+        claimed: 'StaffSupportForumClaimedTag',
+        unclaimed: 'StaffSupportForumUnclaimedTag',
+        archiving: 'StaffSupportForumArchivingTag'
+    },
+    6: { // Demonly Category
+        claimed: 'DemonlyForumClaimedTag',
+        unclaimed: 'DemonlyForumUnclaimedTag',
+        archiving: 'DemonlyForumArchivingTag'
+    },
+    7: { // Ket Category
+        claimed: 'KetForumClaimedTag',
+        unclaimed: 'KetForumUnclaimedTag',
+        archiving: 'KetForumArchivingTag'
+    },
+    8: { // Dev Category
+        claimed: 'DevSupportForumClaimedTag',
+        unclaimed: 'DevSupportForumUnclaimedTag',
+        archiving: 'DevSupportForumArchivingTag'
+    }
+};
 
 
 async function getThreadTag(ticket) {
-    let threadClaimedTag;
-    let threadUnclaimedTag;
-    let threadClosingTag;
-    if (ticket.ticketLevel === 0) { // Helper Catagory
-        switch (ticket.ticketType) {
-            case 'General Support':
-                threadClaimedTag = threadInfo.GeneralSupportForumClaimedTag0;
-                threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag0;
-                threadClosingTag = threadInfo.GeneralSupportForumClosingTag0;
-                break;
-            case 'Technical Support':
-                threadClaimedTag = threadInfo.TechTicketForumClaimedTag0;
-                threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag0;
-                threadClosingTag = threadInfo.TechTicketForumClosingTag0;
-                break;
-            default:
-                console.error('Error getting thread tag.');
-                return null;
-        }
-    } else if (ticket.ticketLevel === 1) { // Moderator Catagory
-        switch (ticket.ticketType) {
-            case 'General Support':
-                threadClaimedTag = threadInfo.GeneralSupportForumClaimedTag1;
-                threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag1;
-                threadClosingTag = threadInfo.GeneralSupportForumClosingTag1;
-                break;
-            case 'Technical Support':
-                threadClaimedTag = threadInfo.TechTicketForumClaimedTag1;
-                threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag1;
-                threadClosingTag = threadInfo.TechTicketForumClosingTag1;
-                break;
-            case 'Player Report':
-                threadClaimedTag = threadInfo.PlayerReportForumClaimedTag1;
-                threadUnclaimedTag = threadInfo.PlayerReportForumUnclaimedTag1;
-                threadClosingTag = threadInfo.PlayerReportForumClosingTag1;
-                break;
-            default:
-                console.error('Error getting thread tag.');
-                return null;
-        }
-    } else if (ticket.ticketLevel === 2) { // Senior Moderator Catagory
-        switch (ticket.ticketType) {
-            case 'General Support':
-                threadClaimedTag = threadInfo.GeneralSupportForumClaimedTag2;
-                threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag2;
-                threadClosingTag = threadInfo.GeneralSupportForumClosingTag2;
-                break;
-            case 'Technical Support':
-                threadClaimedTag = threadInfo.TechTicketForumClaimedTag2;
-                threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag2;
-                threadClosingTag = threadInfo.TechTicketForumClosingTag2;
-                break;
-            case 'Player Report':
-                threadClaimedTag = threadInfo.PlayerReportForumClaimedTag2;
-                threadUnclaimedTag = threadInfo.PlayerReportForumUnclaimedTag2;
-                threadClosingTag = threadInfo.PlayerReportForumClosingTag2;
-                break;
-            case 'Staff Report':
-                threadClaimedTag = threadInfo.StaffReportForumClaimedTag2;
-                threadUnclaimedTag = threadInfo.StaffReportForumUnclaimedTag2;
-                threadClosingTag = threadInfo.StaffReportForumClosingTag2;
-                break;
-            default:
-                console.error('Error getting thread tag.');
-                return null;
-        }
-    } else if (ticket.ticketLevel === 3) { // Admin Catagory
-        switch (ticket.ticketType) {
-            case 'Player Report':
-                threadClaimedTag = threadInfo.PlayerReportForumClaimedTag3;
-                threadUnclaimedTag = threadInfo.PlayerReportForumUnclaimedTag3;
-                threadClosingTag = threadInfo.PlayerReportForumClosingTag;
-                break;
-            case 'VIP Application':
-                threadClaimedTag = threadInfo.VIPAppForumClaimedTag3;
-                threadUnclaimedTag = threadInfo.VIPAppForumUnclaimedTag3;
-                threadClosingTag = threadInfo.VIPAppForumClosingTag3;
-                break;
-            case 'Technical Support':
-                threadClaimedTag = threadInfo.TechTicketForumClaimedTag3;
-                threadUnclaimedTag = threadInfo.TechTicketForumUnclaimedTag3;
-                threadClosingTag = threadInfo.TechTicketForumClosingTag3;
-                break;
-            case 'Staff Report':
-                threadClaimedTag = threadInfo.StaffReportForumClaimedTag3;
-                threadUnclaimedTag = threadInfo.StaffReportForumUnclaimedTag3;
-                threadClosingTag = threadInfo.StaffReportForumClosingTag3;
-                break;
-            case 'General Support':
-                threadClaimedTag = threadInfo.GeneralSupportForumClaimedTag3;
-                threadUnclaimedTag = threadInfo.GeneralSupportForumUnclaimedTag3;
-                threadClosingTag = threadInfo.GeneralSupportForumClosingTag3;
-                break;
-            default:
-                console.error('Error getting thread tag.');
-                return null;
-        }
+    let mapping;
+
+    // If the ticketLevel is between 5 and 8, 
+    if (ticket.ticketLevel >= 5 && ticket.ticketLevel <= 8) {
+        mapping = tagMapping[ticket.ticketLevel];
     } else {
+        mapping = tagMapping[ticket.ticketLevel] && tagMapping[ticket.ticketLevel][ticket.ticketType];
+    }
+
+    if (!mapping) {
         console.error('Error getting thread tag.');
         return null;
     }
-    
-    let tag;
+
+    let tagKey;
     if (!ticket.isOpen) {
-        tag = threadClosingTag;
+        tagKey = 'archiving';
     } else {
-        tag = ticket.isClaimed ? threadClaimedTag : threadUnclaimedTag;
+        tagKey = ticket.isClaimed ? 'claimed' : 'unclaimed';
     }
-    return tag;
+    
+    return threadInfo[mapping[tagKey]];
 }
+
+
 
 async function closeThread(interaction) {
     const threadId = interaction.channel.id;
@@ -276,7 +278,7 @@ async function closeThread(interaction) {
             await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion in " + closeTimer + " hour(s)."});
         }
     } catch (error) {
-        console.error('Error closing ticket:', error);
+        console.error('Error ending thread:', error);
     }
 }
 

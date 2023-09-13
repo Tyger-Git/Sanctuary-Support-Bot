@@ -1,9 +1,6 @@
 const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, } = require("discord.js");
-const modResponse = require("../../functions/modResponse");
-const { outgoingDirectMessage } = require("./directMessageHandler.js");
 const snippets = require("../../snippets.json");
 const Ticket = require("../../schemas/ticket.js");
-const DyingTicket = require('../../schemas/dyingTicket.js');
 const { handleThreadName, handleTicketMessageUpdate, getThreadTag } = require("../../functions/threadFunctions.js");
 
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -11,6 +8,7 @@ const { handleThreadName, handleTicketMessageUpdate, getThreadTag } = require(".
 /*------------------------------------------------------------------------------------------------------------------------*/
 const checkExistingTicket = async (interaction) => {
     // Check if user already has an active ticket
+    /*
     const existingTicket = await Ticket.findOne({ userId: interaction.user.id, isOpen: true });
     if (existingTicket) {
         // Reply to the user that they can only have one active ticket
@@ -18,6 +16,8 @@ const checkExistingTicket = async (interaction) => {
         return true;
     }
     return false;
+    */
+   return false; // Commented out for testing, allowing devs to create multiple tickets
 };
 
 // Creator Inquiries Button
@@ -302,6 +302,52 @@ const unclaimButton = async (interaction) => {
     }
 };
 
+// Escalate Button (ModTicket)
+/*------------------------------------------------------------------------------------------------------------------------*/
+const escalateButton = async (interaction) => {
+    // Create the select menu
+    const escalateMenu = new StringSelectMenuBuilder()
+        .setCustomId("escalate_menu")
+        .setMaxValues(1)
+        .setPlaceholder("What group would you like to move this ticket to?")
+    
+    // Add the options to the select menu
+    escalateMenu.addOptions(
+        new StringSelectMenuOptionBuilder()
+            .setLabel("Helpers")
+            .setValue("Helpers"),
+        new StringSelectMenuOptionBuilder()
+            .setLabel("Moderators")
+            .setValue("Moderators"),
+        new StringSelectMenuOptionBuilder()
+            .setLabel("Senior Moderators")
+            .setValue("Senior Moderators"),
+        new StringSelectMenuOptionBuilder()
+            .setLabel("Head Moderators")
+            .setValue("Head Moderators"),
+        new StringSelectMenuOptionBuilder()
+            .setLabel("Server Support")
+            .setValue("Server Support"),
+        new StringSelectMenuOptionBuilder()
+            .setLabel("Demonly")
+            .setValue("Demonly"),
+        new StringSelectMenuOptionBuilder()
+            .setLabel("Ketraies")
+            .setValue("Ketraies"),
+        new StringSelectMenuOptionBuilder()
+            .setLabel("Developers")
+            .setValue("Developers"),
+    );
+
+    const row = new ActionRowBuilder().addComponents(escalateMenu);
+
+    interaction.reply({
+        content: "Where would you like to escalate this ticket to?",
+        components: [row],
+        //ephemeral: true
+    });
+};
+
 // Close Button (ModTicket)
 /*------------------------------------------------------------------------------------------------------------------------*/
 const closeButton = async (interaction) => {
@@ -349,5 +395,6 @@ module.exports = {
     snippetsButton,
     claimButton,
     unclaimButton,
+    escalateButton,
     closeButton
 }

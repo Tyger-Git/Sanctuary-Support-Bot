@@ -1,7 +1,8 @@
 const createTicket = require('../database/createTicket');
 const { incomingDirectMessage } = require('./interactionTypeHandlers/directMessageHandler');
 const { closeThread } = require('../functions/threadFunctions');
-const { snippetWorkflow } = require('./functionHandlers/snippetWorkflow');
+const { snippetWorkflow } = require('./functionHandlers/handleSnippets');
+const { escalateWorkflow } = require('./functionHandlers/handleEscalate');
 
 const {
     creatorInquiriesButton,
@@ -12,6 +13,7 @@ const {
     snippetsButton,
     claimButton,
     unclaimButton,
+    escalateButton,
     closeButton
 } = require('./interactionTypeHandlers/buttonHandler');
 
@@ -22,19 +24,23 @@ const buttonHandlers = {
     'general_support_button': generalSupportButton,
     'staff_report_button': staffReportButton,
     'snippets_button': snippetsButton,
-    'send_snippet_reply_button': snippetWorkflow,
-    'cancel_snippet_reply_button': snippetWorkflow,
+    'send_snippet_reply_button': snippetWorkflow, // Outsourced to handleSnippets.js
+    'cancel_snippet_reply_button': snippetWorkflow, // Outsourced to handleSnippets.js
     'claim_button': claimButton,
     'unclaim_button': unclaimButton,
+    'escalate_button': escalateButton,
+    'send_escalate_reply_button': escalateWorkflow, // Outsourced to handleEscalate.js
+    'cancel_escalate_reply_button': escalateWorkflow, // Outsourced to handleEscalate.js
     'close_button': closeButton,
 };
 
 const menuHandlers = {
-    'snippet_menu': snippetWorkflow,
+    'snippet_menu': snippetWorkflow, // Outsourced to handleSnippets.js
+    'escalate_menu': escalateWorkflow // Outsourced to handleEscalate.js
 };
 
 const modalHandlers = {
-    'newReportTicketModal': (interaction) => handleTicketCreation(interaction, 'Player Report', 'You submitted a report ticket successfully!'),
+    'newReportTicketModal': (interaction) => handleTicketCreation(interaction, 'User Report', 'You submitted a report ticket successfully!'),
     'newTechTicketModal': (interaction) => handleTicketCreation(interaction, 'Technical Support', 'You submitted a technical issue ticket successfully!'),
     'newCreatorTicketModal': (interaction) => handleTicketCreation(interaction, 'VIP Application', 'You submitted a content creator ticket successfully!'),
     'newGenSupTicketModal': (interaction) => handleTicketCreation(interaction, 'General Support', 'You submitted a general support ticket successfully!'),
@@ -61,6 +67,8 @@ const handleInteractionCreate = async (interaction) => {
     if (interaction.isButton()) {
       if (interaction.customId.startsWith('send_snippet_reply_button')) {
         await snippetWorkflow(interaction);
+      } else if (interaction.customId.startsWith('send_escalate_reply_button')){
+        await escalateWorkflow(interaction);
       } else {
         const handler = buttonHandlers[interaction.customId];
         if (handler) {

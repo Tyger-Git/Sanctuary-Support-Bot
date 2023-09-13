@@ -77,9 +77,9 @@ const ticketSchema = new Schema({
         required: true,
         default: false,
     },
-    ticketType: { // General Support, Technical Support, VIP Applications, Player Reports, Staff Reports
+    ticketType: { // General Support, Technical Support, VIP Applications, User Reports, Staff Reports
         type: String,
-        enum: ['General Support', 'Technical Support', 'VIP Application', 'Player Report', 'Staff Report'],
+        enum: ['General Support', 'Technical Support', 'VIP Application', 'User Report', 'Staff Report'],
         required: true,
         default: 'General Support',
     },
@@ -102,7 +102,7 @@ const ticketSchema = new Schema({
         type: Date,
         required: false,
     },
-    ticketLevel: { // 0 = Helper, 1 = Mod, 2 = SeniorMod, 3 = Head Mods, 4 = Admin, 5 = Goji, 6 = Demonly, 7 = Ket, 8 = Developer
+    ticketLevel: { // 0 = Helper, 1 = Mod, 2 = SeniorMod, 3 = Head Mods, 4 = Admin, 5 = Server Support, 6 = Demonly, 7 = Ket, 8 = Developer
         type: Number,
         required: true,
         default: 0,
@@ -139,13 +139,13 @@ const ticketSchema = new Schema({
 
     // Ticket Content
     /******************************************************************************************************************************************************/
-    // Player Reports
+    // User Reports
     reportedUser: { // Who is the report against?
         type: String,
         required: false,
         default: 'N/A',
     },
-    playerReportReason: { // Why is the user being reported?
+    userReportReason: { // Why is the user being reported?
         type: String,
         required: false,
         default: 'N/A',
