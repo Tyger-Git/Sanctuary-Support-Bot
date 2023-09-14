@@ -4,6 +4,7 @@ const { closeThread } = require('../functions/threadFunctions');
 const { snippetWorkflow } = require('./functionHandlers/handleSnippets');
 const { escalateWorkflow } = require('./functionHandlers/handleEscalate');
 const watchedMessage = require('./interactionTypeHandlers/messageHandler');
+const config = require('../../config.json');
 
 const {
     creatorInquiriesButton,
@@ -52,6 +53,9 @@ const modalHandlers = {
 const commandHandlers = {
   'testLogs' : require('../commands/test/testLogs'),
 };
+
+const clientSingleton = require('../utils/DiscordClientInstance');
+const client = clientSingleton.getClient();
 
 // Helper function to catch ticket creation errors and cleanly reply to the user if something goes wrong
 async function handleTicketCreation(interaction, ticketType, successMessage) {
@@ -103,6 +107,14 @@ const handleInteractionCreate = async (interaction) => {
       if (message.author.bot){
         console.log(`Got message from a bot: ${message.author.tag}`);
         return;  // Ignore messages from other bots
+      }
+      // Check if the bot was mentioned
+      if (message.mentions.has(client.user)) {
+          message.reply(`Hello! I'm the support bot for Sanctuary. If you need help, please visit : ${config.supportmessagelink}`);
+          // Get bot pings channel
+          const thread = await client.channels.fetch('1152017558128566332');
+          const messageLink = `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
+          await thread.send({content: `Bot pinged by **${message.author.tag}** in ${message.channel.name}. See message here: ${messageLink}`});
       }
       // Get parent channel ID of message channel
       const parentChannelId = message.channel.parentId;
