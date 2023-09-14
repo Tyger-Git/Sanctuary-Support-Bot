@@ -4,6 +4,7 @@ const emojis = require('../emojis.json');
 const threadInfo = require('../threadInformation.json');
 const Ticket = require('../schemas/ticket.js');
 const DyingTicket = require('../schemas/dyingTicket.js');
+const logger = require('../utils/logger.js');
 
 async function handleTicketMessageUpdate(ticket) {
     // Get the Discord client
@@ -273,10 +274,11 @@ async function closeThread(interaction) {
 
         // Reply to the interaction
         if (closeTimer === 0) {
-            await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion immediately."});
+            await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion **immediately.**"});
         } else {
-            await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion in " + closeTimer + " hour(s)."});
+            await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion in **" + closeTimer + " hour(s).**"});
         }
+        await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket closed by **${interaction.user.username}**`);
     } catch (error) {
         console.error('Error ending thread:', error);
     }

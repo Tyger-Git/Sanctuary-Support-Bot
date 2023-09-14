@@ -1,11 +1,12 @@
 const { ButtonBuilder, EmbedBuilder, ActionRowBuilder } = require("discord.js");
 const { outgoingDirectMessage } = require("../interactionTypeHandlers/directMessageHandler");
 const Ticket = require("../../schemas/ticket");
+const logger = require("../../utils/logger");
 const threadReCreation = require("../functionHandlers/handleThreadReCreation");
 const clientSingleton = require("../../utils/DiscordClientInstance");
 
 // Helper Function to Delete and Recreate a Thread
-const deleteAndRecreateThread = async (interaction, ticket) => {
+const deleteAndRecreateThread = async (interaction, ticket, escalatorId) => {
     // Get Client Singleton
     const client = clientSingleton.getClient();
     // Get and Delete the thread
@@ -13,7 +14,7 @@ const deleteAndRecreateThread = async (interaction, ticket) => {
     await thread.delete();
 
     // Recreate the thread
-    await threadReCreation(client, ticket);
+    await threadReCreation(client, ticket, escalatorId);
 };
 
 
@@ -56,7 +57,8 @@ const escalateWorkflow = async (interaction) => {
                 } else {
                     ticket.ticketLevel = 0;
                     await ticket.save();
-                    await deleteAndRecreateThread(interaction, ticket);
+                    await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', 'Ticket De-Escalated to Helpers');
                 }
                 break;
             case "Moderators":
@@ -68,7 +70,8 @@ const escalateWorkflow = async (interaction) => {
                 } else {
                     ticket.ticketLevel = 1;
                     await ticket.save();
-                    await deleteAndRecreateThread(interaction, ticket);
+                    await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', 'Ticket Escalated to Moderators');
                 }
                 break;
             case "Senior Moderators":
@@ -80,7 +83,8 @@ const escalateWorkflow = async (interaction) => {
                 } else {
                     ticket.ticketLevel = 2;
                     await ticket.save();
-                    await deleteAndRecreateThread(interaction, ticket);
+                    await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', 'Ticket Escalated to Senior Moderators');
                 }
                 break;
             case "Head Moderators":
@@ -92,7 +96,8 @@ const escalateWorkflow = async (interaction) => {
                 } else {
                     ticket.ticketLevel = 3;
                     await ticket.save();
-                    await deleteAndRecreateThread(interaction, ticket);
+                    await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', 'Ticket Escalated to Head Moderators');
                 }
                 break;
             case "Server Support":
@@ -104,25 +109,28 @@ const escalateWorkflow = async (interaction) => {
                 } else {
                     ticket.ticketLevel = 5;
                     await ticket.save();
-                    await deleteAndRecreateThread(interaction, ticket);
+                    await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', 'Ticket Escalated to Server Support');
                 }
                 break;
             case "Demonly":
                 if (ticket.ticketType === 'VIP Application') {
                     await interaction.update({
-                        content: `${ticket.ticketType} tickets cannot be de-escalated to Demonly.`,
+                        content: `${ticket.ticketType} tickets cannot be moved to Demonly.`,
                         components: []  // Remove all components to disable further interactions
                     });
                 } else {
                     ticket.ticketLevel = 6;
                     await ticket.save();
-                    await deleteAndRecreateThread(interaction, ticket);
+                    await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', 'Ticket Escalated to Demonly');
                 }
                 break;
             case "Ketraies":
                 ticket.ticketLevel = 7;
                 await ticket.save();
-                    await deleteAndRecreateThread(interaction, ticket);
+                    await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', 'Ticket Escalated to Ketraies');
                 break;
             case "Developers":
                 if (ticket.ticketType !== 'Technical Support') {
@@ -133,7 +141,8 @@ const escalateWorkflow = async (interaction) => {
                 } else {
                     ticket.ticketLevel = 8;
                     await ticket.save();
-                    await deleteAndRecreateThread(interaction, ticket);
+                    await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', 'Ticket Escalated to Developers');
                 }
                 break;
             default:

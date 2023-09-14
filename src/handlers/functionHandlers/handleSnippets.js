@@ -38,7 +38,7 @@ const snippetWorkflow = async (interaction) => {
         const selectedSnippet = snippets.find(snippet => snippet.value === snippetIdentifier);
 
         if (selectedSnippet) {
-            outgoingDirectMessage(ticket, selectedSnippet.message);
+            await outgoingDirectMessage(interaction, ticket, selectedSnippet.message);
 
             await interaction.update({ 
                 content: `Snippet sent!\n\`\`\`${selectedSnippet.message}\`\`\``, 

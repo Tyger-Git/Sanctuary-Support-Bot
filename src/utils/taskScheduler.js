@@ -1,6 +1,7 @@
 const dyingTicket = require('../schemas/dyingTicket');
 const Ticket = require('../schemas/ticket');
 const clientSingleton = require('./DiscordClientInstance');
+const logger = require('./logger');
 
 async function deleteOldThreads() {
     try {
@@ -26,7 +27,7 @@ async function deleteOldThreads() {
             const thread = await client.channels.fetch(ticket.ticketThread);
             if (thread && ticket.closeTimer > 0) {
                 await thread.delete('Scheduled deletion after ' + ticket.closeTimer + ' hours of closure');
-            } else if (thread && ticket.closeTimer === 0) {
+            } else if (thread && parseInt(ticket.closeTimer) === 0) {
                 await thread.delete('Scheduled deletion immediately after closure');
             }
 
@@ -40,6 +41,7 @@ async function deleteOldThreads() {
             // Delete the dying ticket entry
             await dyingTicket.findByIdAndDelete(ticket._id);
             console.log('Deleted thread for ticket', mainTicket.ticketId);
+            await logger(mainTicket.ticketId, 'Event', client.user.id, 'Bot', `Deleted thread for ticket ${mainTicket.ticketId}`);
         }
         console.log('Done deleting threads');
     } catch (error) {

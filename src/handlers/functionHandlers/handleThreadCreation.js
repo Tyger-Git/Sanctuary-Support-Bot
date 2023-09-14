@@ -4,6 +4,7 @@ const threadInfo = require('../../threadInformation.json');
 const Ticket = require("../../schemas/ticket.js");
 const modTicket = require("../../functions/modTicket.js");
 const { handleThreadName, getThreadTag, getParentChannelID } = require("../../functions/threadFunctions.js");
+const logger = require('../../utils/logger.js');
 
 module.exports = async function handleThreadCreation(client, ticketData) {
     // Fetch the ticket as a Mongoose model instance
@@ -50,5 +51,6 @@ module.exports = async function handleThreadCreation(client, ticketData) {
     ticket.ticketThreadMessage = sentMessage.id;
     await ticket.save();
     
+    await logger(ticket.ticketId, 'Event', client.user.id, 'Bot', `Created thread for ticket ${ticket.ticketId}`);
     return thread;
 }

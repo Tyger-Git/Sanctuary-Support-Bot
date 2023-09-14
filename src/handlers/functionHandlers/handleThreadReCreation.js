@@ -4,11 +4,12 @@ const threadInfo = require('../../threadInformation.json');
 const Ticket = require("../../schemas/ticket.js");
 const modTicket = require("../../functions/modTicket.js");
 const { handleThreadName, getThreadTag, getParentChannelID } = require("../../functions/threadFunctions.js");
+const clientSingleton = require("../../utils/DiscordClientInstance.js");
 
-module.exports = async function handleThreadReCreation(client, ticket) {
+module.exports = async function handleThreadReCreation(interaction, ticket, escalatorId) {
     // Get the correct parent forum ID based on ticket type
     let parentChannelId = await getParentChannelID(ticket);
-
+    const client = clientSingleton.getClient();
     // Fetch the parent channel using the Discord.js client
     let parentChannel;
     try {
@@ -43,6 +44,14 @@ module.exports = async function handleThreadReCreation(client, ticket) {
     ticket.ticketThread = thread.id;
     ticket.ticketThreadMessage = sentMessage.id;
     await ticket.save();
+
+    // Send a message noting that the thread was re-created, and to see logs for more information
+    const escalator = await client.users.fetch(escalatorId);
+    const escalationMessageEmbed = new EmbedBuilder()
+        .setTitle('Ticket Escalated')
+        .setDescription(`This ticket was escalated to **${parentChannel.name}** by user **${escalator.username}**.`)
+        .setColor([255,255,225]) // White
+    await thread.send({embeds: [escalationMessageEmbed]});
     
     return thread;
 }

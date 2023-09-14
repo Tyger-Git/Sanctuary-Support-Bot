@@ -50,7 +50,7 @@ module.exports = async function modTicket(ticket) {
             contentValue2 = ticket.userReportReason;
             break;
         case 'VIP Application':
-            embedColor = [78,79,88] // Grey
+            embedColor = [255,223,0] // Gold
             contentName1 = "Social Media Name:";
             contentValue1 = ticket.socialMediaName;
             contentName2 = "Application Description:";

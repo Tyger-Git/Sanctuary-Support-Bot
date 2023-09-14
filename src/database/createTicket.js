@@ -1,6 +1,6 @@
 // Module to read a modal and create a ticket in the database
 
-const ticket = require("../schemas/ticket.js");
+const logger = require('../utils/logger.js');
 const Ticket = require("../schemas/ticket.js"); 
 const TicketCounter = require('../schemas/ticketCounter.js');
 
@@ -115,6 +115,7 @@ const createTicket = async (interaction, ticketType) => {
 
     // Save the new ticket to the database
     await newTicket.save();
+    await logger(ticketId, 'Event', userId, 'Bot', `Ticket created by ${userDisplayName} (${userName}) with ID ${ticketId}`)
   } catch (error) {
     console.error("Error creating ticket:", error);
   }

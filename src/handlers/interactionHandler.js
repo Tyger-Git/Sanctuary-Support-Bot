@@ -3,6 +3,7 @@ const { incomingDirectMessage } = require('./interactionTypeHandlers/directMessa
 const { closeThread } = require('../functions/threadFunctions');
 const { snippetWorkflow } = require('./functionHandlers/handleSnippets');
 const { escalateWorkflow } = require('./functionHandlers/handleEscalate');
+const watchedMessage = require('./interactionTypeHandlers/messageHandler');
 
 const {
     creatorInquiriesButton,
@@ -91,7 +92,7 @@ const handleInteractionCreate = async (interaction) => {
   };
 
   const handleMessageCreate = async (message) => {
-    if (message.partial) { // Partial messages do not contain all message data, so fetch the full message (DM's aren't cached, always partial)
+      if (message.partial) { // Partial messages do not contain all message data, so fetch the full message (DM's aren't cached, always partial)
         try {
           await message.fetch();  // Fetch the full message data
         } catch (error) {
@@ -103,15 +104,45 @@ const handleInteractionCreate = async (interaction) => {
         console.log(`Got message from a bot: ${message.author.tag}`);
         return;  // Ignore messages from other bots
       }
-      if (message.channel.type === 1){ // Type 1 is a DM channel
-        console.log(`See DM from ${message.author.tag}`);
+      // Get parent channel ID of message channel
+      const parentChannelId = message.channel.parentId;
+      // Handle message based on channel type
+      if (message.channel.type === 1){ // Check if message is a DM
         await incomingDirectMessage(message).catch(err => console.error("Error in directMessageHandler: ", err));
+      } else if (channelIDs.includes(parentChannelId)){ // Check if message is within a ticket forum
+        await watchedMessage(message).catch(err => console.error("Error in messageHandler: ", err));
       } else {
-        console.log(`See message from ${message.author.tag} in ${message.channel.name}`);
-        // Future else if's for logging messages in the server
         return;
       }
   };
+
+  const channelConfig = {
+    "GeneralSupportForum0": "1151237881977905273",
+    "TechSupportForum0": "1151237933605597254",
+
+    "GeneralSupportForum1": "1140398426580852897",
+    "TechSupportForum1": "1140397073238335510",
+    "UserReportForum1": "1140397105123426435",
+
+    "GeneralSupportForum2": "1140397282005631067",
+    "TechSupportForum2": "1151238183535779901",
+    "UserReportForum2": "1151238216301682698",
+    "StaffReportForum2": "1151238332454543432",
+
+    "GeneralSupportForum3": "1151238420853690449",
+    "TechSupportForum3": "1151238474779869284",
+    "UserReportForum3": "1151238457142820896",
+    "StaffReportForum3": "1151238403678031883",
+
+    "VIPAppForum4": "1140398786552803449",
+    "StaffReportForum4": "1151242072804823160",
+    "StaffSupportForum": "1140398736963534869",
+    "DemonlyForum": "1140398611046350848",
+    "KetForum": "1140398651945001132",
+
+    "DevSupportForum": "1151238517842788392"
+  };
+  const channelIDs = Object.values(channelConfig);
 
   module.exports = {
     handleInteractionCreate,

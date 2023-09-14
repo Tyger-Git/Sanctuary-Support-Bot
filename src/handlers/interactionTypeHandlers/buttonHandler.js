@@ -2,6 +2,7 @@ const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, String
 const snippets = require("../../snippets.json");
 const Ticket = require("../../schemas/ticket.js");
 const { handleThreadName, handleTicketMessageUpdate, getThreadTag } = require("../../functions/threadFunctions.js");
+const logger = require('../../utils/logger.js');
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Helper functions
@@ -264,7 +265,8 @@ const claimButton = async (interaction) => {
         await handleTicketMessageUpdate(ticket);
 
         // Reply to the interaction
-        await interaction.reply({ content: "Ticket Claimed by **" + claimantMod + "**"});
+        await interaction.reply({ content: `Ticket claimed by **${claimantMod}**`});
+        await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket Claimed by **${claimantMod}**`);
     } catch (error) {
         console.error('Error claiming ticket:', error);
     }
@@ -296,7 +298,8 @@ const unclaimButton = async (interaction) => {
         await handleTicketMessageUpdate(ticket);
 
         // Reply to the interaction
-        await interaction.reply({ content: modUnclaiming + " unclaimed the ticket."});
+        await interaction.reply({ content: `Ticket unclaimed by **${modUnclaiming}**`});
+        await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket Unclaimed by **${modUnclaiming}**`)
     } catch (error) {
         console.error('Error unclaiming ticket:', error);
     }
