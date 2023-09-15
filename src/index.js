@@ -1,10 +1,12 @@
-require('dotenv').config();
-const slashCommandHandler = require('./handlers/commandHandlers/slashCommandHandler');
-const db = require('./database/database');
-const { handleInteractionCreate, handleMessageCreate } = require('./handlers/interactionHandler');
-const clientSingleton = require('./utils/DiscordClientInstance');
-const taskScheduler = require('./utils/taskScheduler');
+import { config } from 'dotenv';
+import clientSingleton from './utils/DiscordClientInstance.js';
+import { connectToDatabase, initializeTicketCounter, watchTickets } from './database/database.js';
+import { handleInteractionCreate, handleMessageCreate } from './handlers/interactionHandler.js';
+import slashCommandHandler from './handlers/commandHandlers/slashCommandHandler.js';
+import { deleteOldThreads } from './utils/taskScheduler.js';
 
+// Execute dotenv config
+config();
 // Get the Discord client
 const client = clientSingleton.getClient();
 
@@ -15,13 +17,13 @@ client.on('interactionCreate', handleInteractionCreate);
 client.on('messageCreate', handleMessageCreate);
 
 async function initBot() {
-  await db.connectToDatabase();
-  await db.initializeTicketCounter();
-  db.watchTickets(client);
+  await connectToDatabase();
+  await initializeTicketCounter();
+  watchTickets(client);
   slashCommandHandler(client);
   client.login(process.env.TOKEN);
 }
 
 initBot();
 
-setInterval(taskScheduler.deleteOldThreads, 60 * 1000); // Run every minute
+setInterval(deleteOldThreads, 60 * 1000); // Run every minute

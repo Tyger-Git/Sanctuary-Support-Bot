@@ -1,6 +1,6 @@
-const Log = require('../schemas/log');
-const clientSingleton = require('./DiscordClientInstance');
-const config = require('../../config.json');
+import Log from '../schemas/log.js';
+import clientSingleton from '../utils/DiscordClientInstance.js';
+import config from '../../config.json' assert { type: 'json' };
 
 const log = async (ticketId, type, userId, classType, message) => {
     // Get the highest role of the user
@@ -20,11 +20,9 @@ const log = async (ticketId, type, userId, classType, message) => {
     } catch (error) {
         console.error('Error saving log:', error);
     }
-}
+};
 
-/******************************************************************************************************************************************************/
 // Helper functions
-/******************************************************************************************************************************************************/
 const roleCache = new Map();
 const client = clientSingleton.getClient();
 // Caching the highest role of a user, to reduce API calls
@@ -47,4 +45,4 @@ async function getHighestRole(userId) {
     return highestRole.id;
 }
 
-module.exports = log;
+export default log;

@@ -1,12 +1,9 @@
-// Function to create a thread called on mongoose stream change listener
-const { messageEmbed, ButtonBuilder, EmbedBuilder, ActionRowBuilder } = require('discord.js');
-const threadInfo = require('../../threadInformation.json');
-const Ticket = require("../../schemas/ticket.js");
-const modTicket = require("../../functions/modTicket.js");
-const { handleThreadName, getThreadTag, getParentChannelID } = require("../../functions/threadFunctions.js");
-const clientSingleton = require("../../utils/DiscordClientInstance.js");
+import {  EmbedBuilder } from 'discord.js';
+import modTicket from "../../functions/modTicket.js";
+import { handleThreadName, getThreadTag, getParentChannelID } from "../../functions/threadFunctions.js";
+import clientSingleton from "../../utils/DiscordClientInstance.js";
 
-module.exports = async function handleThreadReCreation(interaction, ticket, escalatorId) {
+const handleThreadReCreation = async (interaction, ticket, escalatorId) => {
     // Get the correct parent forum ID based on ticket type
     let parentChannelId = await getParentChannelID(ticket);
     const client = clientSingleton.getClient();
@@ -55,3 +52,5 @@ module.exports = async function handleThreadReCreation(interaction, ticket, esca
     
     return thread;
 }
+
+export default handleThreadReCreation;

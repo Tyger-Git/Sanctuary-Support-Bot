@@ -1,8 +1,8 @@
 // This command is used to toggle alerts on or off for a ticket
 
-const { ApplicationCommandOptionType } = require('discord.js');
+import { ApplicationCommandOptionType } from 'discord.js';
 
-module.exports = {
+export default {
     name: 'togglealerts',
     description: 'Toggle alerts on or off',
     options: [

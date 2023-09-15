@@ -1,17 +1,14 @@
 // Initial runthrough of all slash commands, reading through and initializing them
 
-const { modServer } = require('../../../config.json');
-const areCommandsDifferent = require('../../commandUtils/areCommandsDifferent');
-const getApplicationCommands = require('../../commandUtils/getApplicationCommands');
-const getLocalCommands = require('../../commandUtils/getLocalCommands');
+import config from '../../../config.json' assert { type: 'json' };
+import areCommandsDifferent from '../../commandUtils/areCommandsDifferent.js';
+import getApplicationCommands from '../../commandUtils/getApplicationCommands.js';
+import getLocalCommands from '../../commandUtils/getLocalCommands.js';
 
-module.exports = async (client) => {
+const registerCommands = async (client) => {
   try {
-    const localCommands = getLocalCommands();
-    const applicationCommands = await getApplicationCommands(
-      client,
-      modServer
-    );
+    const localCommands = await getLocalCommands();
+    const applicationCommands = await getApplicationCommands(client, config.modServer);
     
     for (const localCommand of localCommands) {
       const { name, description, options } = localCommand;
@@ -51,6 +48,7 @@ module.exports = async (client) => {
 
         console.log(`👍 Registered command "${name}."`);
       }
+      console.log(`👍 Command ${name} already registered.`)
     }
   } catch (error) {
     console.log(`There was an error: ${error}`);
@@ -58,3 +56,5 @@ module.exports = async (client) => {
 
   console.log('👍 Registered all commands.');
 };
+
+export default registerCommands;

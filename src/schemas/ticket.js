@@ -1,4 +1,6 @@
-const { Schema, model, mongoose } = require('mongoose');
+import mongoose from 'mongoose';
+
+const { Schema, model } = mongoose;
 
 const ticketSchema = new Schema({
     // User information
@@ -200,4 +202,4 @@ const ticketSchema = new Schema({
     },
 });
 
-module.exports = model('ticket', ticketSchema);
+export default model('ticket', ticketSchema);

@@ -1,6 +1,6 @@
-// Tickets awaiting thread deletion
+import mongoose from 'mongoose';
 
-const { Schema, model, mongoose } = require('mongoose');
+const { Schema, model } = mongoose;
 
 const dyingTicketSchema = new Schema({
     ticketId: { // Ticket ID
@@ -25,4 +25,4 @@ const dyingTicketSchema = new Schema({
     },
 });
 
-module.exports = model('dyingTicket', dyingTicketSchema);
+export default model('dyingTicket', dyingTicketSchema);

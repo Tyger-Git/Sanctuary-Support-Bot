@@ -1,4 +1,6 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+
+const { Schema, model } = mongoose;
 
 const logSchema = new Schema({
     ticketId: {
@@ -34,4 +36,4 @@ const logSchema = new Schema({
     },
 });
 
-module.exports = model('log', logSchema);
+export default model('log', logSchema);

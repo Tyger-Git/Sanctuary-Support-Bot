@@ -1,7 +1,7 @@
-const { ButtonBuilder, EmbedBuilder, ActionRowBuilder } = require("discord.js");
-const snippets = require("../../snippets.json");
-const { outgoingDirectMessage } = require("../interactionTypeHandlers/directMessageHandler");
-const Ticket = require("../../schemas/ticket");
+import { ButtonBuilder, ActionRowBuilder } from "discord.js";
+import snippets from "../../snippets.json" assert { type: "json" };
+import { outgoingDirectMessage } from "../interactionTypeHandlers/directMessageHandler.js";
+import Ticket from "../../schemas/ticket.js";
 
 const snippetWorkflow = async (interaction) => {
     if (interaction.customId === "snippet_menu") {
@@ -55,6 +55,4 @@ const snippetWorkflow = async (interaction) => {
     }
 };
 
-module.exports = {
-    snippetWorkflow,
-}
+export { snippetWorkflow }

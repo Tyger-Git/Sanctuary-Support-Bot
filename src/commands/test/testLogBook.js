@@ -1,7 +1,7 @@
 // Test command to show logs in an embed booklet
 /*---------- Will Not Be In Final Product ----------*/
 
-const { SlashCommandBuilder, PermissionFlagsBits, ButtonBuilder, EmbedBuilder, ActionRowBuilder, Message, MessageEmbed, Attachment } = require("discord.js");
+import { ButtonBuilder, EmbedBuilder, ActionRowBuilder } from "discord.js";
 
 function chunkArray(array, chunkSize) {
     const results = [];
@@ -26,7 +26,7 @@ function createEmbedsFromChunks(chunks) {
 }
 
 
-module.exports = {
+export default {
     name: 'tlogbook',
     description: 'Test Log Book',
     callback: async (client, interaction) => {

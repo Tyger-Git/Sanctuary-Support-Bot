@@ -1,13 +1,9 @@
 // Test command to show the support message in normal message format with response buttons
 /*---------- Will Not Be In Final Product ----------*/
 
-const {
-  MessageButton,
-  ActionRowBuilder,
-  ButtonBuilder
-} = require("discord.js");
+import { ActionRowBuilder, ButtonBuilder } from 'discord.js';
 
-module.exports = {
+export default {
     name: "supportmessage",
     description: "Support message",
     callback: async (client, interaction) => {

@@ -1,8 +1,8 @@
-const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, } = require("discord.js");
-const snippets = require("../../snippets.json");
-const Ticket = require("../../schemas/ticket.js");
-const { handleThreadName, handleTicketMessageUpdate, getThreadTag } = require("../../functions/threadFunctions.js");
-const logger = require('../../utils/logger.js');
+import { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import snippets from "../../snippets.json" assert { type: "json" };
+import Ticket from "../../schemas/ticket.js";
+import { handleThreadName, handleTicketMessageUpdate, getThreadTag } from "../../functions/threadFunctions.js";
+import logger from '../../utils/logger.js';
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Helper functions
@@ -355,7 +355,7 @@ const escalateButton = async (interaction) => {
 /*------------------------------------------------------------------------------------------------------------------------*/
 const closeButton = async (interaction) => {
     // Modal Creation
-    let closeTicketModal= new ModalBuilder()
+    let closeTicketModal = new ModalBuilder()
     .setCustomId("closeTicketModal")
     .setTitle("Mod Notes");
 
@@ -389,7 +389,7 @@ const closeButton = async (interaction) => {
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Export the functions
 /*------------------------------------------------------------------------------------------------------------------------*/
-module.exports = {
+export { 
     creatorInquiriesButton,
     generalSupportButton,
     reportButton,
@@ -399,5 +399,5 @@ module.exports = {
     claimButton,
     unclaimButton,
     escalateButton,
-    closeButton
-}
+    closeButton 
+};

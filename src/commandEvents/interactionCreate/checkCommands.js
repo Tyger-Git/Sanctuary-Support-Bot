@@ -1,9 +1,9 @@
 //Handler for slash commands
 
-const { devs, modServer } = require('../../../config.json');
-const getLocalCommands = require('../../commandUtils/getLocalCommands');
+import { devs, modServer } from '../../../config.json' assert { type: 'json' };
+import getLocalCommands from '../../commandUtils/getLocalCommands';
 
-module.exports = async (client, interaction) => {
+const checkCommands = async (client, interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   const localCommands = getLocalCommands();
@@ -65,3 +65,5 @@ module.exports = async (client, interaction) => {
     console.log(`There was an error running this command: ${error}`);
   }
 };
+
+export default checkCommands;

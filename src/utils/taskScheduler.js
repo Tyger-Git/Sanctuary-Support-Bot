@@ -1,12 +1,12 @@
-const dyingTicket = require('../schemas/dyingTicket');
-const Ticket = require('../schemas/ticket');
-const clientSingleton = require('./DiscordClientInstance');
-const logger = require('./logger');
+import DyingTicketModel from '../schemas/dyingTicket.js';
+import Ticket from '../schemas/ticket.js';
+import clientSingleton from '../utils/DiscordClientInstance.js';
+import logger from './logger.js';
 
 async function deleteOldThreads() {
     try {
         // Fetch all the dying tickets that have a valid closeTimer
-        const allDyingTickets = await dyingTicket.find({
+        const allDyingTickets = await DyingTicketModel.find({
             closeTimer: { $exists: true, $ne: null }
         });
         console.log('Found', allDyingTickets.length, 'dying tickets');
@@ -21,7 +21,7 @@ async function deleteOldThreads() {
         console.log('Found', ticketsToDelete.length, 'threads to delete');
         // Use client singleton to get the Discord client
         const client = clientSingleton.getClient();
-
+        // Loop through the tickets to delete
         for (const ticket of ticketsToDelete) {
             // Delete thread from Discord
             const thread = await client.channels.fetch(ticket.ticketThread);
@@ -39,7 +39,7 @@ async function deleteOldThreads() {
             }
 
             // Delete the dying ticket entry
-            await dyingTicket.findByIdAndDelete(ticket._id);
+            await DyingTicketModel.findByIdAndDelete(ticket._id);
             console.log('Deleted thread for ticket', mainTicket.ticketId);
             await logger(mainTicket.ticketId, 'Event', client.user.id, 'Bot', `Deleted thread for ticket ${mainTicket.ticketId}`);
         }
@@ -49,7 +49,5 @@ async function deleteOldThreads() {
     }
 }
 
-
-module.exports = {
-    deleteOldThreads
-};
+// ES6 export
+export { deleteOldThreads };

@@ -1,10 +1,10 @@
 // Test command to create a new ticket thread
 /*---------- Will Not Be In Final Product ----------*/
 
-const Ticket = require("../../schemas/ticket.js");
-const { getParentChannelID } = require('../../functions/threadFunctions.js');
+import Ticket from '../../schemas/ticket.js';
+import { getParentChannelID } from '../../functions/threadFunctions.js';
 
-module.exports = {
+export default {
     name: 'newticketthread',
     description: 'Creates a new ticket thread',
     devOnly: true,

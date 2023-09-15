@@ -1,10 +1,10 @@
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
 
-async function handleDMKickoff(client, ticket) {
+async function handleInitialUserMessage(client, ticket) {
     try {
         // Fetch the user using the client and userId from ticket
         const user = await client.users.fetch(ticket.userId);
-
+        // If the user doesn't exist, log an error and return
         if (!user) {
             console.error(`Failed to find user with ID: ${ticket.userId}`);
             return;
@@ -26,8 +26,4 @@ async function handleDMKickoff(client, ticket) {
     }
 }
 
-/*------------------------------------------------------------------------------------------------------------------------*/
-// Export the functions
-/*------------------------------------------------------------------------------------------------------------------------*/
-
-module.exports = handleDMKickoff;
+export default handleInitialUserMessage;

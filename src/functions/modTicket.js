@@ -1,7 +1,7 @@
-const { ButtonBuilder, EmbedBuilder, ActionRowBuilder, } = require('discord.js');
-const emojis = require("../emojis.json");
+import { ButtonBuilder, EmbedBuilder, ActionRowBuilder } from 'discord.js';
+import emojis from '../emojis.json' assert { type: 'json' };
 
-module.exports = async function modTicket(ticket) {
+const modTicket = async (ticket) => {
     let messageObject = {};
     let ticketStatus = ticket.isOpen ? 'Open' : 'Closed';
     // Turn ticketLevel into a string
@@ -236,3 +236,5 @@ function formatDate(date) {
     // Return the formatted string
     return `${month}/${day}/${year} - ${hours}:${minutes}`;
 }
+
+export default modTicket;

@@ -1,6 +1,7 @@
+// Command to get the forum tag IDs for the parent forums
+/*---- Dev Only ----*/
 
-
-module.exports = {
+export default {
     name: 'getforumtags',
     description: 'Gets the forum tag IDs for the parent forums',
     devOnly: true,

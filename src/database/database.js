@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const TicketCounter = require('../schemas/ticketCounter.js');
-const initialUserMessage = require('../handlers/functionHandlers/handleInitialUserMessage.js');
-const threadCreation = require('../handlers/functionHandlers/handleThreadCreation.js');
+import mongoose from 'mongoose';
+import TicketCounter from '../schemas/ticketCounter.js';
+import initialUserMessage from '../handlers/functionHandlers/handleInitialUserMessage.js';
+import threadCreation from '../handlers/functionHandlers/handleThreadCreation.js';
 
 async function connectToDatabase() {
     mongoose.set('strictQuery', false);
@@ -33,7 +33,7 @@ function watchTickets(client) {
     });
 }
 
-module.exports = {
+export {
     connectToDatabase,
     initializeTicketCounter,
     watchTickets

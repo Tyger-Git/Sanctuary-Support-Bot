@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
 
 async function modResponse(client, ticket, response) {
     try {
@@ -26,8 +26,4 @@ async function modResponse(client, ticket, response) {
     }
 }
 
-/*------------------------------------------------------------------------------------------------------------------------*/
-// Export the functions
-/*------------------------------------------------------------------------------------------------------------------------*/
-
-module.exports = modResponse;
+export default modResponse;

@@ -1,18 +1,9 @@
 // This is a test command to show the mod ticket embed
 /*---------- Will Not Be In Final Product ----------*/
 
-const {
-    SlashCommandBuilder,
-    PermissionFlagsBits,
-    ButtonBuilder,
-    EmbedBuilder,
-    ActionRowBuilder,
-    Message,
-    MessageEmbed,
-    Attachment,
-  } = require("discord.js");
+import { ButtonBuilder, EmbedBuilder, ActionRowBuilder } from 'discord.js';
 
-module.exports = {
+export default {
     name: 'testmodticket',
     description: 'Shows the mod ticket embed',
     devOnly: true,

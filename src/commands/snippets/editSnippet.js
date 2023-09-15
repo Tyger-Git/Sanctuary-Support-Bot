@@ -1,10 +1,11 @@
 // This command is used to delete a snippet from the snippets.json file
 /*--- DEV ONLY ---*/
 
-const { ApplicationCommandOptionType } = require('discord.js');
-const fs = require('fs');
+import snippets from '../../snippets.json' assert { type: "json" };
+import fs from 'fs';
+import { ApplicationCommandOptionType } from 'discord.js';
 
-module.exports = {
+export default {
     name: 'editsnippet',
     description: 'Edit a snippet',
     options: [
@@ -26,7 +27,6 @@ module.exports = {
         await interaction.deferReply();
         const label = interaction.options.getString('label');
         const message = interaction.options.getString('message');
-        const snippets = require("../../snippets.json");
         const index = snippets.findIndex(snippet => snippet.label === label);
         if (index > -1) {
             snippets[index].message = message;

@@ -1,10 +1,10 @@
-const modTicket = require('./modTicket.js');
-const clientSingleton = require('../utils/DiscordClientInstance.js');
-const emojis = require('../emojis.json');
-const threadInfo = require('../threadInformation.json');
-const Ticket = require('../schemas/ticket.js');
-const DyingTicket = require('../schemas/dyingTicket.js');
-const logger = require('../utils/logger.js');
+import modTicket from '../functions/modTicket.js';
+import clientSingleton from '../utils/DiscordClientInstance.js';
+import emojis from '../emojis.json' assert { type: 'json' };
+import threadInfo from '../threadInformation.json' assert { type: "json" };
+import Ticket from '../schemas/ticket.js';
+import DyingTicket from '../schemas/dyingTicket.js';
+import logger from '../utils/logger.js';
 
 async function handleTicketMessageUpdate(ticket) {
     // Get the Discord client
@@ -284,10 +284,10 @@ async function closeThread(interaction) {
     }
 }
 
-module.exports = {
+export {
     handleTicketMessageUpdate,
     handleThreadName,
     getThreadTag,
     getParentChannelID,
     closeThread
-}
+};

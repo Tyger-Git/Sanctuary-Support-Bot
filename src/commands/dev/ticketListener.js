@@ -1,23 +1,15 @@
 // Front facing UX for the ticket system. It is a button menu that allows users to select a ticket type and open a ticket.
 /*---- Dev Only ----*/
 
-const {
-    PermissionFlagsBits,
-    ButtonBuilder,
-    EmbedBuilder,
-    ActionRowBuilder,
-    MessageEmbed,
-  } = require("discord.js");
-  const ticketSchema = require("../../schemas/ticket");
-  const emojis = require("../../emojis.json");
+import { ButtonBuilder, EmbedBuilder, ActionRowBuilder } from "discord.js";
+import emojis from "../../emojis.json" assert { type: "json" };
 
-module.exports = {
+export default {
     name: 'ticketlistener',
     description: 'Adds the ticket listener to the channel',
     devOnly: true,
     callback: async (client, interaction) => {
         await interaction.deferReply();
-
         const channel = interaction.channel;
         const ticketEmbed = new EmbedBuilder()
             .setColor([108,0,18])
@@ -40,37 +32,6 @@ module.exports = {
             .setFooter({text: "© Sanctuary Development Team - 2023"})
             ;
 
-        // No longer using a dropdown menu, but keeping this code for future reference
-        /*
-        const menu = new StringSelectMenuBuilder()
-            .setCustomId("Select")
-            .setMaxValues(1)
-            .setPlaceholder("Select a topic.")
-            .addOptions(
-                new StringSelectMenuOptionBuilder()
-                    .setLabel("Report a User")
-                    .setDescription("Do you need to report a user?")
-                    .setValue("Report a User")
-                    .setEmoji("<:icon_report:1140779824793788486>"),
-                new StringSelectMenuOptionBuilder()
-                    .setLabel("Technical Support")
-                    .setDescription("Are you having technical difficulties?")
-                    .setValue("Technical Support")
-                    .setEmoji("<:icon_tech2:1140800254141268018>"),
-                new StringSelectMenuOptionBuilder()
-                    .setLabel("VIP Applications")
-                    .setDescription("Apply for VIP / Content Creator status.")
-                    .setValue("VIP Applications")
-                    .setEmoji("<:icon_vip2:1140799537942900799>"),
-                new StringSelectMenuOptionBuilder()
-                    .setLabel("General Support")
-                    .setDescription("Have some general questions?")
-                    .setValue("General Support")
-                    .setEmoji("<:icon_general2:1140799531496263700>"),
-            );
-        const oldRow = new ActionRowBuilder().addComponents(menu);
-        */
-        
         // Create Buttons
         const report_button = new ButtonBuilder()
         .setCustomId('report_button')
@@ -98,7 +59,7 @@ module.exports = {
         .setEmoji(`${emojis.generalButtonEmoji}`)
         .setStyle('Success');
 
-        // Create Button Row
+        // Create Button Rows
         const row1 = new ActionRowBuilder()
             .addComponents(report_button, staff_report_button);
         const row2 = new ActionRowBuilder()
@@ -108,7 +69,6 @@ module.exports = {
 
 
         await interaction.deleteReply(); //  Delete command for cleanliness
-        //await channel.send({ files: [{attachment: './resources/support.png', name: 'support.png'}] });
         await channel.send({ embeds: [ticketEmbed], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [row1, row2, row3] });
     }
 }

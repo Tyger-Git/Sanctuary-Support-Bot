@@ -1,24 +1,17 @@
-const createTicket = require('../database/createTicket');
-const { incomingDirectMessage } = require('./interactionTypeHandlers/directMessageHandler');
-const { closeThread } = require('../functions/threadFunctions');
-const { snippetWorkflow } = require('./functionHandlers/handleSnippets');
-const { escalateWorkflow } = require('./functionHandlers/handleEscalate');
-const watchedMessage = require('./interactionTypeHandlers/messageHandler');
-const config = require('../../config.json');
+import createTicket from '../database/createTicket.js';
+import { incomingDirectMessage } from './interactionTypeHandlers/directMessageHandler.js';
+import { closeThread } from '../functions/threadFunctions.js';
+import { snippetWorkflow } from './functionHandlers/handleSnippets.js';
+import { escalateWorkflow } from './functionHandlers/handleEscalate.js';
+import watchedMessage from './interactionTypeHandlers/messageHandler.js';
+import config from '../../config.json' assert { type: "json" };
+import clientSingleton from '../utils/DiscordClientInstance.js';
+import { creatorInquiriesButton, generalSupportButton, reportButton, 
+    technicalIssuesButton, staffReportButton, snippetsButton, 
+    claimButton, unclaimButton, escalateButton, closeButton } from './interactionTypeHandlers/buttonHandler.js';
 
-const {
-    creatorInquiriesButton,
-    generalSupportButton,
-    reportButton,
-    technicalIssuesButton,
-    staffReportButton,
-    snippetsButton,
-    claimButton,
-    unclaimButton,
-    escalateButton,
-    closeButton
-} = require('./interactionTypeHandlers/buttonHandler');
-
+// Function handoffs for interaction types
+/*------------------------------------------------------------------------------------------------------------------------*/
 const buttonHandlers = {
     'report_button': reportButton,
     'technical_issues_button': technicalIssuesButton,
@@ -35,12 +28,10 @@ const buttonHandlers = {
     'cancel_escalate_reply_button': escalateWorkflow, // Outsourced to handleEscalate.js
     'close_button': closeButton,
 };
-
 const menuHandlers = {
     'snippet_menu': snippetWorkflow, // Outsourced to handleSnippets.js
     'escalate_menu': escalateWorkflow // Outsourced to handleEscalate.js
 };
-
 const modalHandlers = {
     'newReportTicketModal': (interaction) => handleTicketCreation(interaction, 'User Report', 'You submitted a report ticket successfully!'),
     'newTechTicketModal': (interaction) => handleTicketCreation(interaction, 'Technical Support', 'You submitted a technical issue ticket successfully!'),
@@ -50,14 +41,11 @@ const modalHandlers = {
     'closeTicketModal': (interaction) => closeThread(interaction),
 };
 
-const commandHandlers = {
-  'testLogs' : require('../commands/test/testLogs'),
-};
-
-const clientSingleton = require('../utils/DiscordClientInstance');
+// Helper functions
+/*------------------------------------------------------------------------------------------------------------------------*/
+// Get Discord client instance
 const client = clientSingleton.getClient();
-
-// Helper function to catch ticket creation errors and cleanly reply to the user if something goes wrong
+// Catch ticket creation errors and cleanly reply to the user if something goes wrong
 async function handleTicketCreation(interaction, ticketType, successMessage) {
     try {
         createTicket(interaction, ticketType);
@@ -68,6 +56,8 @@ async function handleTicketCreation(interaction, ticketType, successMessage) {
     }
   }
 
+// Interaction handlers
+/*------------------------------------------------------------------------------------------------------------------------*/
 const handleInteractionCreate = async (interaction) => {
     if (interaction.isButton()) {
       if (interaction.customId.startsWith('send_snippet_reply_button')) {
@@ -94,7 +84,6 @@ const handleInteractionCreate = async (interaction) => {
       return;
     }
   };
-
   const handleMessageCreate = async (message) => {
       if (message.partial) { // Partial messages do not contain all message data, so fetch the full message (DM's aren't cached, always partial)
         try {
@@ -127,7 +116,7 @@ const handleInteractionCreate = async (interaction) => {
         return;
       }
   };
-
+  // Map of channel names to channel IDs, used for determining if a message is in a ticket forum
   const channelConfig = {
     "GeneralSupportForum0": "1151237881977905273",
     "TechSupportForum0": "1151237933605597254",
@@ -156,7 +145,7 @@ const handleInteractionCreate = async (interaction) => {
   };
   const channelIDs = Object.values(channelConfig);
 
-  module.exports = {
+export {
     handleInteractionCreate,
     handleMessageCreate
-}
+};

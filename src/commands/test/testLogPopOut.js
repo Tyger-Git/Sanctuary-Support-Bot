@@ -1,8 +1,6 @@
 // Test command to pop out logs into a thread, in plain text (No emebeds, scroll through the entire log)
 /*---------- Will Not Be In Final Product ----------*/
 
-const { SlashCommandBuilder } = require("discord.js");
-
 function chunkStringArrayByCharCount(array, charLimit) {
     let chunk = "";
     const result = [];
@@ -21,7 +19,7 @@ function chunkStringArrayByCharCount(array, charLimit) {
     return result;
 }
 
-module.exports = {
+export default {
     name: 'tlogpopout',
     description: 'Test Log Pop Out',
     callback: async (client, interaction) => {

@@ -1,8 +1,6 @@
-// Module to read a modal and create a ticket in the database
-
-const logger = require('../utils/logger.js');
-const Ticket = require("../schemas/ticket.js"); 
-const TicketCounter = require('../schemas/ticketCounter.js');
+import logger from '../utils/logger.js';
+import Ticket from '../schemas/ticket.js';
+import TicketCounter from '../schemas/ticketCounter.js';
 
 async function getNewTicketID() {
   try {
@@ -121,4 +119,4 @@ const createTicket = async (interaction, ticketType) => {
   }
 };
 
-module.exports = createTicket;
+export default createTicket;

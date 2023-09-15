@@ -1,13 +1,9 @@
 // Testing some embeds and buttons for the logs embed
 /*---------- Will Not Be In Final Product ----------*/
 
-const {
-    ButtonBuilder,
-    EmbedBuilder,
-    ActionRowBuilder,
-  } = require("discord.js");
+import { ButtonBuilder, EmbedBuilder, ActionRowBuilder } from 'discord.js';
 
-module.exports = {
+export default {
     name: 'testlogs',
     description: 'Shows the logs embed',
     devOnly: true,

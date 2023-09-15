@@ -1,11 +1,11 @@
 // This command adds a snippet to the snippets.json file
 /*--- DEV ONLY ---*/
 
-const { ApplicationCommandOptionType } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
+import { ApplicationCommandOptionType } from 'discord.js';
+import snippets from '../../snippets.json' assert { type: "json" };
+import fs from 'fs';
 
-module.exports = {
+export default {
     name: 'addsnippet',
     description: 'Add a snippet',
     options: [{
@@ -26,9 +26,7 @@ module.exports = {
         await interaction.deferReply();
         const label = interaction.options.getString('label');
         const message = interaction.options.getString('message');
-        const snippets = require("../../snippets.json");
         snippets.push({ label: label, value: label, message: message });
-        const fs = require('fs');
 
         fs.writeFile("./snippets.json", JSON.stringify(snippets, null, 2));
 

@@ -1,9 +1,8 @@
-const { ButtonBuilder, EmbedBuilder, ActionRowBuilder } = require("discord.js");
-const { outgoingDirectMessage } = require("../interactionTypeHandlers/directMessageHandler");
-const Ticket = require("../../schemas/ticket");
-const logger = require("../../utils/logger");
-const threadReCreation = require("../functionHandlers/handleThreadReCreation");
-const clientSingleton = require("../../utils/DiscordClientInstance");
+import { ButtonBuilder, ActionRowBuilder } from "discord.js";
+import Ticket from "../../schemas/ticket.js";
+import logger from "../../utils/logger.js";
+import threadReCreation from "../functionHandlers/handleThreadReCreation.js";
+import clientSingleton from '../../utils/DiscordClientInstance.js';
 
 // Helper Function to Delete and Recreate a Thread
 const deleteAndRecreateThread = async (interaction, ticket, escalatorId) => {
@@ -12,7 +11,6 @@ const deleteAndRecreateThread = async (interaction, ticket, escalatorId) => {
     // Get and Delete the thread
     const thread = await client.channels.fetch(ticket.ticketThread);
     await thread.delete();
-
     // Recreate the thread
     await threadReCreation(client, ticket, escalatorId);
 };
@@ -22,19 +20,16 @@ const deleteAndRecreateThread = async (interaction, ticket, escalatorId) => {
 const escalateWorkflow = async (interaction) => {
     if (interaction.customId === "escalate_menu") {
         const selectedValue = interaction.values[0];
-        
 
         // Create the confirmation buttons
         const sendReplyButton = new ButtonBuilder()
             .setLabel("Escalate")
             .setCustomId(`send_escalate_reply_button:${selectedValue}`) // Embed the value here
             .setStyle("Success");
-
         const cancelButton = new ButtonBuilder()
             .setLabel("Cancel")
             .setCustomId("cancel_escalate_reply_button")
             .setStyle("Danger");
-
         const row = new ActionRowBuilder().addComponents(sendReplyButton, cancelButton);
 
         // Update the message with the snippet's content and the confirmation buttons
@@ -42,6 +37,7 @@ const escalateWorkflow = async (interaction) => {
             content: `Confirm escalation to ${selectedValue}?`,
             components: [row],
         });
+
     } else if (interaction.customId.startsWith("send_escalate_reply_button")) {
         const [_, targetCatagory] = interaction.customId.split(':'); // Split the customId to retrieve the target catagory
         const threadId = interaction.channel.id;
@@ -160,6 +156,4 @@ const escalateWorkflow = async (interaction) => {
     }
 };
 
-module.exports = {
-    escalateWorkflow,
-}
+export { escalateWorkflow };

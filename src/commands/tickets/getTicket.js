@@ -1,8 +1,8 @@
-const { ApplicationCommandOptionType } = require("discord.js");
-const modTicket = require("../../functions/modTicket.js");
-const Ticket = require("../../schemas/ticket.js");
+import { ApplicationCommandOptionType } from 'discord.js';
+import modTicket from '../../functions/modTicket.js';
+import Ticket from '../../schemas/ticket.js';
 
-module.exports = {
+export default {
     name: 'getticket',
     description: 'Display a ticket. If no ticket ID is provided, the ticket in the current channel will be displayed.',
     options: [

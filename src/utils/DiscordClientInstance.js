@@ -1,4 +1,4 @@
-const { Client, IntentsBitField, Partials } = require('discord.js');
+import { Client, IntentsBitField, Partials } from 'discord.js';
 
 class DiscordClientSingleton {
     constructor() {
@@ -33,4 +33,4 @@ class DiscordClientSingleton {
 const instance = new DiscordClientSingleton();
 Object.freeze(instance);
 
-module.exports = instance;
+export default instance;

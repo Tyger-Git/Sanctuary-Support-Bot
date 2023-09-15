@@ -1,12 +1,9 @@
-// Function to create a thread called on mongoose stream change listener
-const { messageEmbed, ButtonBuilder, EmbedBuilder, ActionRowBuilder } = require('discord.js');
-const threadInfo = require('../../threadInformation.json');
-const Ticket = require("../../schemas/ticket.js");
-const modTicket = require("../../functions/modTicket.js");
-const { handleThreadName, getThreadTag, getParentChannelID } = require("../../functions/threadFunctions.js");
-const logger = require('../../utils/logger.js');
+import Ticket from "../../schemas/ticket.js";
+import modTicket from "../../functions/modTicket.js";
+import { handleThreadName, getThreadTag, getParentChannelID } from "../../functions/threadFunctions.js";
+import logger from '../../utils/logger.js';
 
-module.exports = async function handleThreadCreation(client, ticketData) {
+const handleThreadCreation = async (client, ticketData) => {
     // Fetch the ticket as a Mongoose model instance
     const ticket = await Ticket.findById(ticketData._id);
     if (!ticket) {
@@ -54,3 +51,5 @@ module.exports = async function handleThreadCreation(client, ticketData) {
     await logger(ticket.ticketId, 'Event', client.user.id, 'Bot', `Created thread for ticket ${ticket.ticketId}`);
     return thread;
 }
+
+export default handleThreadCreation;

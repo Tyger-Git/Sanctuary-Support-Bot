@@ -1,8 +1,8 @@
-const Ticket = require('../../schemas/ticket');
-const clientSingleton = require('../../utils/DiscordClientInstance');
-const config = require('../../../config.json');
-const { EmbedBuilder } = require("discord.js");
-const logger = require('../../utils/logger.js');
+import Ticket from '../../schemas/ticket.js';
+import clientSingleton from '../../utils/DiscordClientInstance.js';
+import config from '../../../config.json' assert { type: 'json' };
+import { EmbedBuilder } from "discord.js";
+import logger from '../../utils/logger.js';
 
 const incomingDirectMessage = async (message) => {
     console.log(`Got DM from ${message.author.tag}`);
@@ -17,14 +17,14 @@ const incomingDirectMessage = async (message) => {
         const thread = await client.channels.fetch(ticket.ticketThread);
 
         // Spin up an embed to send to the thread
-        const embed = new EmbedBuilder()
+        const embed = new EmbedBuilder();
 
         if (thread) {
             embed
                 .setTitle(`${ticket.userDisplayName} (${ticket.userName}) has replied to their ticket :`)
-                .setDescription(`${message.content}`)
+                .setDescription(`${message.content}`);
             // Send the user's message to the thread
-            await thread.send({ embeds: [embed]});
+            await thread.send({ embeds: [embed] });
             await logger(ticket.ticketId, 'Primary', message.author.id, 'User', message.content);
         } else {
             // This is just a safety check in case the thread doesn't exist for some reason.
@@ -33,9 +33,9 @@ const incomingDirectMessage = async (message) => {
     } else {
         embed
             .setTitle("Uh oh!")
-            .setDescription(`You don't have an open ticket. If you wish to create one, please follow the instructions here: ${config.supportmessagelink}`)
+            .setDescription(`You don't have an open ticket. If you wish to create one, please follow the instructions here: ${config.supportmessagelink}`);
         // Reply to the user if they don't have an open ticket
-        await message.reply({ embeds: [embed]});
+        await message.reply({ embeds: [embed] });
     }
 };
 
@@ -46,21 +46,21 @@ const outgoingDirectMessage = async (interaction, ticket, message) => {
     }
     // Use the client singleton to get the Discord client
     const client = clientSingleton.getClient();
-    const embed = new EmbedBuilder()
+    const embed = new EmbedBuilder();
 
     try {
         const user = await client.users.fetch(ticket.userId); // Fetch the user based on ID
         embed
             .setTitle(`A staff member has replied to your ticket :`)
-            .setDescription(`${message}`)
-        await user.send({ embeds: [embed]}); // DM the user
+            .setDescription(`${message}`);
+        await user.send({ embeds: [embed] }); // DM the user
         await logger(ticket.ticketId, 'Primary', interaction.user.id, 'Staff', message);
     } catch (error) {
         console.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error.message}`);
     }
 };
 
-module.exports = {
-    incomingDirectMessage,
-    outgoingDirectMessage,
-}
+export { 
+    incomingDirectMessage, 
+    outgoingDirectMessage 
+};

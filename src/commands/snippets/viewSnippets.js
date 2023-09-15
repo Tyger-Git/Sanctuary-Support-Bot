@@ -1,6 +1,5 @@
-const { SlashCommandBuilder, ButtonBuilder, EmbedBuilder, ActionRowBuilder } = require("discord.js");
-const fs = require('fs');
-const snippets = require("../../snippets.json");
+import snippets from "../../snippets.json" assert { type: "json" };
+import { ButtonBuilder, EmbedBuilder, ActionRowBuilder } from 'discord.js';
 
 function chunkArray(array, chunkSize) {
     const MAX_CHARS = 5800; // This leaves a little room for titles, descriptions, and other embed components.
@@ -48,7 +47,7 @@ function createEmbedsFromChunks(chunks) {
     });
 }
 
-module.exports = {
+export default {
     name: 'viewsnippets',
     description: 'View all snippets',
     devOnly: true,

@@ -1,27 +1,30 @@
-const path = require('path');
-const getAllFiles = require('./getAllFiles');
+import path from 'path';
+import getAllFiles from '../commandUtils/getAllFiles.js';
+import { fileURLToPath, pathToFileURL } from 'url';
 
-module.exports = (exceptions = []) => {
-  let localCommands = [];
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-  const commandCategories = getAllFiles(
-    path.join(__dirname, '..', 'commands'),
-    true
-  );
-
-  for (const commandCategory of commandCategories) {
-    const commandFiles = getAllFiles(commandCategory);
+const getLocalCommands = async (exceptions = []) => {
+    let localCommands = [];
     
-    for (const commandFile of commandFiles) {
-      const commandObject = require(commandFile);
+    const commandCategories = getAllFiles(path.join(__dirname, '..', 'commands'), true);
+    
+    for (const commandCategory of commandCategories) {
+        const commandFiles = getAllFiles(commandCategory);
+        
+        for (const commandFile of commandFiles) {
+            const commandFileURL = pathToFileURL(commandFile).href;
+            const commandObject = await import(commandFileURL).then(module => module.default);
+            
+            if (exceptions.includes(commandObject.name)) {
+                continue;
+            }
 
-      if (exceptions.includes(commandObject.name)) {
-        continue;
-      }
-
-      localCommands.push(commandObject);
+            localCommands.push(commandObject);
+        }
     }
-  }
 
-  return localCommands;
+    return localCommands;
 };
+
+export default getLocalCommands;
