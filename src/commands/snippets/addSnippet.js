@@ -3,7 +3,8 @@
 
 import { ApplicationCommandOptionType } from 'discord.js';
 import snippets from '../../snippets.json' assert { type: "json" };
-import fs from 'fs';
+import { promises as fs } from 'fs';
+
 
 export default {
     name: 'addsnippet',
@@ -28,7 +29,8 @@ export default {
         const message = interaction.options.getString('message');
         snippets.push({ label: label, value: label, message: message });
 
-        fs.writeFile("./snippets.json", JSON.stringify(snippets, null, 2));
+        await fs.writeFile("./snippets.json", JSON.stringify(snippets, null, 2));
+
 
         await interaction.editReply(`${label} snippet successfully added.`);
     }

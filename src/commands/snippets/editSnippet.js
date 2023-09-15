@@ -2,7 +2,7 @@
 /*--- DEV ONLY ---*/
 
 import snippets from '../../snippets.json' assert { type: "json" };
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 export default {
@@ -32,7 +32,7 @@ export default {
             snippets[index].message = message;
         }
 
-        fs.writeFile("./snippets.json", JSON.stringify(snippets, null, 2));
+        await fs.writeFile("./snippets.json", JSON.stringify(snippets, null, 2));
         
         await interaction.editReply(`${label} snippet successfully edited.`);
     }

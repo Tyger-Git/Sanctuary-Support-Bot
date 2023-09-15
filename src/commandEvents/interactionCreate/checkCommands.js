@@ -1,12 +1,12 @@
 //Handler for slash commands
 
-import { devs, modServer } from '../../../config.json' assert { type: 'json' };
-import getLocalCommands from '../../commandUtils/getLocalCommands';
+import config from '../../../config.json' assert { type: 'json' };
+import getLocalCommands from '../../commandUtils/getLocalCommands.js';
 
 const checkCommands = async (client, interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  const localCommands = getLocalCommands();
+  const localCommands = await getLocalCommands();
   try {
     const commandObject = localCommands.find(
       (cmd) => cmd.name === interaction.commandName
@@ -15,7 +15,7 @@ const checkCommands = async (client, interaction) => {
     if (!commandObject) return;
 
     if (commandObject.devOnly) {
-      if (!devs.includes(interaction.member.id)) {
+      if (!config.devs.includes(interaction.member.id)) {
         interaction.reply({
           content: 'Only developers are allowed to run this command.',
           ephemeral: true,

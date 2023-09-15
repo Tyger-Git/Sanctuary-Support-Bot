@@ -2,7 +2,7 @@
 /*--- DEV ONLY ---*/
 
 import { ApplicationCommandOptionType } from 'discord.js';
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import snippets from '../../snippets.json' assert { type: "json" };
 
 export default {
@@ -25,7 +25,7 @@ export default {
             snippets.splice(index, 1);
         }
 
-        fs.writeFile("./snippets.json", JSON.stringify(snippets, null, 2));
+        await fs.writeFile("./snippets.json", JSON.stringify(snippets, null, 2));
 
         await interaction.editReply(`${label} snippet successfully deleted.`);
     }
