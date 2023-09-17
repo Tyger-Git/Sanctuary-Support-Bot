@@ -1,5 +1,5 @@
 import { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
-import snippets from "../../snippets.json" assert { type: "json" };
+import Snippet from "../../schemas/snippet.js";
 import Ticket from "../../schemas/ticket.js";
 import { handleThreadName, handleTicketMessageUpdate, getThreadTag } from "../../functions/threadFunctions.js";
 import logger from '../../utils/logger.js';
@@ -220,7 +220,8 @@ const snippetsButton = async (interaction) => {
         .setCustomId("snippet_menu")
         .setMaxValues(1)
         .setPlaceholder("Select a snippet to send.")
-    
+    let snippets = await Snippet.find({});
+    // Does this work?
     snippets.forEach(snippet => {
         snippetMenu.addOptions(
             new StringSelectMenuOptionBuilder()

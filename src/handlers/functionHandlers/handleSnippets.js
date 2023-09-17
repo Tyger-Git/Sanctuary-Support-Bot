@@ -1,12 +1,14 @@
 import { ButtonBuilder, ActionRowBuilder } from "discord.js";
-import snippets from "../../snippets.json" assert { type: "json" };
 import { outgoingDirectMessage } from "../interactionTypeHandlers/directMessageHandler.js";
 import Ticket from "../../schemas/ticket.js";
+import Snippet from "../../schemas/snippet.js";
 
 const snippetWorkflow = async (interaction) => {
     if (interaction.customId === "snippet_menu") {
         const selectedValue = interaction.values[0];
-        const selectedSnippet = snippets.find(snippet => snippet.value === selectedValue);
+        
+        // Fetch the snippet from the database instead of JSON
+        const selectedSnippet = await Snippet.findOne({ value: selectedValue });
 
         if (!selectedSnippet) {
             console.log("Selected snippet is undefined.");
@@ -35,7 +37,9 @@ const snippetWorkflow = async (interaction) => {
         const threadId = interaction.channel.id;
         const ticket = await Ticket.findOne({ ticketThread: threadId });
         const [_, snippetIdentifier] = interaction.customId.split(':'); // Split the customId to retrieve the snippet value
-        const selectedSnippet = snippets.find(snippet => snippet.value === snippetIdentifier);
+        
+        // Fetch the snippet from the database again
+        const selectedSnippet = await Snippet.findOne({ value: snippetIdentifier });
 
         if (selectedSnippet) {
             await outgoingDirectMessage(interaction, ticket, selectedSnippet.message);
