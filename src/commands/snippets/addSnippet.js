@@ -1,9 +1,8 @@
-// This command adds a snippet to the snippets.json file
+// This command adds a snippet to the snippets collection
 /*--- DEV ONLY ---*/
 
 import { ApplicationCommandOptionType } from 'discord.js';
-import snippets from '../../snippets.json' assert { type: "json" };
-import { promises as fs } from 'fs';
+import Snippet from '../../schemas/snippet.js';
 
 
 export default {
@@ -27,11 +26,13 @@ export default {
         await interaction.deferReply();
         const label = interaction.options.getString('label');
         const message = interaction.options.getString('message');
-        snippets.push({ label: label, value: label, message: message });
 
-        await fs.writeFile("./snippets.json", JSON.stringify(snippets, null, 2));
+        const newSnippet = new Snippet({
+            snippetName: label,
+            snippetContent: message,
+        });
 
-
+        await newSnippet.save();
         await interaction.editReply(`${label} snippet successfully added.`);
     }
 }

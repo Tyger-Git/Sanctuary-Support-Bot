@@ -2,8 +2,7 @@
 /*--- DEV ONLY ---*/
 
 import { ApplicationCommandOptionType } from 'discord.js';
-import { promises as fs } from 'fs';
-import snippets from '../../snippets.json' assert { type: "json" };
+import Snippet from '../../schemas/snippet.js';
 
 export default {
     name: 'deletesnippet',
@@ -20,13 +19,12 @@ export default {
     callback: async (client, interaction) => {
         await interaction.deferReply();
         const label = interaction.options.getString('label');
-        const index = snippets.findIndex(snippet => snippet.label === label);
-        if (index > -1) {
-            snippets.splice(index, 1);
+        const snippet = await Snippet.findOne({ snippetName: label });
+        if (snippet){
+            await snippet.delete();
+            await interaction.editReply(`${label} snippet successfully deleted.`);
+        } else {
+            await interaction.editReply(`${label} snippet not found.`);
         }
-
-        await fs.writeFile("./snippets.json", JSON.stringify(snippets, null, 2));
-
-        await interaction.editReply(`${label} snippet successfully deleted.`);
     }
 }
