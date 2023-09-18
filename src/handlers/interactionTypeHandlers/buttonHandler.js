@@ -225,8 +225,8 @@ const snippetsButton = async (interaction) => {
     snippets.forEach(snippet => {
         snippetMenu.addOptions(
             new StringSelectMenuOptionBuilder()
-                .setLabel(snippet.label)
-                .setValue(snippet.value)
+                .setLabel(snippet.snippetName)
+                .setValue(snippet.snippetName)
         );
     });
     const row = new ActionRowBuilder().addComponents(snippetMenu);
@@ -234,7 +234,7 @@ const snippetsButton = async (interaction) => {
     interaction.reply({
         content: "Select a snippet to send.",
         components: [row],
-        //ephemeral: true
+        ephemeral: true
     });
 };
 
