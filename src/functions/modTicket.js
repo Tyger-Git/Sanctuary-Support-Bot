@@ -201,6 +201,31 @@ const modTicket = async (ticket) => {
         return messageObject;
 };
 
+const ticketList = async (type, tickets) => { // This takes an array of tickets
+    let messageObject = {};
+    let ticketListEmbed = new EmbedBuilder()
+        .setColor([0,0,0]) // Black 
+        .setTitle('Ticket List')
+        .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
+        .setImage('attachment://1px.png')
+        ;
+    if (type === 'user'){
+        tickets.forEach(ticket => {
+            ticketListEmbed.addFields(
+                { name: 'Ticket ID: ', value: `${ticket.ticketId}`, inline: true },{ name: 'Claimant Mod: ', value: ticket.claimantModName, inline: true },{ name: 'Ticket Type:', value: ticket.ticketType, inline: true },
+            )
+        });
+    } else if (type === 'mod'){
+        tickets.forEach(ticket => {
+            ticketListEmbed.addFields(
+                { name: 'Ticket ID: ', value: `${ticket.ticketId}`, inline: true },{ name: 'User Name: ', value: ticket.userName, inline: true },{ name: 'Ticket Type:', value: ticket.ticketType, inline: true },
+            )
+        });
+    }
+    messageObject = { embeds: [ticketListEmbed], files: [{attachment: './resources/1px.png', name: '1px.png'}] };
+    return messageObject;
+};
+
 function daysToYearsMonthsDays(age) {
     const daysInYear = 365.25; // Taking into account leap years
     const daysInMonth = 30.44; // Average days in a month considering all months
@@ -237,4 +262,7 @@ function formatDate(date) {
     return `${month}/${day}/${year} - ${hours}:${minutes}`;
 }
 
-export default modTicket;
+export {
+    modTicket,
+    ticketList,
+};

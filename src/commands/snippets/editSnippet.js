@@ -23,6 +23,7 @@ export default {
     ],
     devOnly: true,
     callback: async (client, interaction) => {
+        //await interaction.deferReply({ ephemeral: true });
         await interaction.deferReply();
         const label = interaction.options.getString('label');
         const message = interaction.options.getString('message');
@@ -32,9 +33,11 @@ export default {
         if (snippet) {
             snippet.snippetContent = message;
             await snippet.save();
-            await interaction.editReply(`${label} snippet successfully edited.`);
+            //await interaction.editReply({content: `${label} snippet successfully edited.`, ephemeral: true});
+            await interaction.editReply({content: `${label} snippet successfully edited.` });
         } else {
-            await interaction.editReply(`${label} snippet not found.`);
+            //await interaction.editReply({ content: `${label} snippet not found.`, ephemeral: true });
+            await interaction.editReply({ content: `${label} snippet not found.` });
         }
     }
 }

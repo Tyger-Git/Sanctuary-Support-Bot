@@ -40,6 +40,13 @@ const vibeCheck = async (action, interaction) => {
 };
 
 const claimTicket = async (interaction) => {
+    // Vibe Checker
+    const permissionCheck = await vibeCheck('claim', interaction);
+    if (permissionCheck !== '✅') {
+        await interaction.reply({ content: permissionCheck, ephemeral: true }); // Reply with the error message
+        return; // Exit early since the check failed
+    }
+
     const threadId = interaction.channel.id;
     const claimantMod = interaction.user.username;
     const claimantModId = interaction.user.id;
@@ -72,6 +79,13 @@ const claimTicket = async (interaction) => {
 };
 
 const unclaimTicket = async (interaction) => {
+    // Vibe Checker
+    const permissionCheck = await vibeCheck('unclaim', interaction);
+    if (permissionCheck !== '✅') {
+        await interaction.reply({ content: permissionCheck, ephemeral: true }); // Reply with the error message
+        return; // Exit early since the check failed
+    }
+
     const threadId = interaction.channel.id;
     const thread = interaction.channel;
     try {

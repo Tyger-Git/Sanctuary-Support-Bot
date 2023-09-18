@@ -1,5 +1,5 @@
 import {  EmbedBuilder } from 'discord.js';
-import modTicket from "../../functions/modTicket.js";
+import { modTicket } from "../../functions/modTicket.js";
 import { handleThreadName, getThreadTag, getParentChannelID } from "../../functions/threadFunctions.js";
 import clientSingleton from "../../utils/DiscordClientInstance.js";
 

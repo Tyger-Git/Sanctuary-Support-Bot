@@ -1,5 +1,5 @@
 import Ticket from "../../schemas/ticket.js";
-import modTicket from "../../functions/modTicket.js";
+import { modTicket } from "../../functions/modTicket.js";
 import { handleThreadName, getThreadTag, getParentChannelID } from "../../functions/threadFunctions.js";
 import logger from '../../utils/logger.js';
 

@@ -1,4 +1,4 @@
-import modTicket from '../functions/modTicket.js';
+import { modTicket } from '../functions/modTicket.js';
 import clientSingleton from '../utils/DiscordClientInstance.js';
 import emojis from '../emojis.json' assert { type: 'json' };
 import threadInfo from '../threadInformation.json' assert { type: "json" };

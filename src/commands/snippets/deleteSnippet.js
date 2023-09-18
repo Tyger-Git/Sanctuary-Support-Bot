@@ -17,14 +17,17 @@ export default {
     ],
     devOnly: true,
     callback: async (client, interaction) => {
+        //await interaction.deferReply({ ephemeral: true });
         await interaction.deferReply();
         const label = interaction.options.getString('label');
         const snippet = await Snippet.findOne({ snippetName: label });
         if (snippet){
             await snippet.delete();
-            await interaction.editReply(`${label} snippet successfully deleted.`);
+            //await interaction.editReply({ content:`${label} snippet successfully deleted.`, ephemeral: true});
+            await interaction.editReply({ content:`${label} snippet successfully deleted.` });
         } else {
-            await interaction.editReply(`${label} snippet not found.`);
+            //await interaction.editReply({ content:`${label} snippet not found.`, ephemeral: true});
+            await interaction.editReply({ content:`${label} snippet not found.` });
         }
     }
 }

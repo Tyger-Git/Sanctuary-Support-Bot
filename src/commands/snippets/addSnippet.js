@@ -23,6 +23,7 @@ export default {
     ],
     devOnly: true,
     callback: async (client, interaction) => {
+        //await interaction.deferReply({ephemeral: true});
         await interaction.deferReply();
         const label = interaction.options.getString('label');
         const message = interaction.options.getString('message');
@@ -33,6 +34,7 @@ export default {
         });
 
         await newSnippet.save();
-        await interaction.editReply(`${label} snippet successfully added.`);
+        //await interaction.editReply({content: `${label} snippet successfully added.`, ephemeral: true});
+        await interaction.editReply({content: `${label} snippet successfully added.` });
     }
 }
