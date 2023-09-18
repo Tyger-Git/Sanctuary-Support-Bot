@@ -36,6 +36,7 @@ const escalateWorkflow = async (interaction) => {
         await interaction.update({
             content: `Confirm escalation to ${selectedValue}?`,
             components: [row],
+            ephemeral: true,
         });
 
     } else if (interaction.customId.startsWith("send_escalate_reply_button")) {
@@ -48,7 +49,8 @@ const escalateWorkflow = async (interaction) => {
                 if (ticket.ticketType === 'User Report' || ticket.ticketType === 'Staff Report' || ticket.ticketType === 'VIP Application') {
                     await interaction.update({
                         content: `${ticket.ticketType} tickets cannot be de-escalated to Helpers.`,
-                        components: []  // Remove all components to disable further interactions
+                        components: [],  // Remove all components to disable further interactions
+                        ephemeral: true,
                     });
                 } else {
                     ticket.ticketLevel = 0;
@@ -61,7 +63,8 @@ const escalateWorkflow = async (interaction) => {
                 if (ticket.ticketType === 'Staff Report' || ticket.ticketType === 'VIP Application') {
                     await interaction.update({
                         content: `${ticket.ticketType} tickets cannot be de-escalated to Moderators.`,
-                        components: []  // Remove all components to disable further interactions
+                        components: [],  // Remove all components to disable further interactions
+                        ephemeral: true,
                     });
                 } else {
                     ticket.ticketLevel = 1;
@@ -74,7 +77,8 @@ const escalateWorkflow = async (interaction) => {
                 if (ticket.ticketType === 'VIP Application') {
                     await interaction.update({
                         content: `${ticket.ticketType} tickets cannot be de-escalated to Senior Moderators.`,
-                        components: []  // Remove all components to disable further interactions
+                        components: [],  // Remove all components to disable further interactions
+                        ephemeral: true,
                     });
                 } else {
                     ticket.ticketLevel = 2;
@@ -87,7 +91,8 @@ const escalateWorkflow = async (interaction) => {
                 if (ticket.ticketType === 'VIP Application') {
                     await interaction.update({
                         content: `${ticket.ticketType} tickets cannot be de-escalated to Head Moderators.`,
-                        components: []  // Remove all components to disable further interactions
+                        components: [],  // Remove all components to disable further interactions
+                        ephemeral: true,
                     });
                 } else {
                     ticket.ticketLevel = 3;
@@ -100,7 +105,8 @@ const escalateWorkflow = async (interaction) => {
                 if (ticket.ticketType === 'VIP Application') {
                     await interaction.update({
                         content: `${ticket.ticketType} tickets cannot be de-escalated to Server Support.`,
-                        components: []  // Remove all components to disable further interactions
+                        components: [],  // Remove all components to disable further interactions
+                        ephemeral: true,
                     });
                 } else {
                     ticket.ticketLevel = 5;
@@ -113,7 +119,8 @@ const escalateWorkflow = async (interaction) => {
                 if (ticket.ticketType === 'VIP Application') {
                     await interaction.update({
                         content: `${ticket.ticketType} tickets cannot be moved to Demonly.`,
-                        components: []  // Remove all components to disable further interactions
+                        components: [],  // Remove all components to disable further interactions
+                        ephemeral: true,
                     });
                 } else {
                     ticket.ticketLevel = 6;
@@ -132,7 +139,8 @@ const escalateWorkflow = async (interaction) => {
                 if (ticket.ticketType !== 'Technical Support') {
                     await interaction.update({
                         content: `${ticket.ticketType} tickets cannot be escalated to Developers.`,
-                        components: []  // Remove all components to disable further interactions
+                        components: [],  // Remove all components to disable further interactions
+                        ephemeral: true,
                     });
                 } else {
                     ticket.ticketLevel = 8;
@@ -144,14 +152,16 @@ const escalateWorkflow = async (interaction) => {
             default:
                 await interaction.update({
                     content: "Error: Catagory not found.",
-                    components: []  // Remove all components to disable further interactions
+                    components: [],  // Remove all components to disable further interactions
+                    ephemeral: true,
                 });
                 break;
         }
     } else if (interaction.customId === "cancel_escalate_reply_button") {
         await interaction.update({
             content: "Escalation cancelled.",
-            components: []  // Remove all components to disable further interactions
+            components: [],  // Remove all components to disable further interactions
+            ephemeral: true,
         });
     }
 };

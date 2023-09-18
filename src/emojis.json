@@ -18,5 +18,5 @@
     "claimedTicket" : "🟡",
     "unclaimedTicket" : "🔴",
     "closedTicket" : "🟢",
-    "flipTicket" : "🔁"
+    "redCircle" : "⭕"
 }

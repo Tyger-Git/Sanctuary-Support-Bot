@@ -3,6 +3,7 @@ import Snippet from "../../schemas/snippet.js";
 import Ticket from "../../schemas/ticket.js";
 import { handleThreadName, handleTicketMessageUpdate, getThreadTag } from "../../functions/threadFunctions.js";
 import logger from '../../utils/logger.js';
+import { claimTicket, unclaimTicket, vibeCheck } from "../../functions/ticketFunctions.js";
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Helper functions
@@ -242,67 +243,22 @@ const snippetsButton = async (interaction) => {
 // Claim Button (ModTicket)
 /*------------------------------------------------------------------------------------------------------------------------*/
 const claimButton = async (interaction) => {
-    const threadId = interaction.channel.id;
-    const claimantMod = interaction.user.username;
-    const claimantModId = interaction.user.id;
-    const thread = interaction.channel;
-    try {
-        const ticket = await Ticket.findOne({ ticketThread: threadId });
-        // Update the ticket's info in MongoDB and save
-        ticket.isClaimed = true;
-        ticket.claimantModId = claimantModId;
-        ticket.claimantModName = claimantMod;
-        await ticket.save();
-
-        // Get the thread and edit the thread name
-        const newThreadName = await handleThreadName(ticket);
-        const threadTag = await getThreadTag(ticket);
-        await thread.edit({
-            name: newThreadName,
-            appliedTags: [threadTag],
-        });
-
-        //Update Ticket Message
-        await handleTicketMessageUpdate(ticket);
-
-        // Reply to the interaction
-        await interaction.reply({ content: `Ticket claimed by **${claimantMod}**`});
-        await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket Claimed by **${claimantMod}**`);
-    } catch (error) {
-        console.error('Error claiming ticket:', error);
+    const permCheck = await vibeCheck('claim', interaction);
+    if (permCheck === '✅'){
+        await claimTicket(interaction);
+    } else {
+        await interaction.reply({ content: permCheck, ephemeral: true });
     }
 };
 
 // Unclaim Button (ModTicket)
 /*------------------------------------------------------------------------------------------------------------------------*/
 const unclaimButton = async (interaction) => {
-    const threadId = interaction.channel.id;
-    const thread = interaction.channel;
-    try {
-        const ticket = await Ticket.findOne({ ticketThread: threadId });
-        // Update the ticket's info in MongoDB and save
-        ticket.isClaimed = false;
-        ticket.claimantModId = 0;
-        let modUnclaiming = ticket.claimantModName;
-        ticket.claimantModName = 'Unclaimed';
-        await ticket.save();
-
-        // Get the thread and edit the thread name
-        const newThreadName = await handleThreadName(ticket);
-        const threadTag = await getThreadTag(ticket);
-        await thread.edit({
-            name: newThreadName,
-            appliedTags: [threadTag],
-        });
-
-        //Update Ticket Message
-        await handleTicketMessageUpdate(ticket);
-
-        // Reply to the interaction
-        await interaction.reply({ content: `Ticket unclaimed by **${modUnclaiming}**`});
-        await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket Unclaimed by **${modUnclaiming}**`)
-    } catch (error) {
-        console.error('Error unclaiming ticket:', error);
+    const permCheck = await vibeCheck('unclaim', interaction);
+    if (permCheck === '✅'){
+        await unclaimTicket(interaction);
+    } else {
+        await interaction.reply({ content: permCheck, ephemeral: true });
     }
 };
 
@@ -348,7 +304,7 @@ const escalateButton = async (interaction) => {
     interaction.reply({
         content: "Where would you like to escalate this ticket to?",
         components: [row],
-        //ephemeral: true
+        ephemeral: true
     });
 };
 
