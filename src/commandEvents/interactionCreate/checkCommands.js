@@ -16,20 +16,14 @@ const checkCommands = async (client, interaction) => {
 
     if (commandObject.devOnly) {
       if (!config.devs.includes(interaction.member.id)) {
-        interaction.reply({
-          content: 'Only developers are allowed to run this command.',
-          ephemeral: true,
-        });
+        interaction.reply(await ticketErrorMessageObject('Only developers are allowed to run this command.', true));
         return;
       }
     }
 
     if (commandObject.modServerOnly) {
       if (!(interaction.guild.id === modServer)) {
-        interaction.reply({
-          content: 'This command cannot be ran here.',
-          ephemeral: true,
-        });
+        interaction.reply(await ticketErrorMessageObject('This command can not be run here.', true));
         return;
       }
     }
@@ -37,10 +31,7 @@ const checkCommands = async (client, interaction) => {
     if (commandObject.permissionsRequired?.length) {
       for (const permission of commandObject.permissionsRequired) {
         if (!interaction.member.permissions.has(permission)) {
-          interaction.reply({
-            content: 'Not enough permissions.',
-            ephemeral: true,
-          });
+          interaction.reply(await ticketErrorMessageObject('You do need meet the permissions requirements to run this command.', true));
           return;
         }
       }
@@ -51,10 +42,7 @@ const checkCommands = async (client, interaction) => {
         const bot = interaction.guild.members.me;
 
         if (!bot.permissions.has(permission)) {
-          interaction.reply({
-            content: "I don't have enough permissions.",
-            ephemeral: true,
-          });
+          interaction.reply(await ticketErrorMessageObject('I do not have the required permissions to run this command.', true));
           return;
         }
       }

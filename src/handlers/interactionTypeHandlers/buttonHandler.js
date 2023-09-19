@@ -8,7 +8,7 @@ import { claimTicket, unclaimTicket, vibeCheck } from "../../functions/ticketFun
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Helper functions
 /*------------------------------------------------------------------------------------------------------------------------*/
-const checkExistingTicket = async (interaction) => {
+const checkExistingTicket = async (interaction) => { // MAKE THIS RESPONSE A PRETTY EMBED
     // Check if user already has an active ticket
     /*
     const existingTicket = await Ticket.findOne({ userId: interaction.user.id, isOpen: true });
@@ -243,23 +243,13 @@ const snippetsButton = async (interaction) => {
 // Claim Button (ModTicket)
 /*------------------------------------------------------------------------------------------------------------------------*/
 const claimButton = async (interaction) => {
-    const permCheck = await vibeCheck('claim', interaction);
-    if (permCheck === '✅'){
-        await claimTicket(interaction);
-    } else {
-        await interaction.reply({ content: permCheck, ephemeral: true });
-    }
+    await claimTicket(interaction, 'button');
 };
 
 // Unclaim Button (ModTicket)
 /*------------------------------------------------------------------------------------------------------------------------*/
 const unclaimButton = async (interaction) => {
-    const permCheck = await vibeCheck('unclaim', interaction);
-    if (permCheck === '✅'){
-        await unclaimTicket(interaction);
-    } else {
-        await interaction.reply({ content: permCheck, ephemeral: true });
-    }
+    await unclaimTicket(interaction, 'button');
 };
 
 // Escalate Button (ModTicket)

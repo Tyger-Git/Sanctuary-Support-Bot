@@ -274,9 +274,9 @@ async function closeThread(interaction) {
 
         // Reply to the interaction
         if (closeTimer === 0) {
-            await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion **immediately.**"});
+            await interaction.reply(await ticketActionMessageObject("Ticket Closed...Thread scheduled for deletion **immediately.**", false));
         } else {
-            await interaction.reply({ content: "Ticket Closed...Thread scheduled for deletion in **" + closeTimer + " hour(s).**"});
+            await interaction.reply(await ticketActionMessageObject("Ticket Closed...Thread scheduled for deletion in **" + closeTimer + " hour(s).**", false));
         }
         await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket closed by **${interaction.user.username}**`);
     } catch (error) {

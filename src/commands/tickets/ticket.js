@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord.js';
 import {modTicket, ticketList} from '../../functions/modTicket.js';
 import Ticket from '../../schemas/ticket.js';
+import { ticketErrorMessageObject } from '../../functions/responseFunctions.js';
 
 export default {
     name: 'ticket',
@@ -51,12 +52,12 @@ export default {
             try {
                 ticket = await Ticket.findOne(query);
                 if (!ticket) {
-                    await interaction.editReply('No ticket found.');
+                    await interaction.editReply(await ticketErrorMessageObject('No ticket found.', true));
                     return;
                 }
             } catch (err) {
                 console.error(err);
-                await interaction.editReply('An error occurred while fetching the ticket.');
+                await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the ticket.', true));
             }
             // Construct the ticket
             const messageObj = await modTicket(ticket);
@@ -67,12 +68,12 @@ export default {
             try {
                 tickets = await Ticket.find(query);
                 if (!tickets) {
-                    await interaction.editReply('No tickets found.');
+                    await interaction.editReply(await ticketErrorMessageObject('No tickets found.', true));
                     return;
                 }
             } catch (error) {
                 console.error(error);
-                await interaction.editReply('An error occurred while fetching the tickets.');
+                await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the tickets.', true));
             }
             const type = providedUserId ? 'user' : 'mod';
             // Construct the table of contents
@@ -83,12 +84,12 @@ export default {
             try {
                 ticket = await Ticket.findOne(query);
                 if (!ticket) {
-                    await interaction.editReply('No ticket found.');
+                    await interaction.editReply(await ticketErrorMessageObject('No ticket found.', true));
                     return;
                 }
             } catch (err) {
                 console.error(err);
-                await interaction.editReply('An error occurred while fetching the ticket.');
+                await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the ticket.', true));
             }
             // Construct the ticket
             const messageObj = await modTicket(ticket);

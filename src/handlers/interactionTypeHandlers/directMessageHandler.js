@@ -28,12 +28,12 @@ const incomingDirectMessage = async (message) => {
             await logger(ticket.ticketId, 'Primary', message.author.id, 'User', message.content);
         } else {
             // This is just a safety check in case the thread doesn't exist for some reason.
-            await message.reply("Sorry, there seems to be an issue with your ticket's thread. Please contact support.");
+            await message.reply(await ticketErrorMessageObject('An error occurred while sending your message. Please try again later, or contact a staff member for assistance.', true));
         }
     } else {
         embed
             .setTitle("Uh oh!")
-            .setDescription(`You don't have an open ticket. If you wish to create one, please follow the instructions here: ${config.supportmessagelink}`);
+            .setDescription(`You don't have an open ticket. If you wish to create one, please fill out a ticket form here: ${config.supportmessagelink}`);
         // Reply to the user if they don't have an open ticket
         await message.reply({ embeds: [embed] });
     }

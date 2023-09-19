@@ -2,6 +2,7 @@ import { ButtonBuilder, ActionRowBuilder } from "discord.js";
 import { outgoingDirectMessage } from "../interactionTypeHandlers/directMessageHandler.js";
 import Ticket from "../../schemas/ticket.js";
 import Snippet from "../../schemas/snippet.js";
+import { ticketActionMessageObject, ticketErrorMessageObject } from "../../functions/responseFunctions.js";
 
 const snippetWorkflow = async (interaction) => {
     if (interaction.customId === "snippet_menu") {
@@ -50,12 +51,9 @@ const snippetWorkflow = async (interaction) => {
                 components: [],  // Remove all components to disable further interactions
                 ephemeral: true
             });
-            await interaction.channel.send({ 
-                content: `A Snippet was sent to the user:\n\`\`\`${selectedSnippet.snippetContent}\`\`\``, 
-                components: []  // Remove all components to disable further interactions
-            });
+            await interaction.channel.send(ticketActionMessageObject(`A Snippet was sent to the user:\n\`\`\`${selectedSnippet.snippetContent}\`\`\``, false));
         } else {
-            await interaction.reply({ content: "Error: Snippet not found.", ephemeral: true });
+            await interaction.reply(ticketErrorMessageObject(`Snippet not found.`, true));
         }
     } else if (interaction.customId === "cancel_snippet_reply_button") {
         await interaction.update({

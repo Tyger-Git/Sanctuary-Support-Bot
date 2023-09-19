@@ -6,6 +6,8 @@ import { escalateWorkflow } from './functionHandlers/handleEscalate.js';
 import watchedMessage from './interactionTypeHandlers/messageHandler.js';
 import config from '../../config.json' assert { type: "json" };
 import clientSingleton from '../utils/DiscordClientInstance.js';
+import { EmbedBuilder } from 'discord.js';
+import emojis from '../emojis.json' assert { type: "json" };
 import { creatorInquiriesButton, generalSupportButton, reportButton, 
     technicalIssuesButton, staffReportButton, snippetsButton, 
     claimButton, unclaimButton, escalateButton, closeButton } from './interactionTypeHandlers/buttonHandler.js';
@@ -103,7 +105,10 @@ const handleInteractionCreate = async (interaction) => {
           // Get bot pings channel
           const thread = await client.channels.fetch('1152017558128566332');
           const messageLink = `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
-          await thread.send({content: `Bot pinged by **${message.author.tag}** in ${message.channel.name}. See message here: ${messageLink}`});
+          const embed = new EmbedBuilder()
+              .setTitle(`${emojis.outage} Bot pinged! ${emojis.outage}`)
+              .setDescription(`Bot pinged by **${message.author.tag}** in **${message.channel.name}**. See message here: ${messageLink}`)
+          await thread.send({ embeds: [embed] });
       }
       // Get parent channel ID of message channel
       const parentChannelId = message.channel.parentId;

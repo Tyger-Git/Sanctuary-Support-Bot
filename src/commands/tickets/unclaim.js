@@ -14,6 +14,6 @@ export default {
     ],
     callback: async (client, interaction) => {
         await interaction.deferReply();
-        await unclaimTicket(interaction);
+        await unclaimTicket(interaction, 'slash');
     }
 }

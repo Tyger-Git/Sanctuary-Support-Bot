@@ -1,6 +1,8 @@
 // This command is used to toggle alerts on or off for a ticket
 
 import { ApplicationCommandOptionType } from 'discord.js';
+import Ticket from '../../schemas/ticket.js';
+import { handleTicketMessageUpdate } from '../../functions/threadFunctions.js';
 
 export default {
     name: 'togglealerts',
@@ -29,17 +31,40 @@ export default {
             type: ApplicationCommandOptionType.Integer
         },
     ],
-    devOnly: true,
     callback: async (client, interaction) => {
         await interaction.deferReply();
-        // ticket ID needs to be found out from the thread if the field is empty
-        const givenTicketId = interaction.options.getInteger('ticketId');
         const toggle = interaction.options.getString('toggle');
-        const ticketSchema = require("../../schemas/ticket");
+        const ticketId = interaction.options.getInteger('ticketid');
+        let ticket;
 
-        // Logic not yet implemented
-
-        await interaction.editReply(`Alerts successfully toggled to ${toggle}.`);
-
+        if (!ticketId) { // Find by thread ID
+            const threadId = interaction.channel.id;
+            try {
+                ticket = await Ticket.findOne({ ticketThread: threadId });
+            } catch (error) {
+                console.error('Error finding ticket:', error);
+            }
+            if (!ticket) {
+                await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));
+                return;
+            }
+            ticket.isAlertOn = toggle === 'on';
+            await ticket.save();
+            await interaction.editReply(ticketActionMessageObject(`Alerts toggled ${toggle}`, false));
+            await handleTicketMessageUpdate(ticket);
+        } else { // Find by ticket ID
+            try {
+                ticket = await Ticket.findOne({ ticketId: ticketId });
+            } catch (error) {
+                console.error('Error finding ticket:', error);
+            }
+            if (!ticket) {
+                await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));
+                return;
+            }
+            ticket.isAlertOn = toggle === 'on';
+            await ticket.save();
+            await interaction.editReply(ticketActionMessageObject(`Alerts toggled ${toggle}`, true));
+        }
     }
 }

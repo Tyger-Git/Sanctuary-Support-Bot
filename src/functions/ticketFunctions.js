@@ -1,6 +1,7 @@
 import Ticket from '../schemas/ticket.js';
 import { handleThreadName, getThreadTag, handleTicketMessageUpdate } from './threadFunctions.js'; 
 import { outgoingTicketEvent } from '../handlers/interactionTypeHandlers/directMessageHandler.js';
+import logger from '../utils/logger.js';
 
 // Check for specific roles
 const hasRole = (interaction, roles) => {
@@ -37,7 +38,7 @@ const vibeCheck = async (ticket, action, interaction) => {
     if (action === 'unclaim') return canUnclaim(ticket, interaction);
 };
 
-const claimTicket = async (interaction) => {
+const claimTicket = async (interaction, iType) => {
     const threadId = interaction.channel.id;
     const claimantMod = interaction.user.username;
     const claimantModId = interaction.user.id;
@@ -53,7 +54,9 @@ const claimTicket = async (interaction) => {
     // Vibe Checker
     const permissionCheck = await vibeCheck(ticket, 'claim', interaction);
     if (permissionCheck !== '✅') {
-        await interaction.reply({ content: permissionCheck, ephemeral: true }); // Reply with the error message
+        const msgObj = await ticketErrorMessageObject(permissionCheck);
+        if (iType === 'slash') {await interaction.editReply(msgObj);}
+        if (iType === 'button') {await interaction.reply(msgObj);}
         return; // Exit early since the check failed
     }
 
@@ -76,7 +79,9 @@ const claimTicket = async (interaction) => {
         await handleTicketMessageUpdate(ticket);
 
         // Reply to the interaction
-        await interaction.reply({ content: `Ticket claimed by **${claimantMod}**`});
+        const msgObj = await ticketActionMessageObject(`Ticket claimed by **${claimantMod}**`, false);
+        if (iType === 'slash') {await interaction.editReply(msgObj);}
+        if (iType === 'button') {await interaction.reply(msgObj);}
         await outgoingTicketEvent(interaction, ticket, `Ticket claimed by a Staff Member. Please wait for a response.`);
         await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket Claimed by **${claimantMod}**`);
     } catch (error) {
@@ -84,7 +89,7 @@ const claimTicket = async (interaction) => {
     }
 };
 
-const unclaimTicket = async (interaction) => {
+const unclaimTicket = async (interaction, iType) => {
     const threadId = interaction.channel.id;
     const thread = interaction.channel;
     let ticket;
@@ -96,7 +101,9 @@ const unclaimTicket = async (interaction) => {
     // Vibe Checker
     const permissionCheck = await vibeCheck(ticket, 'unclaim', interaction);
     if (permissionCheck !== '✅') {
-        await interaction.reply({ content: permissionCheck, ephemeral: true }); // Reply with the error message
+        const msgObj = await ticketErrorMessageObject(permissionCheck);
+        if (iType === 'slash') {await interaction.editReply(msgObj);}
+        if (iType === 'button') {await interaction.reply(msgObj);}
         return; // Exit early since the check failed
     }
 
@@ -120,7 +127,9 @@ const unclaimTicket = async (interaction) => {
         await handleTicketMessageUpdate(ticket);
 
         // Reply to the interaction
-        await interaction.reply({ content: `Ticket unclaimed by **${modUnclaiming}**`});
+        const msgObj = await ticketActionMessageObject(`Ticket unclaimed by **${modUnclaiming}**`, false);
+        if (iType === 'slash') {await interaction.editReply(msgObj);}
+        if (iType === 'button') {await interaction.reply(msgObj);}
         await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket Unclaimed by **${modUnclaiming}**`)
     } catch (error) {
         console.error('Error unclaiming ticket:', error);
