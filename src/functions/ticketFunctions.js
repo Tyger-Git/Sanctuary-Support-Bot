@@ -1,5 +1,6 @@
 import Ticket from '../schemas/ticket.js';
 import { handleThreadName, getThreadTag, handleTicketMessageUpdate } from './threadFunctions.js'; 
+import { outgoingTicketEvent } from '../handlers/interactionTypeHandlers/directMessageHandler.js';
 
 // Check for specific roles
 const hasRole = (interaction, roles) => {
@@ -76,6 +77,7 @@ const claimTicket = async (interaction) => {
 
         // Reply to the interaction
         await interaction.reply({ content: `Ticket claimed by **${claimantMod}**`});
+        await outgoingTicketEvent(interaction, ticket, `Ticket claimed by a Staff Member. Please wait for a response.`);
         await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket Claimed by **${claimantMod}**`);
     } catch (error) {
         console.error('Error claiming ticket:', error);

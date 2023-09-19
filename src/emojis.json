@@ -18,5 +18,10 @@
     "claimedTicket" : "🟡",
     "unclaimedTicket" : "🔴",
     "closedTicket" : "🟢",
-    "redCircle" : "⭕"
+    "redCircle" : "⭕",
+    "redDot" : "<:RedDot:1153735832159658035>",
+    "redDash1" : "<:RedDash1:1153736084526743604>",
+    "redDash2" : "<:RedDash2:1153736085814378636>",
+    "redDash3" : "<:RedDash3:1153736088297418843>",
+    "ticketRecieved" : "📨"
 }

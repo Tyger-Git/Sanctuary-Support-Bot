@@ -1,4 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
+import emojis from '../../emojis.json' assert { type: 'json' };
 
 async function handleInitialUserMessage(client, ticket) {
     try {
@@ -9,14 +10,12 @@ async function handleInitialUserMessage(client, ticket) {
             console.error(`Failed to find user with ID: ${ticket.userId}`);
             return;
         }
-
-        // Create a message embed for a richer DM content (optional)
+        const date = new Date();
         const embed = new EmbedBuilder()
-            .setTitle('Ticket Created')
-            .setDescription('Your ticket has been created and will be processed shortly.')
-            .addFields(
-                {name: 'Ticket ID',value: ticket.ticketId.toString()}
-                )
+            .setTitle(`${emojis.ticketRecieved} Ticket Created - Ticket ID: ${ticket.ticketId.toString()}`)
+            .setDescription('Thanks for contacting us! Our Staff-Members have been notified and will respond as soon as possible.')
+            .setFooter({ text: `©️ Sanctuary Development Team · ${date.getFullYear()}` })
+            .setColor([0, 255, 0]); // Green
 
         // Send the DM
         await user.send({ embeds: [embed] });

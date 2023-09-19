@@ -50,8 +50,9 @@ const outgoingDirectMessage = async (interaction, ticket, message) => {
 
     try {
         const user = await client.users.fetch(ticket.userId); // Fetch the user based on ID
+        const staffHighestRole = interaction.member.roles.highest.name;
         embed
-            .setTitle(`A staff member has replied to your ticket :`)
+            .setTitle(`A ${staffHighestRole} has replied to your ticket :`)
             .setDescription(`${message}`);
         await user.send({ embeds: [embed] }); // DM the user
         await logger(ticket.ticketId, 'Primary', interaction.user.id, 'Staff', message);
@@ -60,7 +61,29 @@ const outgoingDirectMessage = async (interaction, ticket, message) => {
     }
 };
 
+const outgoingTicketEvent = async (interaction, ticket, message) => {
+    if (!ticket.userId || !message) {
+        console.error('Invalid parameters provided for messageUser function');
+        return;
+    }
+    // Use the client singleton to get the Discord client
+    const client = clientSingleton.getClient();
+    const embed = new EmbedBuilder();
+
+    try {
+        const user = await client.users.fetch(ticket.userId); // Fetch the user based on ID
+        embed
+            .setTitle(`Your ticket has been modified!`)
+            .setDescription(`${message}`);
+        await user.send({ embeds: [embed] }); // DM the user
+        await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', message);
+    } catch (error) {
+        console.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error.message}`);
+    }
+};
+
 export { 
     incomingDirectMessage, 
-    outgoingDirectMessage 
+    outgoingDirectMessage,
+    outgoingTicketEvent,
 };
