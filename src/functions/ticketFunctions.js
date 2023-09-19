@@ -31,28 +31,32 @@ const canUnclaim = (ticket, interaction) => {
     return hasRole(interaction, higherRoles) ? '✅' : 'You cannot unclaim a ticket that you have not claimed.';
 };
 
-const vibeCheck = async (action, interaction) => {
-    const threadId = interaction.channel.id;
-    const ticket = await Ticket.findOne({ ticketThread: threadId });
-
+const vibeCheck = async (ticket, action, interaction) => {
     if (action === 'claim') return canClaim(ticket, interaction);
     if (action === 'unclaim') return canUnclaim(ticket, interaction);
 };
 
 const claimTicket = async (interaction) => {
+    const threadId = interaction.channel.id;
+    const claimantMod = interaction.user.username;
+    const claimantModId = interaction.user.id;
+    const thread = interaction.channel;
+    // Find the ticket in MongoDB
+    let ticket;
+    try {
+        ticket = await Ticket.findOne({ ticketThread: threadId });
+    } catch (error) {
+        console.error('Error finding ticket:', error);
+    }
+
     // Vibe Checker
-    const permissionCheck = await vibeCheck('claim', interaction);
+    const permissionCheck = await vibeCheck(ticket, 'claim', interaction);
     if (permissionCheck !== '✅') {
         await interaction.reply({ content: permissionCheck, ephemeral: true }); // Reply with the error message
         return; // Exit early since the check failed
     }
 
-    const threadId = interaction.channel.id;
-    const claimantMod = interaction.user.username;
-    const claimantModId = interaction.user.id;
-    const thread = interaction.channel;
     try {
-        const ticket = await Ticket.findOne({ ticketThread: threadId });
         // Update the ticket's info in MongoDB and save
         ticket.isClaimed = true;
         ticket.claimantModId = claimantModId;
@@ -79,17 +83,22 @@ const claimTicket = async (interaction) => {
 };
 
 const unclaimTicket = async (interaction) => {
+    const threadId = interaction.channel.id;
+    const thread = interaction.channel;
+    let ticket;
+    try {
+        ticket = await Ticket.findOne({ ticketThread: threadId });
+    } catch (error) {
+        console.error('Error finding ticket:', error);
+    }
     // Vibe Checker
-    const permissionCheck = await vibeCheck('unclaim', interaction);
+    const permissionCheck = await vibeCheck(ticket, 'unclaim', interaction);
     if (permissionCheck !== '✅') {
         await interaction.reply({ content: permissionCheck, ephemeral: true }); // Reply with the error message
         return; // Exit early since the check failed
     }
 
-    const threadId = interaction.channel.id;
-    const thread = interaction.channel;
     try {
-        const ticket = await Ticket.findOne({ ticketThread: threadId });
         // Update the ticket's info in MongoDB and save
         ticket.isClaimed = false;
         ticket.claimantModId = 0;
