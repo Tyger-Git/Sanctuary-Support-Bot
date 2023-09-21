@@ -1,5 +1,7 @@
 import { ButtonBuilder, EmbedBuilder, ActionRowBuilder } from 'discord.js';
 import emojis from '../emojis.json' assert { type: 'json' };
+import { getUserLevel } from './permissions.js';
+import { get } from 'mongoose';
 
 const modTicket = async (ticket) => {
     let messageObject = {};
@@ -201,24 +203,38 @@ const modTicket = async (ticket) => {
         return messageObject;
 };
 
-const ticketList = async (type, tickets) => { // This takes an array of tickets
+const ticketList = async (id, type, tickets, interaction) => { // This takes an array of tickets
     let messageObject = {};
+    let userLevel = await getUserLevel(interaction);
+    let viewable = "";
     let ticketListEmbed = new EmbedBuilder()
-        .setColor([0,0,0]) // Black 
-        .setTitle('Ticket List')
+        .setColor([255,255,255]) // Black 
+        .setTitle('Ticket list by ' + type +' with ID: ' + id)
         .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
         .setImage('attachment://1px.png')
         ;
     if (type === 'user'){
         tickets.forEach(ticket => {
+            if (userLevel >= ticket.ticketLevel) {
+                viewable = '✅';
+            } else {
+                viewable = '❌';
+            }
             ticketListEmbed.addFields(
                 { name: 'Ticket ID: ', value: `${ticket.ticketId}`, inline: true },{ name: 'Claimant Mod: ', value: ticket.claimantModName, inline: true },{ name: 'Ticket Type:', value: ticket.ticketType, inline: true },
+                { name: `Viewing Permissions: ${viewable}`, value: `\n${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`}
             )
         });
     } else if (type === 'mod'){
         tickets.forEach(ticket => {
+            if (userLevel >= ticket.ticketLevel) {
+                viewable = '✅';
+            } else {
+                viewable = '❌';
+            }
             ticketListEmbed.addFields(
                 { name: 'Ticket ID: ', value: `${ticket.ticketId}`, inline: true },{ name: 'User Name: ', value: ticket.userName, inline: true },{ name: 'Ticket Type:', value: ticket.ticketType, inline: true },
+                { name: `Viewing Permissions: ${viewable}`, value: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`}
             )
         });
     }

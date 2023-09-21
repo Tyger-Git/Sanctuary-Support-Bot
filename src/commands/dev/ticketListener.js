@@ -1,22 +1,31 @@
 // Front facing UX for the ticket system. It is a button menu that allows users to select a ticket type and open a ticket.
 /*---- Dev Only ----*/
 
-import { ButtonBuilder, EmbedBuilder, ActionRowBuilder } from "discord.js";
+import { ButtonBuilder, EmbedBuilder, ActionRowBuilder, ApplicationCommandOptionType } from "discord.js";
 import emojis from "../../emojis.json" assert { type: "json" };
 
 export default {
     name: 'ticketlistener',
     description: 'Adds the ticket listener to the channel',
     devOnly: true,
+    options: [
+        {
+            name: 'support-message',
+            description: 'Message to be added to the listener',
+            type: ApplicationCommandOptionType.String,
+            required: true
+        }
+    ],
     callback: async (client, interaction) => {
         await interaction.deferReply();
         const channel = interaction.channel;
+        const message = interaction.options.get('support-message').value;
         const ticketEmbed = new EmbedBuilder()
             .setColor([108,0,18])
             .setTitle("Need to Contact Staff?")
             .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
             .addFields(
-                { name: 'Please use the menu below to open up a support ticket with Sanctuary\'s Staff Team.', value: '\u200B' },
+                { name: `Please use the options below to open up a support ticket with Sanctuary\'s Staff Team. ${message}`, value: '\u200B' },
                 { name: `${emojis.reportEmoji} Report A Member`, value: `${emojis.line90Report} Use the Report A Member option if you need to report rule-breaking behavior within the walls of Sanctuary.` },
                 { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B'},
                 { name: `${emojis.techEmoji} Technical Issues`, value: `${emojis.line90Tech} Use the Technical Issues option if you require technical support regarding the Discord server: issues with roles, cannot access channels, etc.`},

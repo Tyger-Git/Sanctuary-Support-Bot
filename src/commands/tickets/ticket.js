@@ -2,6 +2,7 @@ import { ApplicationCommandOptionType } from 'discord.js';
 import {modTicket, ticketList} from '../../functions/modTicket.js';
 import Ticket from '../../schemas/ticket.js';
 import { ticketErrorMessageObject } from '../../functions/responseFunctions.js';
+import { checkPerms } from '../../functions/permissions.js';
 
 export default {
     name: 'ticket',
@@ -59,9 +60,13 @@ export default {
                 console.error(err);
                 await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the ticket.', true));
             }
-            // Construct the ticket
-            const messageObj = await modTicket(ticket);
-            await interaction.editReply(messageObj);
+            if (await checkPerms(interaction, ticket.ticketLevel)) {
+                // Construct the ticket
+                const messageObj = await modTicket(ticket);
+                await interaction.editReply(messageObj);
+            } else {
+                await interaction.editReply(await ticketErrorMessageObject('You do not have permission to view this ticket.', true));
+            }
         } else if (providedUserId || providedModId) {
             // Return a table of contents of tickets
             let tickets;
@@ -76,8 +81,9 @@ export default {
                 await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the tickets.', true));
             }
             const type = providedUserId ? 'user' : 'mod';
+            const id = providedUserId || providedModId;
             // Construct the table of contents
-            const messageObj = await ticketList(type, tickets);
+            const messageObj = await ticketList(id, type, tickets, interaction);
             await interaction.editReply(messageObj);
         } else {
             let ticket;
