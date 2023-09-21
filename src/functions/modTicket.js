@@ -203,43 +203,48 @@ const modTicket = async (ticket) => {
         return messageObject;
 };
 
-const ticketList = async (id, type, tickets, interaction) => { // This takes an array of tickets
-    let messageObject = {};
-    let userLevel = await getUserLevel(interaction);
-    let viewable = "";
-    let ticketListEmbed = new EmbedBuilder()
-        .setColor([255,255,255]) // Black 
-        .setTitle('Ticket list by ' + type +' with ID: ' + id)
-        .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
-        .setImage('attachment://1px.png')
-        ;
-    if (type === 'user'){
-        tickets.forEach(ticket => {
-            if (userLevel >= ticket.ticketLevel) {
-                viewable = '✅';
-            } else {
-                viewable = '❌';
-            }
-            ticketListEmbed.addFields(
-                { name: 'Ticket ID: ', value: `${ticket.ticketId}`, inline: true },{ name: 'Claimant Mod: ', value: ticket.claimantModName, inline: true },{ name: 'Ticket Type:', value: ticket.ticketType, inline: true },
-                { name: `Viewing Permissions: ${viewable}`, value: `\n${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`}
-            )
-        });
-    } else if (type === 'mod'){
-        tickets.forEach(ticket => {
-            if (userLevel >= ticket.ticketLevel) {
-                viewable = '✅';
-            } else {
-                viewable = '❌';
-            }
-            ticketListEmbed.addFields(
-                { name: 'Ticket ID: ', value: `${ticket.ticketId}`, inline: true },{ name: 'User Name: ', value: ticket.userName, inline: true },{ name: 'Ticket Type:', value: ticket.ticketType, inline: true },
-                { name: `Viewing Permissions: ${viewable}`, value: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`}
-            )
-        });
+// Helper function to chunk an array into smaller arrays of a specific size
+function chunkArray(array, chunkSize) {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+        chunks.push(array.slice(i, i + chunkSize));
     }
-    messageObject = { embeds: [ticketListEmbed], files: [{attachment: './resources/1px.png', name: '1px.png'}] };
-    return messageObject;
+    return chunks;
+}
+
+const createTicketEmbed = async (ticketsChunk, type, userLevel, emojis) => {
+    const embed = new EmbedBuilder()
+        .setColor([255, 255, 255]) 
+        .setTitle(`Results for searching tickets by ${type}:`)
+        .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
+        .setImage('attachment://1px.png');
+
+    ticketsChunk.forEach(ticket => {
+        const viewable = userLevel >= ticket.ticketLevel ? '✅' : '❌';
+        const fields = type === 'user'
+            ? [
+                { name: 'Ticket ID: ', value: `${ticket.ticketId}`, inline: true },
+                { name: 'Claimant Mod: ', value: ticket.claimantModName, inline: true },
+                { name: 'Ticket Type:', value: ticket.ticketType, inline: true }
+              ]
+            : [
+                { name: 'Ticket ID: ', value: `${ticket.ticketId}`, inline: true },
+                { name: 'User Name: ', value: ticket.userName, inline: true },
+                { name: 'Ticket Type:', value: ticket.ticketType, inline: true }
+              ];
+
+        fields.push({ name: `Viewing Permissions: ${viewable}`, value: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`});
+        embed.addFields(fields);
+    });
+
+    return embed;
+}
+
+const ticketList = async (type, tickets, interaction) => {
+    const userLevel = await getUserLevel(interaction);
+    const ticketChunks = chunkArray(tickets, 5);
+    const embeds = await Promise.all(ticketChunks.map(chunk => createTicketEmbed(chunk, type, userLevel, emojis)));
+    return embeds;
 };
 
 function daysToYearsMonthsDays(age) {

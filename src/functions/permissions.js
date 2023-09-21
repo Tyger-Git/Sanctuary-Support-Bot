@@ -1,4 +1,5 @@
-
+import config from '../../config.json' assert { type: 'json' };
+import clientSingleton from '../utils/DiscordClientInstance.js';
 
 const roleToUserLevel = new Map()
     .set('Helper', 0)
@@ -9,7 +10,9 @@ const roleToUserLevel = new Map()
     .set('Developer', 8);
 
 const getUserLevel = async (interaction) => {
-    const member = await interaction.guild.members.fetch(interaction.user.id);
+    const client = clientSingleton.getClient();
+    const guild = client.guilds.cache.get(config.modServer);
+    const member = await guild.members.fetch(interaction.user.id);
 
     const highestRoleName = member.roles.highest.name;
     return roleToUserLevel.get(highestRoleName) || -1;

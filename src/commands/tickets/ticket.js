@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, ButtonBuilder, ActionRowBuilder } from 'discord.js';
 import {modTicket, ticketList} from '../../functions/modTicket.js';
 import Ticket from '../../schemas/ticket.js';
 import { ticketErrorMessageObject } from '../../functions/responseFunctions.js';
@@ -11,7 +11,7 @@ export default {
         {
             name: 'ticket-id',
             description: 'The ID of the ticket you want to display.',
-            type: ApplicationCommandOptionType.Number,
+            type: ApplicationCommandOptionType.String,
             required: false,
         },
         {
@@ -23,7 +23,7 @@ export default {
         {
             name: 'mod-id',
             description: 'The ID of the mod\'s tickets you want to display.',
-            type: ApplicationCommandOptionType.Number,
+            type: ApplicationCommandOptionType.String,
             required: false,
         }
     ],
@@ -81,10 +81,54 @@ export default {
                 await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the tickets.', true));
             }
             const type = providedUserId ? 'user' : 'mod';
-            const id = providedUserId || providedModId;
             // Construct the table of contents
-            const messageObj = await ticketList(id, type, tickets, interaction);
-            await interaction.editReply(messageObj);
+            const allEmbeds = await ticketList(type, tickets, interaction);
+            // Create Buttons
+            const previous_button_ticketList = new ButtonBuilder()
+                .setCustomId('previous_button_ticketList')
+                .setLabel('⬅')
+                .setStyle('Primary');
+            const next_button_ticketList = new ButtonBuilder()
+                .setCustomId('next_button_ticketList')
+                .setLabel('➡')
+                .setStyle('Primary');
+            const first_button_ticketList = new ButtonBuilder()
+                .setCustomId('first_button_ticketList')
+                .setLabel('⬅⬅⬅')
+                .setStyle('Primary');
+            const last_button_ticketList = new ButtonBuilder()
+                .setCustomId('last_button_ticketList')
+                .setLabel('➡➡➡')
+                .setStyle('Primary');
+
+            const row = new ActionRowBuilder()
+                .addComponents(first_button_ticketList, previous_button_ticketList, next_button_ticketList, last_button_ticketList);
+
+            let currentPage = 0;
+            await interaction.editReply({ embeds: [allEmbeds[currentPage]], components: [row], files: [{attachment: './resources/1px.png', name: '1px.png'}] });
+            // Set up the collector
+            const filter = i => i.customId === 'previous_button_ticketList' || i.customId === 'next_button_ticketList' || i.customId === 'first_button_ticketList' || i.customId === 'last_button_ticketList';
+            const msg = await interaction.fetchReply();
+            const collector = msg.createMessageComponentCollector({ filter, time: 600000 }); // 10 minutes timer
+
+            collector.on('collect', async interaction => {
+                if (interaction.customId === 'previous_button_ticketList' && currentPage > 0) {
+                    currentPage--;
+                } else if (interaction.customId === 'next_button_ticketList' && currentPage < allEmbeds.length - 1) {
+                    currentPage++;
+                } else if (interaction.customId === 'first_button_ticketList') {
+                    currentPage = 0;
+                } else if (interaction.customId === 'last_button_ticketList') {
+                    currentPage = allEmbeds.length - 1;
+                }
+                await interaction.update({ embeds: [allEmbeds[currentPage]], components: [row], files: [{attachment: './resources/1px.png', name: '1px.png'}]  });
+            });
+            
+            collector.on('end', (collected, reason) => {
+                // This will run after the collector has stopped.
+                // If you want to delete the message after the collector ends:
+                interaction.fetchReply().then(reply => reply.delete());
+            });
         } else {
             let ticket;
             try {
