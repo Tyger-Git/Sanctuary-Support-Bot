@@ -1,3 +1,5 @@
+// This command is used to unclaim a ticket
+
 import { unclaimTicket } from "../../functions/ticketFunctions.js";
 import { ApplicationCommandOptionType } from 'discord.js';
 

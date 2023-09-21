@@ -1,3 +1,5 @@
+// This command is used to claim a ticket
+
 import { claimTicket } from "../../functions/ticketFunctions.js";
 import { ApplicationCommandOptionType } from 'discord.js';
 

@@ -1,3 +1,5 @@
+// Purpose: Handle thread creation for a ticket.
+
 import Ticket from "../../schemas/ticket.js";
 import { modTicket } from "../../functions/modTicket.js";
 import { handleThreadName, getThreadTag, getParentChannelID } from "../../functions/threadFunctions.js";
@@ -33,7 +35,7 @@ const handleThreadCreation = async (client, ticketData) => {
     // Create a new thread inside the parent channel
     const thread = await parentChannel.threads.create({
         name: threadName,
-        message: 'Thread created for ticket ' + ticket.ticketId + '. Ticket awaiting claim.',
+        message: 'Thread Created for ticket ' + ticket.ticketId,
         autoArchiveDuration: 60,
         appliedTags: [threadTag],
     });
@@ -41,6 +43,7 @@ const handleThreadCreation = async (client, ticketData) => {
     // Async function to memory before sending, store promise to extract message ID
     const messageObj = await modTicket(ticket);
     const sentMessage = await thread.send(messageObj);
+    await sentMessage.pin();
 
     // Update the ticket's info in MongoDB and save
     ticket.threadCreated = true;

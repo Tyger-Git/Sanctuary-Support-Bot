@@ -49,5 +49,10 @@ async function deleteOldThreads() {
     }
 }
 
-// ES6 export
-export { deleteOldThreads };
+async function pingAlerts() {
+
+}
+export {
+    deleteOldThreads,
+    pingAlerts
+};

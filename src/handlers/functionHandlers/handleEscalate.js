@@ -1,3 +1,5 @@
+// Purpose: Handle the escalation workflow
+
 import { ButtonBuilder, ActionRowBuilder } from "discord.js";
 import Ticket from "../../schemas/ticket.js";
 import logger from "../../utils/logger.js";

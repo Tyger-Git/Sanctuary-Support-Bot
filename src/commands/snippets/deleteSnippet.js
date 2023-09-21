@@ -20,6 +20,7 @@ export default {
         //await interaction.deferReply({ ephemeral: true });
         await interaction.deferReply();
         const label = interaction.options.getString('label');
+        // Search for the snippet in the database collection
         const snippet = await Snippet.findOne({ snippetName: label });
         if (snippet){
             await snippet.delete();

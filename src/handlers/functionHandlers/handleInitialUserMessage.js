@@ -1,3 +1,5 @@
+// Initial user message upon ticket creation
+
 import { EmbedBuilder } from 'discord.js';
 import emojis from '../../emojis.json' assert { type: 'json' };
 

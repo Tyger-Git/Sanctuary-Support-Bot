@@ -1,3 +1,5 @@
+// Creates a new ticket in the database based on the ticket type
+
 import logger from '../utils/logger.js';
 import Ticket from '../schemas/ticket.js';
 import TicketCounter from '../schemas/ticketCounter.js';

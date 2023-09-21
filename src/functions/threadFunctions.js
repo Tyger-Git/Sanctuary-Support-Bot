@@ -1,3 +1,5 @@
+// Various functions for handling ticket threads
+
 import { modTicket } from '../functions/modTicket.js';
 import clientSingleton from '../utils/DiscordClientInstance.js';
 import emojis from '../emojis.json' assert { type: 'json' };

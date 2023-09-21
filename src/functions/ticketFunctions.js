@@ -1,3 +1,5 @@
+// Various functions for ticket interactions
+
 import Ticket from '../schemas/ticket.js';
 import { handleThreadName, getThreadTag, handleTicketMessageUpdate } from './threadFunctions.js'; 
 import { outgoingTicketEvent } from '../handlers/interactionTypeHandlers/directMessageHandler.js';

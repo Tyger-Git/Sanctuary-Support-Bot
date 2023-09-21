@@ -27,9 +27,9 @@ export default {
         await interaction.deferReply();
         const label = interaction.options.getString('label');
         const message = interaction.options.getString('message');
-
+        // Search for the snippet in the database collection
         const snippet = await Snippet.findOne({ snippetName: label });
-
+        // If the snippet is found, update the snippet content
         if (snippet) {
             snippet.snippetContent = message;
             await snippet.save();

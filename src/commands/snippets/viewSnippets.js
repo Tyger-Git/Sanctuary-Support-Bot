@@ -1,35 +1,8 @@
+// This command is used to view all snippets, in an embed book format
+/*--- DEV ONLY ---*/
+
 import { ButtonBuilder, EmbedBuilder, ActionRowBuilder } from 'discord.js';
 import Snippet from '../../schemas/snippet.js';
-
-async function fetchAllSnippets() {
-    try {
-        return await Snippet.find({});
-    } catch (error) {
-        console.log("Failed to fetch snippets: " + error);
-        return [];
-    }
-}
-
-function chunkArray(array, chunkSize) {
-    const results = [];
-    while (array.length) {
-        results.push(array.splice(0, chunkSize));
-    }
-    return results;
-}
-
-function createEmbedsFromChunks(chunks) {
-    return chunks.map((chunk, index) => {
-        let totalPages = chunks.length;
-        const embed = new EmbedBuilder()
-            .setColor([255,255,255]) // White
-            .setTitle(`Snippets: Page ${index + 1} of ${totalPages}`)
-            .setDescription('View all snippets')
-            .addFields(chunk.map(snippet => ({name: snippet.snippetName, value: snippet.snippetContent})))
-            .setFooter({text: `\n -- Page ${index + 1} of ${totalPages} --`});
-        return embed;
-    });
-}
 
 export default {
     name: 'viewsnippets',
@@ -98,3 +71,37 @@ export default {
             }
     }
 }
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+// Helper Functions
+/*------------------------------------------------------------------------------------------------------------------------*/
+async function fetchAllSnippets() {
+    try {
+        return await Snippet.find({});
+    } catch (error) {
+        console.log("Failed to fetch snippets: " + error);
+        return [];
+    }
+}
+
+function chunkArray(array, chunkSize) {
+    const results = [];
+    while (array.length) {
+        results.push(array.splice(0, chunkSize));
+    }
+    return results;
+}
+
+function createEmbedsFromChunks(chunks) {
+    return chunks.map((chunk, index) => {
+        let totalPages = chunks.length;
+        const embed = new EmbedBuilder()
+            .setColor([255,255,255]) // White
+            .setTitle(`Snippets: Page ${index + 1} of ${totalPages}`)
+            .setDescription('View all snippets')
+            .addFields(chunk.map(snippet => ({name: snippet.snippetName, value: snippet.snippetContent})))
+            .setFooter({text: `\n -- Page ${index + 1} of ${totalPages} --`});
+        return embed;
+    });
+}
+

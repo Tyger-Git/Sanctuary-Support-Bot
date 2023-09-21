@@ -1,3 +1,5 @@
+// Functions to return success or error messages, but inside embeds
+
 import { EmbedBuilder } from "discord.js";
 import emojis from "../emojis.json" assert { type: "json" };
 

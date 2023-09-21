@@ -1,8 +1,7 @@
+// Functions to handle button interactions
+
 import { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import Snippet from "../../schemas/snippet.js";
-import Ticket from "../../schemas/ticket.js";
-import { handleThreadName, handleTicketMessageUpdate, getThreadTag } from "../../functions/threadFunctions.js";
-import logger from '../../utils/logger.js';
 import { claimTicket, unclaimTicket, vibeCheck } from "../../functions/ticketFunctions.js";
 
 /*------------------------------------------------------------------------------------------------------------------------*/

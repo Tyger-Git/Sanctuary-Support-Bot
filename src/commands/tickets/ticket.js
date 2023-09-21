@@ -1,3 +1,5 @@
+// This command is used to display a ticket, or list of tickets based off input
+
 import { ApplicationCommandOptionType, ButtonBuilder, ActionRowBuilder } from 'discord.js';
 import {modTicket, ticketList} from '../../functions/modTicket.js';
 import Ticket from '../../schemas/ticket.js';
@@ -81,8 +83,9 @@ export default {
                 await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the tickets.', true));
             }
             const type = providedUserId ? 'user' : 'mod';
+            const id = providedUserId || providedModId;
             // Construct the table of contents
-            const allEmbeds = await ticketList(type, tickets, interaction);
+            const allEmbeds = await ticketList(id, type, tickets, interaction);
             // Create Buttons
             const previous_button_ticketList = new ButtonBuilder()
                 .setCustomId('previous_button_ticketList')

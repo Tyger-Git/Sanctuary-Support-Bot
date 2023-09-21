@@ -1,3 +1,5 @@
+// Helper function to check permissions of a user
+
 import config from '../../config.json' assert { type: 'json' };
 import clientSingleton from '../utils/DiscordClientInstance.js';
 

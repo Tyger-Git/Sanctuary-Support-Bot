@@ -1,7 +1,8 @@
+// Main function to return a message object for a mod ticket, or list of tickets
+
 import { ButtonBuilder, EmbedBuilder, ActionRowBuilder } from 'discord.js';
 import emojis from '../emojis.json' assert { type: 'json' };
 import { getUserLevel } from './permissions.js';
-import { get } from 'mongoose';
 
 const modTicket = async (ticket) => {
     let messageObject = {};
@@ -212,10 +213,10 @@ function chunkArray(array, chunkSize) {
     return chunks;
 }
 
-const createTicketEmbed = async (ticketsChunk, type, userLevel, emojis) => {
+const createTicketEmbed = async (id, ticketsChunk, type, userLevel, emojis) => {
     const embed = new EmbedBuilder()
         .setColor([255, 255, 255]) 
-        .setTitle(`Results for searching tickets by ${type}:`)
+        .setTitle(`Results for searching tickets by ${type} ID: ${id}`)
         .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
         .setImage('attachment://1px.png');
 
@@ -233,17 +234,17 @@ const createTicketEmbed = async (ticketsChunk, type, userLevel, emojis) => {
                 { name: 'Ticket Type:', value: ticket.ticketType, inline: true }
               ];
 
-        fields.push({ name: `Viewing Permissions: ${viewable}`, value: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`});
+        fields.push({ name: `Pull Permissions:\n${viewable}`, value: `\n${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`});
         embed.addFields(fields);
     });
 
     return embed;
 }
 
-const ticketList = async (type, tickets, interaction) => {
+const ticketList = async (id, type, tickets, interaction) => {
     const userLevel = await getUserLevel(interaction);
     const ticketChunks = chunkArray(tickets, 5);
-    const embeds = await Promise.all(ticketChunks.map(chunk => createTicketEmbed(chunk, type, userLevel, emojis)));
+    const embeds = await Promise.all(ticketChunks.map(chunk => createTicketEmbed(id, chunk, type, userLevel, emojis)));
     return embeds;
 };
 

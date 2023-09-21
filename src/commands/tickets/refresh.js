@@ -1,3 +1,5 @@
+// This command is used to refresh a ticket embed
+
 import Ticket from "../../schemas/ticket.js";
 import { handleTicketMessageUpdate } from "../../functions/threadFunctions.js";
 

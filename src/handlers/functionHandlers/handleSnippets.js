@@ -1,3 +1,5 @@
+// Purpose: Handle the snippet workflow when a user selects a snippet from the dropdown menu.
+
 import { ButtonBuilder, ActionRowBuilder } from "discord.js";
 import { outgoingDirectMessage } from "../interactionTypeHandlers/directMessageHandler.js";
 import Ticket from "../../schemas/ticket.js";

@@ -1,3 +1,5 @@
+// Database connection and initialization, as well as ticket watching
+
 import mongoose from 'mongoose';
 import TicketCounter from '../schemas/ticketCounter.js';
 import initialUserMessage from '../handlers/functionHandlers/handleInitialUserMessage.js';

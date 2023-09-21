@@ -12,16 +12,15 @@ const incomingDirectMessage = async (message) => {
     if (ticket) {
         // Use the client singleton to get the Discord client
         const client = clientSingleton.getClient();
-
         // Fetch the associated thread using the stored ticketThread ID
         const thread = await client.channels.fetch(ticket.ticketThread);
-
         // Spin up an embed to send to the thread
+        const modToPing = '';
         const embed = new EmbedBuilder();
-
         if (thread) {
+            if (ticket.isClaimed && ticket.isAlertOn) { modToPing = `Head's up! <@${ticket.claimantModId}> - `; }
             embed
-                .setTitle(`${ticket.userDisplayName} (${ticket.userName}) has replied to their ticket :`)
+                .setTitle(`${modToPing}${ticket.userDisplayName} (${ticket.userName}) has replied to their ticket :`)
                 .setDescription(`${message.content}`);
             // Send the user's message to the thread
             await thread.send({ embeds: [embed] });
@@ -47,7 +46,6 @@ const outgoingDirectMessage = async (interaction, ticket, message) => {
     // Use the client singleton to get the Discord client
     const client = clientSingleton.getClient();
     const embed = new EmbedBuilder();
-
     try {
         const user = await client.users.fetch(ticket.userId); // Fetch the user based on ID
         const staffHighestRole = interaction.member.roles.highest.name;
@@ -69,7 +67,6 @@ const outgoingTicketEvent = async (interaction, ticket, message) => {
     // Use the client singleton to get the Discord client
     const client = clientSingleton.getClient();
     const embed = new EmbedBuilder();
-
     try {
         const user = await client.users.fetch(ticket.userId); // Fetch the user based on ID
         embed
