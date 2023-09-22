@@ -41,7 +41,7 @@ const createTicket = async (interaction, ticketType) => {
     const lastUserResponse = new Date(); // This is reset each time the user responds to the ticket
     const ticketId = await getNewTicketID(); // Ticket ID using ticketID schema
     const guildId = interaction.guild.id; // Server ID
-    const guildAge = Math.floor((Date.now() - member.joinedTimestamp) / (1000 * 60 * 60 * 24)); // Age of user in the server
+    const guildAge = Math.floor((Date.now() - member.joinedTimestamp) / (1000 * 60 * 60 * 24)); // Age of user in the server in days
     const isOpen = true; 
     const lastModResponse = new Date(); // This is reset each time a mod responds to the ticket
     let ticketLevel = 0; 

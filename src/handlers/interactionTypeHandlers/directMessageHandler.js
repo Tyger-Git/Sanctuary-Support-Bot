@@ -15,13 +15,15 @@ const incomingDirectMessage = async (message) => {
         // Fetch the associated thread using the stored ticketThread ID
         const thread = await client.channels.fetch(ticket.ticketThread);
         // Spin up an embed to send to the thread
-        const modToPing = '';
+        let modToPing = '';
         const embed = new EmbedBuilder();
         if (thread) {
-            if (ticket.isClaimed && ticket.isAlertOn) { modToPing = `Head's up! <@${ticket.claimantModId}> - `; }
             embed
-                .setTitle(`${modToPing}${ticket.userDisplayName} (${ticket.userName}) has replied to their ticket :`)
+                .setTitle(`${ticket.userDisplayName} (${ticket.userName}) has replied to their ticket :`)
                 .setDescription(`${message.content}`);
+            // Ping Mods if the ticket is claimed and alerts are on
+            if (ticket.isClaimed && ticket.isAlertOn) { modToPing = `<@${ticket.claimantModId}>`; } // Add perm check too
+            if (modToPing !== '') { await thread.send({content: modToPing}); }
             // Send the user's message to the thread
             await thread.send({ embeds: [embed] });
             await logger(ticket.ticketId, 'Primary', message.author.id, 'User', message.content);

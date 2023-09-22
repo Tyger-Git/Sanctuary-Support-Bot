@@ -91,9 +91,9 @@ const ticketSchema = new Schema({
         default: false,
     },
     claimantModId: { // Discord ID of the mod who claimed the ticket
-        type: Number,
+        type: String,
         required: false,
-        default: 0,
+        default: '0',
     },
     claimantModName: { // Discord username of the mod who claimed the ticket
         type: String,
@@ -103,6 +103,11 @@ const ticketSchema = new Schema({
     lastModResponse: { // Used with a listener to determine when to ping the mod
         type: Date,
         required: false,
+    },
+    inactivityTimer: { // How long until the inactivity alert pings the mod, in hours
+        type: Number,
+        required: true,
+        default: 12,
     },
     ticketLevel: { // 0 = Helper, 1 = Mod, 2 = SeniorMod, 3 = Head Mods, 4 = Admin, 5 = Server Support, 6 = Demonly, 7 = Ket, 8 = Developer
         type: Number,
