@@ -9,7 +9,7 @@ import clientSingleton from '../utils/DiscordClientInstance.js';
 import { EmbedBuilder } from 'discord.js';
 import emojis from '../emojis.json' assert { type: "json" };
 import { creatorInquiriesButton, generalSupportButton, reportButton, 
-    technicalIssuesButton, staffReportButton, snippetsButton, 
+    technicalIssuesButton, submitAppealButton, snippetsButton, 
     claimButton, unclaimButton, escalateButton, closeButton } from './interactionTypeHandlers/buttonHandler.js';
 
 // Function handoffs for interaction types
@@ -19,7 +19,7 @@ const buttonHandlers = {
     'technical_issues_button': technicalIssuesButton,
     'creator_inquiries_button': creatorInquiriesButton,
     'general_support_button': generalSupportButton,
-    'staff_report_button': staffReportButton,
+    'appeal_button': submitAppealButton,
     'snippets_button': snippetsButton,
     'send_snippet_reply_button': snippetWorkflow, // Outsourced to handleSnippets.js
     'cancel_snippet_reply_button': snippetWorkflow, // Outsourced to handleSnippets.js
@@ -39,7 +39,7 @@ const modalHandlers = {
     'newTechTicketModal': (interaction) => handleTicketCreation(interaction, 'Technical Support', 'You submitted a technical issue ticket successfully!'),
     'newCreatorTicketModal': (interaction) => handleTicketCreation(interaction, 'VIP Application', 'You submitted a content creator ticket successfully!'),
     'newGenSupTicketModal': (interaction) => handleTicketCreation(interaction, 'General Support', 'You submitted a general support ticket successfully!'),
-    'newStaffReportTicketModal': (interaction) => handleTicketCreation(interaction, 'Staff Report', 'You submitted a staff report ticket successfully!'),
+    'newAppealTicketModal': (interaction) => handleTicketCreation(interaction, 'Appeal', 'You submitted an appeal ticket successfully!'),
     'closeTicketModal': (interaction) => closeThread(interaction),
 };
 
@@ -133,15 +133,15 @@ const handleInteractionCreate = async (interaction) => {
     "GeneralSupportForum2": "1140397282005631067",
     "TechSupportForum2": "1151238183535779901",
     "UserReportForum2": "1151238216301682698",
-    "StaffReportForum2": "1151238332454543432",
+    "AppealForum2": "1151238332454543432",
 
     "GeneralSupportForum3": "1151238420853690449",
     "TechSupportForum3": "1151238474779869284",
     "UserReportForum3": "1151238457142820896",
-    "StaffReportForum3": "1151238403678031883",
+    "AppealForum3": "1151238403678031883",
 
     "VIPAppForum4": "1140398786552803449",
-    "StaffReportForum4": "1151242072804823160",
+    "AppealForum4": "1151242072804823160",
     "StaffSupportForum": "1140398736963534869",
     "DemonlyForum": "1140398611046350848",
     "KetForum": "1140398651945001132",

@@ -15,9 +15,9 @@ const canClaim = (ticket, interaction) => {
     switch (ticket.ticketType) {
         case 'User Report':
             return hasRole(interaction, ['Helper']) ? 'Helpers cannot claim User Report tickets.' : '✅';
-        case 'Staff Report':
+        case 'Appeal':
             const staffRoles = ['Senior Moderator', 'Head Moderator', 'Administrator', 'Developers'];
-            return hasRole(interaction, staffRoles) ? '✅' : 'You do not have permissions to claim Staff Report tickets.';
+            return hasRole(interaction, staffRoles) ? '✅' : 'You do not have permissions to claim Appeal tickets.';
         case 'VIP Application':
             return hasRole(interaction, ['Administrator', 'Developers']) ? '✅' : 'You do not have permissions to claim VIP Application tickets.';
         default:

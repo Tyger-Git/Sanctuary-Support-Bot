@@ -116,12 +116,12 @@ const reportButton = async (interaction) => {
             .setCustomId("userToReport")
             .setLabel("Who would you like to report?")
             .setStyle(TextInputStyle.Short);
-        const reasonForReport = new TextInputBuilder()
-            .setCustomId("reasonForReport")
+        const userReportReason = new TextInputBuilder()
+            .setCustomId("userReportReason")
             .setLabel("Why are you reporting this user?")
             .setStyle(TextInputStyle.Paragraph);
         const reportFirstActionRow = new ActionRowBuilder().addComponents(userToReport);
-        const reportSecondActionRow = new ActionRowBuilder().addComponents(reasonForReport);
+        const reportSecondActionRow = new ActionRowBuilder().addComponents(userReportReason);
         // Add the components to the modal
         newReportTicketModal.addComponents(reportFirstActionRow, reportSecondActionRow);
     } catch (error) {
@@ -174,39 +174,39 @@ const technicalIssuesButton = async (interaction) => {
     }
 };
 
-// Staff Report Button
+// Appeals Button
 /*------------------------------------------------------------------------------------------------------------------------*/
-const staffReportButton = async (interaction) => {
+const submitAppealButton = async (interaction) => {
     // Check if user already has an active ticket
     const hasExistingTicket = await checkExistingTicket(interaction);
     if (hasExistingTicket) return;
     
     // Modal Creation
-    let newStaffReportTicketModal= new ModalBuilder()
-    .setCustomId("newStaffReportTicketModal")
+    let newAppealTicketModal= new ModalBuilder()
+    .setCustomId("newAppealTicketModal")
     .setTitle("New Ticket");
 
     // Try to build the modal
     try {
-        const staffMemberToReport = new TextInputBuilder()
-            .setCustomId("staffMemberToReport")
-            .setLabel("What staff member would you like to report?")
+        const ticketToAppeal = new TextInputBuilder()
+            .setCustomId("ticketToAppeal")
+            .setLabel("What is the ticket ID that are you appealing?")
             .setStyle(TextInputStyle.Short);
-        const reasonForReport = new TextInputBuilder()
-            .setCustomId("reasonForReport")
-            .setLabel("Why are you reporting this staff member?")
+        const appealReasoning = new TextInputBuilder()
+            .setCustomId("appealReasoning")
+            .setLabel("What is your reasoning for appealing?")
             .setStyle(TextInputStyle.Paragraph);
-        const reportFirstActionRow = new ActionRowBuilder().addComponents(staffMemberToReport);
-        const reportSecondActionRow = new ActionRowBuilder().addComponents(reasonForReport);
+        const reportFirstActionRow = new ActionRowBuilder().addComponents(ticketToAppeal);
+        const reportSecondActionRow = new ActionRowBuilder().addComponents(appealReasoning);
         // Add the components to the modal
-        newStaffReportTicketModal.addComponents(reportFirstActionRow, reportSecondActionRow);
+        newAppealTicketModal.addComponents(reportFirstActionRow, reportSecondActionRow);
     } catch (error) {
-        console.log("Something went wrong while building the Report a staff member modal. Error: " + error);
+        console.log("Something went wrong while building the Appeal modal. Error: " + error);
     }
 
     // Try to send the modal
     try {
-        await interaction.showModal(newStaffReportTicketModal);
+        await interaction.showModal(newAppealTicketModal);
     } catch (error) {
             console.log("Something went wrong while sending the modal. Error: " + error);
     }
@@ -340,7 +340,7 @@ export {
     generalSupportButton,
     reportButton,
     technicalIssuesButton,
-    staffReportButton,
+    submitAppealButton,
     snippetsButton,
     claimButton,
     unclaimButton,

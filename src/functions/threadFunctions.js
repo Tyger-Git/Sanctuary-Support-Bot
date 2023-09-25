@@ -60,17 +60,17 @@ const threadMapping = {
         'General Support': 'GeneralSupportForum2',
         'Technical Support': 'TechSupportForum2',
         'User Report': 'UserReportForum2',
-        'Staff Report': 'StaffReportForum2'
+        'Appeal': 'AppealForum2'
     },
     3: { // Head Moderator Category
         'General Support': 'GeneralSupportForum3',
         'Technical Support': 'TechSupportForum3',
         'User Report': 'UserReportForum3',
-        'Staff Report': 'StaffReportForum3'
+        'Appeal': 'AppealForum3'
     },
     4: { // Admin Category
         'VIP Application': 'VIPAppForum4',
-        'Staff Report': 'StaffReportForum4'
+        'Appeal': 'AppealForum4'
     },
     5: 'StaffSupportForum', // Staff Support Category
     6: 'DemonlyForum',     // Demonly Category
@@ -146,10 +146,10 @@ const tagMapping = {
             unclaimed: 'UserReportForumUnclaimedTag2',
             archiving: 'UserReportForumArchivingTag2'
         },
-        'Staff Report': {
-            claimed: 'StaffReportForumClaimedTag2',
-            unclaimed: 'StaffReportForumUnclaimedTag2',
-            archiving: 'StaffReportForumArchivingTag2'
+        'Appeal': {
+            claimed: 'AppealForumClaimedTag2',
+            unclaimed: 'AppealForumUnclaimedTag2',
+            archiving: 'AppealForumArchivingTag2'
         }
     },
     3: {  // Head Moderator Category
@@ -168,17 +168,17 @@ const tagMapping = {
             unclaimed: 'UserReportForumUnclaimedTag3',
             archiving: 'UserReportForumArchivingTag3'
         },
-        'Staff Report': {
-            claimed: 'StaffReportForumClaimedTag3',
-            unclaimed: 'StaffReportForumUnclaimedTag3',
-            archiving: 'StaffReportForumArchivingTag3'
+        'Appeal': {
+            claimed: 'AppealForumClaimedTag3',
+            unclaimed: 'AppealForumUnclaimedTag3',
+            archiving: 'AppealForumArchivingTag3'
         }
     },
     4: {  // Admin Category
-        'Staff Report': {
-            claimed: 'StaffReportForumClaimedTag4',
-            unclaimed: 'StaffReportForumUnclaimedTag4',
-            archiving: 'StaffReportForumArchivingTag4'
+        'Appeal': {
+            claimed: 'AppealForumClaimedTag4',
+            unclaimed: 'AppealForumUnclaimedTag4',
+            archiving: 'AppealForumArchivingTag4'
         },
         'VIP Application': {
             claimed: 'VIPAppForumClaimedTag4',

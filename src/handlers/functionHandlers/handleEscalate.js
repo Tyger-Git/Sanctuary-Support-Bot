@@ -48,7 +48,7 @@ const escalateWorkflow = async (interaction) => {
 
         switch (targetCatagory) {
             case "Helpers":
-                if (ticket.ticketType === 'User Report' || ticket.ticketType === 'Staff Report' || ticket.ticketType === 'VIP Application') {
+                if (ticket.ticketType === 'User Report' || ticket.ticketType === 'Appeal' || ticket.ticketType === 'VIP Application') {
                     await interaction.update({
                         content: `${ticket.ticketType} tickets cannot be de-escalated to Helpers.`,
                         components: [],  // Remove all components to disable further interactions
@@ -62,7 +62,7 @@ const escalateWorkflow = async (interaction) => {
                 }
                 break;
             case "Moderators":
-                if (ticket.ticketType === 'Staff Report' || ticket.ticketType === 'VIP Application') {
+                if (ticket.ticketType === 'Appeal' || ticket.ticketType === 'VIP Application') {
                     await interaction.update({
                         content: `${ticket.ticketType} tickets cannot be de-escalated to Moderators.`,
                         components: [],  // Remove all components to disable further interactions

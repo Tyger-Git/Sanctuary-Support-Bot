@@ -79,9 +79,9 @@ const ticketSchema = new Schema({
         required: true,
         default: false,
     },
-    ticketType: { // General Support, Technical Support, VIP Applications, User Reports, Staff Reports
+    ticketType: { // General Support, Technical Support, VIP Applications, User Reports, Appeals
         type: String,
-        enum: ['General Support', 'Technical Support', 'VIP Application', 'User Report', 'Staff Report'],
+        enum: ['General Support', 'Technical Support', 'VIP Application', 'User Report', 'Appeal'],
         required: true,
         default: 'General Support',
     },
@@ -158,13 +158,13 @@ const ticketSchema = new Schema({
         default: 'N/A',
     },
 
-    // Staff Reports
-    reportedMod: { // Who is the report against?
+    // Appeals
+    ticketToAppeal: { // Ticket Id of the ticket being appealed
         type: String,
         required: false,
         default: 'N/A',
     },
-    modReportReason: { // Why is the user being reported?
+    appealReasoning: { // Why should the user be unpenalized?
         type: String,
         required: false,
         default: 'N/A',

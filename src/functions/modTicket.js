@@ -68,12 +68,12 @@ const modTicket = async (ticket) => {
             contentName2 = "Issue Description:";
             contentValue2 = ticket.techIssueDescription;
             break;
-        case 'Staff Report':
+        case 'Appeal':
             embedColor = [219,53,62] // Red
-            contentName1 = "Reported Mod:";
-            contentValue1 = ticket.reportedMod;
-            contentName2 = "Report Reason:";
-            contentValue2 = ticket.modReportReason;
+            contentName1 = "Ticket To Appeal:";
+            contentValue1 = ticket.ticketToAppeal;
+            contentName2 = "Reason For Appeal:";
+            contentValue2 = ticket.appealReasoning;
             break;
         case 'General Support':
             embedColor = [36,123,68] // Green

@@ -32,7 +32,7 @@ export default {
                 { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B'},
                 { name: `${emojis.creatorEmoji} Content Creator Inquiries`, value: `${emojis.line90Creator} Use the Content Creator Inquiries option to inquire about receiving the Content Creator role in Sanctuary.`},
                 { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B'},
-                { name: `${emojis.staffReportEmoji} Report A Staff Member`, value: `${emojis.line90Report} Use the Report A Staff Member option if you need to report a staff member\'s behavior within the walls of Sanctuary.`},
+                { name: `${emojis.submitAppealEmoji} Submit an Appeal`, value: `${emojis.line90Report} Use the Submit an Appeal option if you would like to appeal an infraction penalty you have received.`},
                 { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B'},
                 { name: `${emojis.generalEmoji} General Support`, value: `${emojis.line90General} Use the General Support option if none of the above categories suit your questions or concerns!`},
                 
@@ -47,10 +47,10 @@ export default {
         .setLabel('Report A Member')
         .setEmoji(`${emojis.reportButtonEmoji}`)
         .setStyle('Danger');
-        const staff_report_button = new ButtonBuilder()
-        .setCustomId('staff_report_button')
-        .setLabel('Report A Staff Member')
-        .setEmoji(`${emojis.staffReportButtonEmoji}`)
+        const appeal_button = new ButtonBuilder()
+        .setCustomId('appeal_button')
+        .setLabel('Submit an Appeal')
+        .setEmoji(`${emojis.submitAppealButtonEmoji}`)
         .setStyle('Danger');
         const technical_issues_button = new ButtonBuilder()
         .setCustomId('technical_issues_button')
@@ -70,7 +70,7 @@ export default {
 
         // Create Button Rows
         const row1 = new ActionRowBuilder()
-            .addComponents(report_button, staff_report_button);
+            .addComponents(report_button, appeal_button);
         const row2 = new ActionRowBuilder()
             .addComponents(technical_issues_button, creator_inquiries_button);
         const row3 = new ActionRowBuilder()

@@ -75,10 +75,10 @@ const createTicket = async (interaction, ticketType) => {
         ticketLevel = 4;
         break;
       
-      case "Staff Report":
+      case "Appeal":
         specificFields = {
-            reportedMod: interaction.fields.getTextInputValue('staffMemberToReport'),
-            modReportReason: interaction.fields.getTextInputValue('reasonForReport'),
+            ticketToAppeal: interaction.fields.getTextInputValue('ticketToAppeal'),
+            appealReasoning: interaction.fields.getTextInputValue('appealReasoning'),
         };
         ticketLevel = 2;
         break;
