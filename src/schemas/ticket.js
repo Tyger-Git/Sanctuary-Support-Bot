@@ -17,6 +17,10 @@ const ticketSchema = new Schema({
         type: String,
         required: true,
     },
+    userThumbnail: { // Discord avatar
+        type: String,
+        required: false,
+    },
     userAge: { // Days user has had a discord account
         type: Number, 
         required: true,

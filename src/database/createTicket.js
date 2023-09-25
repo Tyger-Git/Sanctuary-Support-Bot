@@ -36,6 +36,7 @@ const createTicket = async (interaction, ticketType) => {
     // Ticket fields that are common to all ticket types
     const userName = interaction.user.username;
     const userDisplayName = member ? member.displayName : interaction.user.username;
+    const userThumbnail = interaction.user.displayAvatarURL({format: 'png', dynamic: true});
     const userAge = Math.floor((Date.now() - interaction.user.createdTimestamp) / (1000 * 60 * 60 * 24)); // Age of user's account
     const userTicketTotal = await getUserTicketCount(userId); // Query the database for the number of tickets the user has submitted, based on userId
     const lastUserResponse = new Date(); // This is reset each time the user responds to the ticket
@@ -54,7 +55,7 @@ const createTicket = async (interaction, ticketType) => {
         //console.log(interaction.fields.getTextInputValue('userToReport'));
         specificFields = {
           reportedUser: interaction.fields.getTextInputValue('userToReport'),
-          userReportReason: interaction.fields.getTextInputValue('reasonForReport') 
+          userReportReason: interaction.fields.getTextInputValue('userReportReason') 
         };
         ticketLevel = 1;
         break;
@@ -99,6 +100,7 @@ const createTicket = async (interaction, ticketType) => {
       userId,
       userName,
       userDisplayName,
+      userThumbnail,
       userAge,
       userTicketTotal,
       lastUserResponse,

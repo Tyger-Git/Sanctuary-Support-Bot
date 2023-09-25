@@ -37,7 +37,7 @@ export default {
                 { name: `${emojis.generalEmoji} General Support`, value: `${emojis.line90General} Use the General Support option if none of the above categories suit your questions or concerns!`},
                 
             )
-            .setImage('attachment://support.png')
+            .setImage('attachment://ContactStaff.gif')
             .setFooter({text: "© Sanctuary Development Team - 2023"})
             ;
 
@@ -78,6 +78,6 @@ export default {
 
 
         await interaction.deleteReply(); //  Delete command for cleanliness
-        await channel.send({ embeds: [ticketEmbed], files: [{attachment: './resources/support.png', name: 'support.png'}], components: [row1, row2, row3] });
+        await channel.send({ embeds: [ticketEmbed], files: [{attachment: './resources/ContactStaff.gif', name: 'ContactStaff.gif'}], components: [row1, row2, row3] });
     }
 }

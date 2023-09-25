@@ -18,6 +18,9 @@ const modTicket = async (ticket) => {
     let ticketCloseDate = ticket.closeDate;
     if (ticketCloseDate === null) {ticketCloseDate = 'Ticket Unresolved';}
 
+    let modAssigned = 'Unclaimed';
+    if (ticket.claimantModName !== 'Unclaimed') {modAssigned = `<@${ticket.claimantModId}>`;}
+
     // Turn attachment array's into strings
     // Format of masked links: [Guide](https://discordjs.guide/ 'optional hovertext')
     let ticketAttachments = '';
@@ -25,7 +28,7 @@ const modTicket = async (ticket) => {
         ticketAttachments = 'No attachments';
     } else {
         ticket.ticketAttachments.forEach(attachment => {
-            ticketAttachments += attachment + '\n';
+            ticketAttachments += emojis.redDot + attachment + '\n';
         });
     }
     let socialLinks = '';
@@ -84,17 +87,26 @@ const modTicket = async (ticket) => {
             console.error('Unsupported ticket type.');
             return null;
     }
-
     const modTicketEmbedTop = new EmbedBuilder()
         .setColor(embedColor)
         .setTitle(`${ticket.ticketType} Ticket`)
+        .setThumbnail(ticket.userThumbnail)
         .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
         .addFields(
-            { name: 'Display Name:', value: ticket.userDisplayName, inline: true},{ name: 'User Name:', value: ticket.userName, inline: true},{ name: 'User ID:', value: ticket.userId, inline: true },
-            { name: 'Total Tickets:', value: `${ticket.userTicketTotal}`, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Server Join Date:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
+            { name: 'Display Name:', value: `${emojis.line90Report} ${ticket.userDisplayName}`}
+        )
+        .setImage('attachment://1px.png')
+        ;
+    const modTicketEmbedMid = new EmbedBuilder()
+        .setColor(embedColor)
+        .setTitle(`User/Ticket Information`)
+        .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
+        .addFields(
+            { name: `${emojis.bouncingCaret}User Name:`, value: ticket.userName, inline: true},{ name: 'User ID:', value: `${emojis.line90Creator} \`${ticket.userId}\``, inline: true },{ name: '\u200B', value: '\u200B', inline: true},
+            { name: 'Total Tickets:', value: `${ticket.userTicketTotal}`, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Server Tenure:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-            { name: 'Ticket ID:', value: `${ticket.ticketId}`, inline: true },{ name: '\u200B', value: '\u200B', inline: true },{ name: 'Ticket Status', value: ticketStatus, inline: true },
-            { name: 'Mod Assigned:', value: ticket.claimantModName, inline: true },{ name: 'Ticket Level:', value: ticketLevel, inline: true },{ name: 'Opened On:', value: formatDate(ticket.openDate), inline: true },
+            { name: 'Ticket ID:', value: `\`${ticket.ticketId}\``, inline: true },{ name: '\u200B', value: '\u200B', inline: true },{ name: 'Ticket Status', value: ticketStatus, inline: true },
+            { name: 'Mod Assigned:', value: `${emojis.line90General} ${modAssigned}`, inline: true },{ name: 'Ticket Level:', value: ticketLevel, inline: true },{ name: 'Opened On:', value: formatDate(ticket.openDate), inline: true },
             { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
         )
         .setImage('attachment://1px.png')
@@ -103,7 +115,7 @@ const modTicket = async (ticket) => {
     if (ticket.ticketType === 'VIP Application') {
         modTicketEmbedBottom
             .setColor(embedColor)
-            .setTitle(`${ticket.ticketType} Ticket Information`)
+            .setTitle(`${ticket.ticketType} Information`)
             .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
             .addFields(
                 { name: contentName1, value: contentValue1},
@@ -113,16 +125,16 @@ const modTicket = async (ticket) => {
                 { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
                 { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
                 { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
-                { name: 'Mod Notes:', value: ticket.modNotes },
+                { name: 'Mod Notes:', value: `*${ticket.modNotes}*` },
                 { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-                { name: 'Attachments:', value: ticketAttachments},
+                { name: 'Ticket Attachments:', value: ticketAttachments},
             )
             .setImage('attachment://1px.png')
             ;
     } else if (ticket.ticketType === 'General Support') {
         modTicketEmbedBottom
             .setColor(embedColor)
-            .setTitle(`${ticket.ticketType} Ticket Information`)
+            .setTitle(`${ticket.ticketType} Information`)
             .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
             .addFields(
                 { name: contentName1, value: contentValue1},
@@ -130,7 +142,7 @@ const modTicket = async (ticket) => {
                 { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
                 { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
                 { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
-                { name: 'Mod Notes:', value: ticket.modNotes },
+                { name: 'Mod Notes:', value: `*${ticket.modNotes}*` },
                 { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
                 { name: 'Attachments:', value: ticketAttachments},
             )
@@ -139,7 +151,7 @@ const modTicket = async (ticket) => {
     } else {
         modTicketEmbedBottom
             .setColor(embedColor)
-            .setTitle(`${ticket.ticketType} Ticket Information`)
+            .setTitle(`${ticket.ticketType} Information`)
             .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
             .addFields(
                 { name: contentName1, value: contentValue1},
@@ -148,7 +160,7 @@ const modTicket = async (ticket) => {
                 { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
                 { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
                 { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
-                { name: 'Mod Notes:', value: ticket.modNotes },
+                { name: 'Mod Notes:', value: `*${ticket.modNotes}*` },
                 { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
                 { name: 'Attachments:', value: ticketAttachments},
             )
@@ -195,11 +207,11 @@ const modTicket = async (ticket) => {
 
     // Display Logic
     if (!ticket.isClaimed && ticket.isOpen) {
-        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [unclaimedRow] };
+        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedMid, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [unclaimedRow] };
     } else if (ticket.isClaimed && ticket.isOpen) {
-        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [claimedRow] };
+        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedMid, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [claimedRow] };
     } else if (!ticket.isOpen) {
-        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [closingRow] };
+        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedMid, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [closingRow] };
     }
         return messageObject;
 };
@@ -269,7 +281,7 @@ function daysToYearsMonthsDays(age) {
 function formatDate(date) {
     // Check if the date is valid
     if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
-        return 'Ticket Unresolved';
+        return '*Ticket Unresolved*';
     }
     // Get the day, month, and year
     const day = String(date.getDate()).padStart(2, '0');

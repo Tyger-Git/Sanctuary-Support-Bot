@@ -3,6 +3,7 @@ import clientSingleton from '../../utils/DiscordClientInstance.js';
 import config from '../../../config.json' assert { type: 'json' };
 import { EmbedBuilder } from "discord.js";
 import logger from '../../utils/logger.js';
+import { handleTicketMessageUpdate } from '../../functions/threadFunctions.js';
 
 const incomingDirectMessage = async (message) => {
     console.log(`Got DM from ${message.author.tag}`);
@@ -14,6 +15,10 @@ const incomingDirectMessage = async (message) => {
         const client = clientSingleton.getClient();
         // Fetch the associated thread using the stored ticketThread ID
         const thread = await client.channels.fetch(ticket.ticketThread);
+        // Prep the regex for hyperlink detection
+        const regex = /https?:\/\/[^\s]+/g;
+        // Check if the message contains a hyperlink, array of hyperlinks, or null
+        const hyperlinks = message.content.match(regex) || [];
         // Spin up an embed to send to the thread
         let modToPing = '';
         const embed = new EmbedBuilder();
@@ -26,6 +31,20 @@ const incomingDirectMessage = async (message) => {
             if (modToPing !== '') { await thread.send({content: modToPing}); }
             // Send the user's message to the thread
             await thread.send({ embeds: [embed] });
+            if (hyperlinks.length) {
+                // Spread Operator to add the hyperlinks to the ticketAttachments array, then remove duplicates
+                ticket.ticketAttachments = [...ticket.ticketAttachments, ...hyperlinks];
+                ticket.ticketAttachments = [...new Set(ticket.ticketAttachments)];
+                let attachmentEmbed = new EmbedBuilder()
+                    .setTitle(`🔗 Hyperlinks Detected 🔗`)
+                    .setDescription(`Added ${hyperlinks.length} link(s) to the ticket`);
+                thread.send({ embeds: [attachmentEmbed] });
+                await logger(ticket.ticketId, 'Event', message.author.id, 'Bot', 'Hyperlinks detected in user message. Added to ticket.');
+            }
+            // Update the lastUserResponse field
+            ticket.lastUserResponse = new Date();
+            await ticket.save();
+            await handleTicketMessageUpdate(ticket);
             await logger(ticket.ticketId, 'Primary', message.author.id, 'User', message.content);
         } else {
             // This is just a safety check in case the thread doesn't exist for some reason.

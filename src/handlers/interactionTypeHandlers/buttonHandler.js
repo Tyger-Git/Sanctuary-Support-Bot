@@ -3,6 +3,9 @@
 import { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import Snippet from "../../schemas/snippet.js";
 import { claimTicket, unclaimTicket, vibeCheck } from "../../functions/ticketFunctions.js";
+import Ticket from "../../schemas/ticket.js";
+import { handleTicketMessageUpdate } from "../../functions/threadFunctions.js";
+import logger from "../../utils/logger.js";
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Helper functions
@@ -331,7 +334,32 @@ const closeButton = async (interaction) => {
     }
 };
 
+// Confirm Button (Attachment Removal)
+/*------------------------------------------------------------------------------------------------------------------------*/
+const confirmAttachButton = async (interaction) => {
+    const ticket = await Ticket.findOne({ ticketThread: interaction.channel.id, isOpen: true });
+    const selectedLink = interaction.message.content.split('\n')[1];
 
+    ticket.ticketAttachments = ticket.ticketAttachments.filter(link => link !== selectedLink);
+    await ticket.save();
+
+    await handleTicketMessageUpdate(ticket);
+    await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', 'Attachment removed.');
+
+    await interaction.update({
+        content: 'Attachment removed successfully!',
+        components: []
+    });
+};
+
+// Cancel Button (Attachment Removal)
+/*------------------------------------------------------------------------------------------------------------------------*/
+const cancelAttachButton = async (interaction) => {
+    await interaction.update({
+        content: 'Attachment removal cancelled.',
+        components: []
+    });
+};
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Export the functions
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -345,5 +373,7 @@ export {
     claimButton,
     unclaimButton,
     escalateButton,
-    closeButton 
+    closeButton,
+    confirmAttachButton,
+    cancelAttachButton
 };

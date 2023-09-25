@@ -6,11 +6,12 @@ import { escalateWorkflow } from './functionHandlers/handleEscalate.js';
 import watchedMessage from './interactionTypeHandlers/messageHandler.js';
 import config from '../../config.json' assert { type: "json" };
 import clientSingleton from '../utils/DiscordClientInstance.js';
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, ButtonBuilder, ActionRowBuilder } from 'discord.js';
 import emojis from '../emojis.json' assert { type: "json" };
 import { creatorInquiriesButton, generalSupportButton, reportButton, 
     technicalIssuesButton, submitAppealButton, snippetsButton, 
-    claimButton, unclaimButton, escalateButton, closeButton } from './interactionTypeHandlers/buttonHandler.js';
+    claimButton, unclaimButton, escalateButton, closeButton,
+    confirmAttachButton, cancelAttachButton } from './interactionTypeHandlers/buttonHandler.js';
 
 // Function handoffs for interaction types
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -29,10 +30,13 @@ const buttonHandlers = {
     'send_escalate_reply_button': escalateWorkflow, // Outsourced to handleEscalate.js
     'cancel_escalate_reply_button': escalateWorkflow, // Outsourced to handleEscalate.js
     'close_button': closeButton,
+    'confirm_remove_attachment' : confirmAttachButton,
+    'cancel_remove_attachment' : cancelAttachButton,
 };
 const menuHandlers = {
     'snippet_menu': snippetWorkflow, // Outsourced to handleSnippets.js
-    'escalate_menu': escalateWorkflow // Outsourced to handleEscalate.js
+    'escalate_menu': escalateWorkflow, // Outsourced to handleEscalate.js
+    'remove_attachment_select' : attachmentRemoval // Done below, for now
 };
 const modalHandlers = {
     'newReportTicketModal': (interaction) => handleTicketCreation(interaction, 'User Report', 'You submitted a report ticket successfully!'),
@@ -57,6 +61,24 @@ async function handleTicketCreation(interaction, ticketType, successMessage) {
         await interaction.reply({ content: 'An error occurred while creating the ticket. Please try again later, or contact a staff member for assistance.', ephemeral: true });
     }
   }
+
+// Handle attachment removal - Might move this to a separate file
+async function attachmentRemoval(interaction) {
+    const selectedLink = interaction.values[0];
+    const confirmButton = new ButtonBuilder()
+        .setCustomId('confirm_remove_attachment')
+        .setLabel('Confirm')
+        .setStyle('Success');
+    const cancelButton = new ButtonBuilder()
+        .setCustomId('cancel_remove_attachment')
+        .setLabel('Cancel')
+        .setStyle('Danger');
+    const row = new ActionRowBuilder().addComponents(confirmButton, cancelButton);
+    await interaction.update({
+        content: `Are you sure you want to remove this attachment?\n${selectedLink}`,
+        components: [row]
+    });
+}
 
 // Interaction handlers
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -107,7 +129,7 @@ const handleInteractionCreate = async (interaction) => {
           const messageLink = `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
           const embed = new EmbedBuilder()
               .setTitle(`${emojis.outage} Bot pinged! ${emojis.outage}`)
-              .setDescription(`Bot pinged by **${message.author.tag}** in **${message.channel.name}**. See message here: ${messageLink}`)
+              .setDescription(`Bot pinged by **${message.author.tag}** in **<#${message.channel.id}>**. See message here: ${messageLink}`)
           await thread.send({ embeds: [embed] });
       }
       // Get parent channel ID of message channel
