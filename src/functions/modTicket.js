@@ -6,56 +6,56 @@ import { getUserLevel } from './permissions.js';
 
 const modTicket = async (ticket) => {
     let messageObject = {};
-    let ticketStatus = ticket.isOpen ? 'Open' : 'Closed';
+    let ticketStatus = ticket.isOpen ? `Open` : `Closed`;
     // Turn ticketLevel into a string
     let ticketLevel;
-    if (ticket.ticketLevel === 0) {ticketLevel = 'Helper';}
-    else if (ticket.ticketLevel === 1) {ticketLevel = 'Mod';}
-    else if (ticket.ticketLevel === 2) {ticketLevel = 'Senior Mod';}
-    else if (ticket.ticketLevel === 3) {ticketLevel = 'Head Mod';}
-    else if (ticket.ticketLevel >= 4) {ticketLevel = 'Admin';}
+    if (ticket.ticketLevel === 0) {ticketLevel = `Helper`;}
+    else if (ticket.ticketLevel === 1) {ticketLevel = `Moderator`;}
+    else if (ticket.ticketLevel === 2) {ticketLevel = `Senior Mod`;}
+    else if (ticket.ticketLevel === 3) {ticketLevel = `Head Mod`;}
+    else if (ticket.ticketLevel >= 4) {ticketLevel = `Admin`;}
 
     let ticketCloseDate = ticket.closeDate;
-    if (ticketCloseDate === null) {ticketCloseDate = 'Ticket Unresolved';}
+    if (ticketCloseDate === null) {ticketCloseDate = `Ticket Unresolved`;}
 
-    let modAssigned = 'Unclaimed';
-    if (ticket.claimantModName !== 'Unclaimed') {modAssigned = `<@${ticket.claimantModId}>`;}
+    let modAssigned = `Unclaimed`;
+    if (ticket.claimantModName !== `Unclaimed`) {modAssigned = `<@${ticket.claimantModId}>`;}
 
-    // Turn attachment array's into strings
-    // Format of masked links: [Guide](https://discordjs.guide/ 'optional hovertext')
-    let ticketAttachments = '';
+    // Turn attachment array`s into strings
+    // Format of masked links: [Guide](https://discordjs.guide/ `optional hovertext`)
+    let ticketAttachments = ``;
     if (ticket.ticketAttachments.length === 0) {
-        ticketAttachments = 'No attachments';
+        ticketAttachments = `No attachments`;
     } else {
         ticket.ticketAttachments.forEach(attachment => {
-            ticketAttachments += emojis.redDot + attachment + '\n';
+            ticketAttachments += emojis.redDot + attachment + `\n`;
         });
     }
-    let socialLinks = '';
+    let socialLinks = ``;
     if (ticket.socialMediaLinks.length === 0) {
-        socialLinks = 'No links provided';
+        socialLinks = `No links provided`;
     } else {
         ticket.socialMediaLinks.forEach(link => {
-            socialLinks += link + '\n';
+            socialLinks += link + `\n`;
         });
     }
 
     let embedColor = [0,0,0] // Black
-    let contentName1 = '\u200B';
-    let contentValue1 = '\u200B';
-    let contentName2 = '\u200B';
-    let contentValue2 = '\u200B';
-    let contentName3 = '\u200B';
-    let contentValue3 = '\u200B';
+    let contentName1 = `\u200B`;
+    let contentValue1 = `\u200B`;
+    let contentName2 = `\u200B`;
+    let contentValue2 = `\u200B`;
+    let contentName3 = `\u200B`;
+    let contentValue3 = `\u200B`;
     switch (ticket.ticketType) {
-        case 'User Report':
+        case `User Report`:
             embedColor = [219,53,62] // Red 
             contentName1 = "Reported User:";
             contentValue1 = ticket.reportedUser;
             contentName2 = "Report Reason:";
             contentValue2 = ticket.userReportReason;
             break;
-        case 'VIP Application':
+        case `VIP Application`:
             embedColor = [255,223,0] // Gold
             contentName1 = "Social Media Name:";
             contentValue1 = ticket.socialMediaName;
@@ -64,27 +64,27 @@ const modTicket = async (ticket) => {
             contentName3 = "Social Media Links:";
             contentValue3 = socialLinks;
             break;
-        case 'Technical Support':
+        case `Technical Support`:
             embedColor = [88,100,241] // Blue
             contentName1 = "Issue Type:";
             contentValue1 = ticket.techIssueType;
             contentName2 = "Issue Description:";
             contentValue2 = ticket.techIssueDescription;
             break;
-        case 'Appeal':
+        case `Appeal`:
             embedColor = [219,53,62] // Red
             contentName1 = "Ticket To Appeal:";
             contentValue1 = ticket.ticketToAppeal;
             contentName2 = "Reason For Appeal:";
             contentValue2 = ticket.appealReasoning;
             break;
-        case 'General Support':
+        case `General Support`:
             embedColor = [36,123,68] // Green
             contentName1 = "Support Description:";
             contentValue1 = ticket.generalSupportDescription;
             break;
         default:
-            console.error('Unsupported ticket type.');
+            console.error(`Unsupported ticket type.`);
             return null;
     }
     const modTicketEmbedTop = new EmbedBuilder()
@@ -93,60 +93,60 @@ const modTicket = async (ticket) => {
         .setThumbnail(ticket.userThumbnail)
         .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
         .addFields(
-            { name: 'Display Name:', value: `${emojis.line90Report} ${ticket.userDisplayName}`}
+            { name: `${emojis.redCircle} Display Name:`, value: `${emojis.redRightHook} ${ticket.userDisplayName}`}
         )
-        .setImage('attachment://1px.png')
+        .setImage(`attachment://1px.png`)
         ;
     const modTicketEmbedMid = new EmbedBuilder()
         .setColor(embedColor)
         .setTitle(`User/Ticket Information`)
         .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
         .addFields(
-            { name: `${emojis.bouncingCaret}User Name:`, value: ticket.userName, inline: true},{ name: 'User ID:', value: `${emojis.line90Creator} \`${ticket.userId}\``, inline: true },{ name: '\u200B', value: '\u200B', inline: true},
-            { name: 'Total Tickets:', value: `${ticket.userTicketTotal}`, inline: true },{ name: 'Account Age:', value: daysToYearsMonthsDays(ticket.userAge), inline: true },{ name: 'Server Tenure:', value: daysToYearsMonthsDays(ticket.guildAge), inline: true },
-            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-            { name: 'Ticket ID:', value: `\`${ticket.ticketId}\``, inline: true },{ name: '\u200B', value: '\u200B', inline: true },{ name: 'Ticket Status', value: ticketStatus, inline: true },
-            { name: 'Mod Assigned:', value: `${emojis.line90General} ${modAssigned}`, inline: true },{ name: 'Ticket Level:', value: ticketLevel, inline: true },{ name: 'Opened On:', value: formatDate(ticket.openDate), inline: true },
-            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
+            { name: `${emojis.redCircle} User Name:`, value: `${emojis.redRightHook} \`${ticket.userName}\``, inline: true},{ name: `${emojis.redCircle} User ID:`, value: `${emojis.redRightHook} \`${ticket.userId}\``, inline: true },{ name: `\u200B`, value: `\u200B`, inline: true},
+            { name: `${emojis.redCircle} Total Tickets:`, value: `${emojis.redRightHook} ${ticket.userTicketTotal}`, inline: true },{ name: `${emojis.redCircle} Account Age:`, value: `${emojis.redRightHook} ${daysToYearsMonthsDays(ticket.userAge)}`, inline: true },{ name: `${emojis.redCircle} Server Tenure:`, value: `${emojis.redRightHook} ${daysToYearsMonthsDays(ticket.guildAge)}`, inline: true },
+            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
+            { name: `${emojis.redCircle} Ticket ID:`, value: `${emojis.redRightHook} \`${ticket.ticketId}\``, inline: true },{ name: `\u200B`, value: `\u200B`, inline: true },{ name: `${emojis.redCircle} Ticket Status`, value: `${emojis.redRightHook} ${ticketStatus}`, inline: true },
+            { name: `${emojis.redCircle} Mod Assigned:`, value: `${emojis.redRightHook} ${modAssigned}`, inline: true },{ name: `${emojis.redCircle} Ticket Level:`, value: `${emojis.redRightHook} ${ticketLevel}`, inline: true },{ name: `${emojis.redCircle} Opened On:`, value: `${emojis.redRightHook} ${formatDate(ticket.openDate)}`, inline: true },
+            { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
         )
-        .setImage('attachment://1px.png')
+        .setImage(`attachment://1px.png`)
         ;
     const modTicketEmbedBottom = new EmbedBuilder()
-    if (ticket.ticketType === 'VIP Application') {
+    if (ticket.ticketType === `VIP Application`) {
         modTicketEmbedBottom
             .setColor(embedColor)
             .setTitle(`${ticket.ticketType} Information`)
             .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
             .addFields(
-                { name: contentName1, value: contentValue1},
-                { name: contentName2, value: contentValue2},
-                { name: contentName3, value: contentValue3},
-                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-                { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
-                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-                { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
-                { name: 'Mod Notes:', value: `*${ticket.modNotes}*` },
-                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-                { name: 'Ticket Attachments:', value: ticketAttachments},
+                { name: `${emojis.redCircle} ${contentName1}`, value: `${emojis.redRightHook} ${contentValue1}`},
+                { name: `${emojis.redCircle} ${contentName2}`, value: `${emojis.redRightHook} ${contentValue2}`},
+                { name: `${emojis.redCircle} ${contentName3}`, value: `${emojis.redRightHook} ${contentValue3}`},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
+                { name: `${emojis.redCircle} User Replied:`, value:  `${emojis.redRightHook} ${formatDate(ticket.lastUserResponse)}`, inline: true},{ name: `\u200B`, value: `\u200B`, inline: true},{ name: `${emojis.redCircle} Mod Replied:`, value: `${emojis.redRightHook} ${formatDate(ticket.lastModResponse)}`, inline: true},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
+                { name: `${emojis.redCircle} Ticket Close Date:`, value: `${emojis.redRightHook} ${formatDate(ticket.closeDate)}` },
+                { name: `${emojis.redCircle} Mod Notes:`, value: `${emojis.redRightHook} *${ticket.modNotes}*` },
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
+                { name: `🔗 Ticket Attachments 🔗`, value: ticketAttachments},
             )
-            .setImage('attachment://1px.png')
+            .setImage(`attachment://1px.png`)
             ;
-    } else if (ticket.ticketType === 'General Support') {
+    } else if (ticket.ticketType === `General Support`) {
         modTicketEmbedBottom
             .setColor(embedColor)
             .setTitle(`${ticket.ticketType} Information`)
             .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
             .addFields(
-                { name: contentName1, value: contentValue1},
-                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-                { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
-                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-                { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
-                { name: 'Mod Notes:', value: `*${ticket.modNotes}*` },
-                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-                { name: 'Attachments:', value: ticketAttachments},
+                { name: `${emojis.redCircle} ${contentName1}`, value: `${emojis.redRightHook} ${contentValue1}`},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
+                { name: `${emojis.redCircle} User Replied:`, value:  `${emojis.redRightHook} ${formatDate(ticket.lastUserResponse)}`, inline: true},{ name: `\u200B`, value: `\u200B`, inline: true},{ name: `${emojis.redCircle} Mod Replied:`, value: `${emojis.redRightHook} ${formatDate(ticket.lastModResponse)}`, inline: true},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
+                { name: `${emojis.redCircle} Ticket Close Date:`, value: `${emojis.redRightHook} ${formatDate(ticket.closeDate)}` },
+                { name: `${emojis.redCircle} Mod Notes:`, value: `${emojis.redRightHook} *${ticket.modNotes}*` },
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
+                { name: `🔗 Ticket Attachments 🔗`, value: ticketAttachments},
             )
-            .setImage('attachment://1px.png')
+            .setImage(`attachment://1px.png`)
             ;
     } else {
         modTicketEmbedBottom
@@ -154,48 +154,48 @@ const modTicket = async (ticket) => {
             .setTitle(`${ticket.ticketType} Information`)
             .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
             .addFields(
-                { name: contentName1, value: contentValue1},
-                { name: contentName2, value: contentValue2},
-                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-                { name: 'Last User Response:', value: formatDate(ticket.lastUserResponse), inline: true},{ name: '\u200B', value: '\u200B', inline: true},{ name: 'Last Mod Response:', value: formatDate(ticket.lastModResponse), inline: true},
-                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-                { name: 'Ticket Close Date:', value: formatDate(ticket.closeDate) },
-                { name: 'Mod Notes:', value: `*${ticket.modNotes}*` },
-                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: '\u200B' },
-                { name: 'Attachments:', value: ticketAttachments},
+                { name: `${emojis.redCircle} ${contentName1}`, value: `${emojis.redRightHook} ${contentValue1}`},
+                { name: `${emojis.redCircle} ${contentName2}`, value: `${emojis.redRightHook} ${contentValue2}`},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
+                { name: `${emojis.redCircle} User Replied:`, value:  `${emojis.redRightHook} ${formatDate(ticket.lastUserResponse)}`, inline: true},{ name: `\u200B`, value: `\u200B`, inline: true},{ name: `${emojis.redCircle} Mod Replied:`, value: `${emojis.redRightHook} ${formatDate(ticket.lastModResponse)}`, inline: true},
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
+                { name: `${emojis.redCircle} Ticket Close Date:`, value: `${emojis.redRightHook} ${formatDate(ticket.closeDate)}` },
+                { name: `${emojis.redCircle} Mod Notes:`, value: `${emojis.redRightHook} *${ticket.modNotes}*` },
+                { name: `${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`, value: `\u200B` },
+                { name: `🔗 Ticket Attachments 🔗`, value: ticketAttachments},
             )
-            .setImage('attachment://1px.png')
+            .setImage(`attachment://1px.png`)
             ;
     }
     // Create Buttons
     const claim_button = new ButtonBuilder()
-        .setCustomId('claim_button')
-        .setLabel('Claim')
-        .setStyle('Success'); // You can set this to SECONDARY, SUCCESS, DANGER, or LINK too
+        .setCustomId(`claim_button`)
+        .setLabel(`Claim`)
+        .setStyle(`Success`); // You can set this to SECONDARY, SUCCESS, DANGER, or LINK too
     const unclaim_button = new ButtonBuilder()
-        .setCustomId('unclaim_button')
-        .setLabel('Unclaim')
-        .setStyle('Danger'); // You can set this to SECONDARY, SUCCESS, DANGER, or LINK too
+        .setCustomId(`unclaim_button`)
+        .setLabel(`Unclaim`)
+        .setStyle(`Danger`); // You can set this to SECONDARY, SUCCESS, DANGER, or LINK too
     const escalate_button = new ButtonBuilder()
-        .setCustomId('escalate_button')
-        .setLabel('Escalate')
-        .setStyle('Primary');
+        .setCustomId(`escalate_button`)
+        .setLabel(`Escalate`)
+        .setStyle(`Primary`);
     const snippets_button = new ButtonBuilder()
-        .setCustomId('snippets_button')
-        .setLabel('Snippets')
-        .setStyle('Primary');
+        .setCustomId(`snippets_button`)
+        .setLabel(`Snippets`)
+        .setStyle(`Primary`);
     const close_button = new ButtonBuilder()
-        .setCustomId('close_button')
-        .setLabel('Close')
-        .setStyle('Danger');
+        .setCustomId(`close_button`)
+        .setLabel(`Close`)
+        .setStyle(`Danger`);
     const logs_button = new ButtonBuilder()
-        .setCustomId('logs_button')
-        .setLabel('Logs')
-        .setStyle('Secondary');
+        .setCustomId(`logs_button`)
+        .setLabel(`Logs`)
+        .setStyle(`Secondary`);
     const reopen_button = new ButtonBuilder()
-        .setCustomId('reopen_button')
-        .setLabel('Reopen')
-        .setStyle('Success');
+        .setCustomId(`reopen_button`)
+        .setLabel(`Reopen`)
+        .setStyle(`Success`);
 
     // Create Button Row
     const claimedRow = new ActionRowBuilder()
@@ -207,11 +207,11 @@ const modTicket = async (ticket) => {
 
     // Display Logic
     if (!ticket.isClaimed && ticket.isOpen) {
-        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedMid, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [unclaimedRow] };
+        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedMid, modTicketEmbedBottom], files: [{attachment: `./resources/1px.png`, name: `1px.png`}], components: [unclaimedRow] };
     } else if (ticket.isClaimed && ticket.isOpen) {
-        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedMid, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [claimedRow] };
+        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedMid, modTicketEmbedBottom], files: [{attachment: `./resources/1px.png`, name: `1px.png`}], components: [claimedRow] };
     } else if (!ticket.isOpen) {
-        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedMid, modTicketEmbedBottom], files: [{attachment: './resources/1px.png', name: '1px.png'}], components: [closingRow] };
+        messageObject = { embeds: [modTicketEmbedTop, modTicketEmbedMid, modTicketEmbedBottom], files: [{attachment: `./resources/1px.png`, name: `1px.png`}], components: [closingRow] };
     }
         return messageObject;
 };
@@ -230,20 +230,20 @@ const createTicketEmbed = async (id, ticketsChunk, type, userLevel, emojis) => {
         .setColor([255, 255, 255]) 
         .setTitle(`Results for searching tickets by ${type} ID: ${id}`)
         .setDescription(`${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`)
-        .setImage('attachment://1px.png');
+        .setImage(`attachment://1px.png`);
 
     ticketsChunk.forEach(ticket => {
-        const viewable = userLevel >= ticket.ticketLevel ? '✅' : '❌';
-        const fields = type === 'user'
+        const viewable = userLevel >= ticket.ticketLevel ? `✅` : `❌`;
+        const fields = type === `user`
             ? [
-                { name: 'Ticket ID: ', value: `${ticket.ticketId}`, inline: true },
-                { name: 'Claimant Mod: ', value: ticket.claimantModName, inline: true },
-                { name: 'Ticket Type:', value: ticket.ticketType, inline: true }
+                { name: `Ticket ID: `, value: `${ticket.ticketId}`, inline: true },
+                { name: `Claimant Mod: `, value: ticket.claimantModName, inline: true },
+                { name: `Ticket Type:`, value: ticket.ticketType, inline: true }
               ]
             : [
-                { name: 'Ticket ID: ', value: `${ticket.ticketId}`, inline: true },
-                { name: 'User Name: ', value: ticket.userName, inline: true },
-                { name: 'Ticket Type:', value: ticket.ticketType, inline: true }
+                { name: `Ticket ID: `, value: `${ticket.ticketId}`, inline: true },
+                { name: `User Name: `, value: ticket.userName, inline: true },
+                { name: `Ticket Type:`, value: ticket.ticketType, inline: true }
               ];
 
         fields.push({ name: `Pull Permissions:\n${viewable}`, value: `\n${emojis.whiteDash}${emojis.whiteDash}${emojis.whiteDash}`});
@@ -272,7 +272,7 @@ function daysToYearsMonthsDays(age) {
     const months = Math.floor(age / daysInMonth);
     age -= months * daysInMonth;
 
-    // What's left now is the days
+    // What`s left now is the days
     const days = Math.round(age); // Rounding to nearest day
 
     return `${years}y - ${months}m - ${days}d`;
@@ -281,16 +281,16 @@ function daysToYearsMonthsDays(age) {
 function formatDate(date) {
     // Check if the date is valid
     if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
-        return '*Ticket Unresolved*';
+        return `*Ticket Unresolved*`;
     }
     // Get the day, month, and year
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, `0`);
+    const month = String(date.getMonth() + 1).padStart(2, `0`); // Months are 0-based
     const year = String(date.getFullYear()).slice(-2); // Last two digits of the year
 
     // Get the hours and minutes
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, `0`);
+    const minutes = String(date.getMinutes()).padStart(2, `0`);
 
     // Return the formatted string
     return `${month}/${day}/${year} - ${hours}:${minutes}`;
