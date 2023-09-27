@@ -45,7 +45,11 @@ const incomingDirectMessage = async (message) => {
             ticket.lastUserResponse = new Date();
             await ticket.save();
             await handleTicketMessageUpdate(ticket);
-            await logger(ticket.ticketId, 'Primary', message.author.id, message.author.username, 'User', message.content);
+            if (hyperlinks.length) { // I don't like this, going to change later
+                await logger(ticket.ticketId, 'Primary', message.author.id, message.author.username, 'User', `<${message.content}>`);
+            } else {
+                await logger(ticket.ticketId, 'Primary', message.author.id, message.author.username, 'User', message.content);
+            }
         } else {
             // This is just a safety check in case the thread doesn't exist for some reason.
             await message.reply(await ticketErrorMessageObject('An error occurred while sending your message. Please try again later, or contact a staff member for assistance.', true));

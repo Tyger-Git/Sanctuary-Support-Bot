@@ -128,6 +128,23 @@ const longLogs = async (interaction, ticket) => {
     });
 };
 
+async function popoutLogs(interaction, ticket) {
+    const logs = await Log.find({ ticketId: ticket.ticketId });
+    
+    let emojiMap = new Map();
+        emojiMap.set('User', emojis.user);
+        emojiMap.set('Staff', emojis.staff);
+        emojiMap.set('Bot', emojis.bot);
+
+    let ticketLogs = logs.map(log => `**${emojis.whiteDashGlow}${emojis.whiteDashGlow}${emojis.whiteDashGlow}\n${emojiMap.get(log.classType)} - ${formatDate(log.timeStamp)}**\n<${log.logMessage}>`);
+    const logCounter = logs.length;
+    const chunkedLogs = chunkArray(ticketLogs, 5);
+    await interaction.editReply(`📜 Ticket Logs #${ticket.ticketId} - Total Entries: ${logCounter} 📜`);
+    chunkedLogs.forEach(async chunk => {
+        await interaction.channel.send({content: chunk.join('\n'), ephemeral: false});
+    });
+}
+
 function chunkArray(array, chunkSize) {
     const results = [];
     while (array.length) {
@@ -168,5 +185,6 @@ function formatDate(date) {
 
 export {
     shortLogs,
-    longLogs
+    longLogs,
+    popoutLogs
 }
