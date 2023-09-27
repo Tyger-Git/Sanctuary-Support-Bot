@@ -53,7 +53,7 @@ const snippetWorkflow = async (interaction) => {
                 components: [],  // Remove all components to disable further interactions
                 ephemeral: true
             });
-            await interaction.channel.send(ticketActionMessageObject(`A Snippet was sent to the user:\n\`\`\`${selectedSnippet.snippetContent}\`\`\``, false));
+            await interaction.channel.send(await ticketActionMessageObject(`A Snippet was sent to the user:\n\`\`\`${selectedSnippet.snippetContent}\`\`\``, false));
         } else {
             await interaction.reply(ticketErrorMessageObject(`Snippet not found.`, true));
         }

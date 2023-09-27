@@ -85,7 +85,7 @@ const claimTicket = async (interaction, iType) => {
         if (iType === 'slash') {await interaction.editReply(msgObj);}
         if (iType === 'button') {await interaction.reply(msgObj);}
         await outgoingTicketEvent(interaction, ticket, `Ticket claimed by a Staff Member. Please wait for a response.`);
-        await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket Claimed by **${claimantMod}**`);
+        await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', `Ticket Claimed by **${claimantMod}**`);
     } catch (error) {
         console.error('Error claiming ticket:', error);
     }
@@ -132,7 +132,7 @@ const unclaimTicket = async (interaction, iType) => {
         const msgObj = await ticketActionMessageObject(`Ticket unclaimed by **${modUnclaiming}**`, false);
         if (iType === 'slash') {await interaction.editReply(msgObj);}
         if (iType === 'button') {await interaction.reply(msgObj);}
-        await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket Unclaimed by **${modUnclaiming}**`)
+        await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', `Ticket Unclaimed by **${modUnclaiming}**`)
     } catch (error) {
         console.error('Error unclaiming ticket:', error);
     }

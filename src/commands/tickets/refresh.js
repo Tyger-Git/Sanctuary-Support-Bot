@@ -2,6 +2,7 @@
 
 import Ticket from "../../schemas/ticket.js";
 import { handleTicketMessageUpdate } from "../../functions/threadFunctions.js";
+import logger from "../../utils/logger.js";
 
 export default {
     name: 'refresh',
@@ -21,6 +22,7 @@ export default {
             return; 
         }
         await handleTicketMessageUpdate(ticket);
+        await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Ticket refreshed.');
         await interaction.editReply(await ticketActionMessageObject(`Ticket Refreshed`, true));
     }
 }

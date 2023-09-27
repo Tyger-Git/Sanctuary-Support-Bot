@@ -5,7 +5,6 @@ import { handleInteractionCreate, handleMessageCreate } from './handlers/interac
 import slashCommandHandler from './handlers/commandHandlers/slashCommandHandler.js';
 import { deleteOldThreads, pingAlerts } from './utils/taskScheduler.js';
 import { ticketActionMessageObject, ticketErrorMessageObject } from './functions/responseFunctions.js';
-import { set } from 'mongoose';
 
 // Execute dotenv config
 config();

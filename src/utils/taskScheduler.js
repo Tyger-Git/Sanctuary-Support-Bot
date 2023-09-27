@@ -41,7 +41,7 @@ async function deleteOldThreads() {
             // Delete the dying ticket entry
             await DyingTicketModel.findByIdAndDelete(ticket._id);
             console.log('Deleted thread for ticket', mainTicket.ticketId);
-            await logger(mainTicket.ticketId, 'Event', client.user.id, 'Bot', `Deleted thread for ticket ${mainTicket.ticketId}`);
+            await logger(mainTicket.ticketId, 'Event', client.user.id, client.user.username, 'Bot', `Deleted thread for ticket ${mainTicket.ticketId}`);
         }
         console.log('Done deleting threads');
     } catch (error) {

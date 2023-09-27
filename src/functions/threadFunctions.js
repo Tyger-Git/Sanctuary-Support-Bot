@@ -280,7 +280,7 @@ async function closeThread(interaction) {
         } else {
             await interaction.reply(await ticketActionMessageObject("Ticket Closed...Thread scheduled for deletion in **" + closeTimer + " hour(s).**", false));
         }
-        await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', `Ticket closed by **${interaction.user.username}**`);
+        await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', `Ticket closed by **${interaction.user.username}**`);
     } catch (error) {
         console.error('Error ending thread:', error);
     }

@@ -2,7 +2,7 @@ import Log from '../schemas/log.js';
 import clientSingleton from '../utils/DiscordClientInstance.js';
 import config from '../../config.json' assert { type: 'json' };
 
-const log = async (ticketId, type, userId, classType, message) => {
+const log = async (ticketId, type, userId, userName, classType, message) => {
     // Get the highest role of the user
     const roleId = await getHighestRole(userId);
     // Create the log entry
@@ -10,6 +10,7 @@ const log = async (ticketId, type, userId, classType, message) => {
         ticketId: ticketId,
         messageType: type,
         userId: userId,
+        userName: userName,
         classType: classType,
         userRole: roleId,
         logMessage: message

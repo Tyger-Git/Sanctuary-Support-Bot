@@ -117,7 +117,7 @@ const createTicket = async (interaction, ticketType) => {
 
     // Save the new ticket to the database
     await newTicket.save();
-    await logger(ticketId, 'Event', userId, 'Bot', `Ticket created by ${userDisplayName} (${userName}) with ID ${ticketId}`)
+    await logger(ticketId, 'Event', userId, interaction.user.username, 'Bot', `Ticket created by ${userDisplayName} (${userName}) with ID ${ticketId}`)
   } catch (error) {
     console.error("Error creating ticket:", error);
   }

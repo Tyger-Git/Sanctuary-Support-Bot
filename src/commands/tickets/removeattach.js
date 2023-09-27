@@ -1,7 +1,5 @@
 import Ticket from '../../schemas/ticket.js';
 import { ActionRowBuilder, ApplicationCommandOptionType, StringSelectMenuBuilder } from 'discord.js';
-import logger from '../../utils/logger.js';
-import { handleTicketMessageUpdate } from '../../functions/threadFunctions.js';
 import { ticketErrorMessageObject } from '../../functions/responseFunctions.js';
 
 export default {
@@ -23,7 +21,6 @@ export default {
         } else {
             ticket = await Ticket.findOne({ ticketThread: interaction.channel.id});
         }
-
         if (!ticket) {
             await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));
             return;

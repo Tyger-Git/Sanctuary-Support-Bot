@@ -3,6 +3,7 @@
 import { ApplicationCommandOptionType } from 'discord.js';
 import Ticket from '../../schemas/ticket.js';
 import { handleTicketMessageUpdate } from '../../functions/threadFunctions.js';
+import logger from '../../utils/logger.js';
 
 export default {
     name: 'togglealerts',
@@ -50,7 +51,7 @@ export default {
             }
             ticket.isAlertOn = toggle === 'on';
             await ticket.save();
-            await interaction.editReply(ticketActionMessageObject(`Alerts toggled ${toggle}`, false));
+            await interaction.editReply(await ticketActionMessageObject(`Alerts toggled ${toggle}`, false));
             await handleTicketMessageUpdate(ticket);
         } else { // Find by ticket ID
             try {
@@ -64,7 +65,8 @@ export default {
             }
             ticket.isAlertOn = toggle === 'on';
             await ticket.save();
-            await interaction.editReply(ticketActionMessageObject(`Alerts toggled ${toggle}`, true));
+            await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', `Alerts toggled ${toggle}`);
+            await interaction.editReply(await ticketActionMessageObject(`Alerts toggled ${toggle}`, true));
         }
     }
 }

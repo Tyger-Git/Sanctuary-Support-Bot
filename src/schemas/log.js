@@ -21,6 +21,10 @@ const logSchema = new Schema({
         type: String,
         required: true,
     },
+    userName: { // Capturing the user name of the person who triggered the log
+        type: String,
+        required: true,
+    },
     classType: { // Capturing the user type - What emoji shows up next to the log
         type: String,
         required: true,
@@ -29,6 +33,7 @@ const logSchema = new Schema({
     userRole: { // Capturing the user role for traceability
         type: String,
         required: true,
+        default: 'User',
     },
     logMessage: { 
         type: String,

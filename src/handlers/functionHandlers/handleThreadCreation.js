@@ -51,7 +51,7 @@ const handleThreadCreation = async (client, ticketData) => {
     ticket.ticketThreadMessage = sentMessage.id;
     await ticket.save();
     
-    await logger(ticket.ticketId, 'Event', client.user.id, 'Bot', `Created thread for ticket ${ticket.ticketId}`);
+    await logger(ticket.ticketId, 'Event', client.user.id, client.user.username, 'Bot', `Created thread for ticket ${ticket.ticketId}`);
     return thread;
 }
 

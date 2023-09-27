@@ -344,7 +344,7 @@ const confirmAttachButton = async (interaction) => {
     await ticket.save();
 
     await handleTicketMessageUpdate(ticket);
-    await logger(ticket.ticketId, 'Event', interaction.user.id, 'Bot', 'Attachment removed.');
+    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Attachment removed. Attachment: ' + selectedLink + '');
 
     await interaction.update({
         content: 'Attachment removed successfully!',

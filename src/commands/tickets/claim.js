@@ -10,7 +10,7 @@ export default {
         {
             name: 'ticket-id',
             description: 'The ID of the ticket you want to claim.',
-            type: ApplicationCommandOptionType.Number,
+            type: ApplicationCommandOptionType.String,
             required: false,
         },
     ],
