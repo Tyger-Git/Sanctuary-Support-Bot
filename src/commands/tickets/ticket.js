@@ -34,7 +34,7 @@ export default {
 
         // Constructing the query dynamically
         let query;
-
+        // Add lot's of checks
         const providedTicketId = interaction.options.get('ticket-id')?.value;
         const providedUserId = interaction.options.get('user-id')?.value;
         const providedModId = interaction.options.get('mod-id')?.value;

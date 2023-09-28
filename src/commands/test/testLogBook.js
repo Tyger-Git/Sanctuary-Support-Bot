@@ -29,6 +29,7 @@ function createEmbedsFromChunks(chunks) {
 export default {
     name: 'tlogbook',
     description: 'Test Log Book',
+    devOnly: true,
     callback: async (client, interaction) => {
         await interaction.deferReply();
 

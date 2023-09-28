@@ -6,6 +6,7 @@ import { ActionRowBuilder, ButtonBuilder } from 'discord.js';
 export default {
     name: "supportmessage",
     description: "Support message",
+    devOnly: true,
     callback: async (client, interaction) => {
       await interaction.deferReply();
       await interaction.deleteReply(); //  Delete command for cleanliness

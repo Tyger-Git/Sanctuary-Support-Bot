@@ -22,6 +22,7 @@ function chunkStringArrayByCharCount(array, charLimit) {
 export default {
     name: 'tlogpopout',
     description: 'Test Log Pop Out',
+    devOnly: true,
     callback: async (client, interaction) => {
         await interaction.deferReply(/*{ ephemeral: true }*/);
 

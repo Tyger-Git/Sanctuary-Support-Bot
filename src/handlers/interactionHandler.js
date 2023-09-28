@@ -11,7 +11,8 @@ import emojis from '../emojis.json' assert { type: "json" };
 import { creatorInquiriesButton, generalSupportButton, reportButton, 
     technicalIssuesButton, submitAppealButton, snippetsButton, 
     claimButton, unclaimButton, escalateButton, closeButton,
-    confirmAttachButton, cancelAttachButton } from './interactionTypeHandlers/buttonHandler.js';
+    confirmAttachButton, cancelAttachButton, logsButton } from './interactionTypeHandlers/buttonHandler.js';
+import log from '../schemas/log.js';
 
 // Function handoffs for interaction types
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -22,12 +23,10 @@ const buttonHandlers = {
     'general_support_button': generalSupportButton,
     'appeal_button': submitAppealButton,
     'snippets_button': snippetsButton,
-    'send_snippet_reply_button': snippetWorkflow, // Outsourced to handleSnippets.js
     'cancel_snippet_reply_button': snippetWorkflow, // Outsourced to handleSnippets.js
     'claim_button': claimButton,
     'unclaim_button': unclaimButton,
     'escalate_button': escalateButton,
-    'send_escalate_reply_button': escalateWorkflow, // Outsourced to handleEscalate.js
     'cancel_escalate_reply_button': escalateWorkflow, // Outsourced to handleEscalate.js
     'close_button': closeButton,
     'confirm_remove_attachment' : confirmAttachButton,
@@ -88,6 +87,8 @@ const handleInteractionCreate = async (interaction) => {
         await snippetWorkflow(interaction);
       } else if (interaction.customId.startsWith('send_escalate_reply_button')){
         await escalateWorkflow(interaction);
+      } else if (interaction.customId.startsWith('logs_button')){
+        await logsButton(interaction);
       } else {
         const handler = buttonHandlers[interaction.customId];
         if (handler) {

@@ -189,7 +189,7 @@ const modTicket = async (ticket) => {
         .setLabel(`Close`)
         .setStyle(`Danger`);
     const logs_button = new ButtonBuilder()
-        .setCustomId(`logs_button`)
+        .setCustomId(`logs_button:${ticket.ticketId}`) // Embed the ticket ID into the button
         .setLabel(`Logs`)
         .setStyle(`Secondary`);
     const reopen_button = new ButtonBuilder()

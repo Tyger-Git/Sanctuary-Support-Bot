@@ -1,6 +1,8 @@
 import Log from '../schemas/log.js';
 import { EmbedBuilder, ButtonBuilder, ActionRowBuilder } from 'discord.js';
 import emojis from '../emojis.json' assert { type: "json" };
+import threadInformation from '../threadInformation.json' assert { type: "json" };
+import clientSingleton from '../utils/DiscordClientInstance.js';
 
 
 async function shortLogs(interaction, ticket) {
@@ -136,12 +138,16 @@ async function popoutLogs(interaction, ticket) {
         emojiMap.set('Staff', emojis.staff);
         emojiMap.set('Bot', emojis.bot);
 
-    let ticketLogs = logs.map(log => `**${emojis.whiteDashGlow}${emojis.whiteDashGlow}${emojis.whiteDashGlow}\n${emojiMap.get(log.classType)} - ${formatDate(log.timeStamp)}**\n<${log.logMessage}>`);
+    let ticketLogs = logs.map(log => `**${emojis.whiteDashGlow}${emojis.whiteDashGlow}${emojis.whiteDashGlow}\n${emojiMap.get(log.classType)} - ${formatDate(log.timeStamp)}**\n${log.logMessage}`);
     const logCounter = logs.length;
     const chunkedLogs = chunkArray(ticketLogs, 5);
-    await interaction.editReply(`📜 Ticket Logs #${ticket.ticketId} - Total Entries: ${logCounter} 📜`);
+    // Get the bot spam channel
+    const client = clientSingleton.getClient();
+    const thread = await client.channels.fetch(threadInformation.BotSpamChannel);
+    await interaction.editReply(`Sent the logs to <#${threadInformation.BotSpamChannel}>!`);
+    await thread.send({content: `📜 Ticket Logs #${ticket.ticketId} - Total Entries: ${logCounter} 📜`, ephemeral: true});
     chunkedLogs.forEach(async chunk => {
-        await interaction.channel.send({content: chunk.join('\n'), ephemeral: false});
+        await thread.send({content: chunk.join('\n'), ephemeral: true});
     });
 }
 

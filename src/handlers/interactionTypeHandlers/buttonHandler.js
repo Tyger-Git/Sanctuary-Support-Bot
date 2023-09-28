@@ -6,6 +6,7 @@ import { claimTicket, unclaimTicket, vibeCheck } from "../../functions/ticketFun
 import Ticket from "../../schemas/ticket.js";
 import { handleTicketMessageUpdate } from "../../functions/threadFunctions.js";
 import logger from "../../utils/logger.js";
+import { shortLogs } from "../../functions/logView.js";
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Helper functions
@@ -254,6 +255,15 @@ const unclaimButton = async (interaction) => {
     await unclaimTicket(interaction, 'button');
 };
 
+// Logs Button (ModTicket)
+/*------------------------------------------------------------------------------------------------------------------------*/
+const logsButton = async (interaction) => {
+    await interaction.deferReply();
+    const [_, ticketID] = interaction.customId.split(':'); // Split the customId to retrieve the snippet value
+    const ticket = await Ticket.findOne({ ticketId: ticketID });
+    await shortLogs(interaction, ticket);
+};
+
 // Escalate Button (ModTicket)
 /*------------------------------------------------------------------------------------------------------------------------*/
 const escalateButton = async (interaction) => {
@@ -375,5 +385,6 @@ export {
     escalateButton,
     closeButton,
     confirmAttachButton,
-    cancelAttachButton
+    cancelAttachButton,
+    logsButton
 };
