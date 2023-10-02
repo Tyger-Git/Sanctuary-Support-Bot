@@ -27,7 +27,7 @@ export default {
         }
 
         if (ticket.ticketAttachments.length === 0) {
-            await interaction.editReply('No attachments found in the selected ticket.');
+            await interaction.editReply(await ticketErrorMessageObject('This ticket has no attachments', true));
             return;
         }
 

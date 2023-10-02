@@ -55,7 +55,7 @@ const snippetWorkflow = async (interaction) => {
             });
             await interaction.channel.send(await ticketActionMessageObject(`A Snippet was sent to the user:\n\`\`\`${selectedSnippet.snippetContent}\`\`\``, false));
         } else {
-            await interaction.reply(ticketErrorMessageObject(`Snippet not found.`, true));
+            await interaction.reply(await ticketErrorMessageObject(`Snippet not found.`, true));
         }
     } else if (interaction.customId === "cancel_snippet_reply_button") {
         await interaction.update({

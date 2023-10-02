@@ -50,7 +50,8 @@ const claimTicket = async (interaction, iType) => {
     try {
         ticket = await Ticket.findOne({ ticketThread: threadId });
     } catch (error) {
-        console.error('Error finding ticket:', error);
+        await interaction.editReply(await ticketErrorMessageObject('Error finding ticket', true));
+        return;
     }
 
     // Vibe Checker

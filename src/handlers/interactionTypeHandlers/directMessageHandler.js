@@ -4,6 +4,7 @@ import config from '../../../config.json' assert { type: 'json' };
 import { EmbedBuilder } from "discord.js";
 import logger from '../../utils/logger.js';
 import { handleTicketMessageUpdate } from '../../functions/threadFunctions.js';
+import emojis from '../../emojis.json' assert { type: 'json' };
 
 const incomingDirectMessage = async (message) => {
     console.log(`Got DM from ${message.author.tag}`);
@@ -24,8 +25,9 @@ const incomingDirectMessage = async (message) => {
         const embed = new EmbedBuilder();
         if (thread) {
             embed
-                .setTitle(`${ticket.userDisplayName} (${ticket.userName}) has replied to their ticket :`)
-                .setDescription(`${message.content}`);
+                .setTitle(`🗣️ ${ticket.userDisplayName} (${ticket.userName}) replied to their ticket 🗣️`)
+                .setDescription(`${message.content}`)
+                .setColor([255,255,255]);
             // Ping Mods if the ticket is claimed and alerts are on
             if (ticket.isClaimed && ticket.isAlertOn) { modToPing = `<@${ticket.claimantModId}>`; } // Add perm check too
             if (modToPing !== '') { await thread.send({content: modToPing}); }
@@ -70,14 +72,18 @@ const outgoingDirectMessage = async (interaction, ticket, message) => {
     }
     // Use the client singleton to get the Discord client
     const client = clientSingleton.getClient();
+    const date = new Date();
     const embed = new EmbedBuilder();
     try {
         const user = await client.users.fetch(ticket.userId); // Fetch the user based on ID
         const staffHighestRole = interaction.member.roles.highest.name;
         embed
-            .setTitle(`A ${staffHighestRole} has replied to your ticket :`)
-            .setDescription(`${message}`);
-        await user.send({ embeds: [embed] }); // DM the user
+            .setTitle(`A ${staffHighestRole} has replied to your ticket :\n\n${emojis.redDash1}${emojis.redDash2}${emojis.redDash3}`)
+            .setDescription(`${message}`)
+            .setImage('attachment://ContactStaff.gif')
+            .setColor([155,0,25]) // Dark Red
+            .setFooter({text : `Sanctuary Support Bot - ©️ Sanctuary Development Team · ${date.getFullYear()}`});
+        await user.send({ embeds: [embed], files: [{attachment: './resources/ContactStaff.gif', name: 'ContactStaff.gif' }] }); // DM the user
         await logger(ticket.ticketId, 'Primary', interaction.user.id, interaction.user.username, 'Staff', message);
     } catch (error) {
         console.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error.message}`);

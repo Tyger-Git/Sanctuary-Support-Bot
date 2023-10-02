@@ -3,7 +3,7 @@ import clientSingleton from './utils/DiscordClientInstance.js';
 import { connectToDatabase, initializeTicketCounter, watchTickets } from './database/database.js';
 import { handleInteractionCreate, handleMessageCreate } from './handlers/interactionHandler.js';
 import slashCommandHandler from './handlers/commandHandlers/slashCommandHandler.js';
-import { deleteOldThreads, pingAlerts } from './utils/taskScheduler.js';
+import { deleteOldThreads } from './utils/taskScheduler.js';
 import { ticketActionMessageObject, ticketErrorMessageObject } from './functions/responseFunctions.js';
 
 // Execute dotenv config
@@ -28,7 +28,6 @@ async function initBot() {
 initBot();
 
 setInterval(deleteOldThreads, 60 * 1000); // Run every minute
-setInterval(pingAlerts, 300 * 1000); // Run every five minutes
 
 // Global variables
 global.ticketActionMessageObject = ticketActionMessageObject;
