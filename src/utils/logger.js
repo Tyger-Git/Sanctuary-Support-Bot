@@ -4,7 +4,7 @@ import config from '../../config.json' assert { type: 'json' };
 
 const log = async (ticketId, type, userId, userName, classType, message) => {
     // Get the highest role of the user
-    const roleId = await getHighestRole(userId);
+    const roleName = await getHighestRole(userId);
     // Create the log entry
     const logEntry = new Log({
         ticketId: ticketId,
@@ -12,7 +12,7 @@ const log = async (ticketId, type, userId, userName, classType, message) => {
         userId: userId,
         userName: userName,
         classType: classType,
-        userRole: roleId,
+        userRole: roleName,
         logMessage: message
     });
     // Save the log entry to the database
@@ -26,6 +26,7 @@ const log = async (ticketId, type, userId, userName, classType, message) => {
 // Helper functions
 const roleCache = new Map();
 const client = clientSingleton.getClient();
+
 // Caching the highest role of a user, to reduce API calls
 async function getHighestRole(userId) {
     const now = Date.now();
@@ -42,8 +43,8 @@ async function getHighestRole(userId) {
     const member = await guild.members.fetch(userId);
     const highestRole = member.roles.highest;
     // Cache the role with current timestamp
-    roleCache.set(userId, { role: highestRole.id, timestamp: now });
-    return highestRole.id;
+    roleCache.set(userId, { role: highestRole.name, timestamp: now });
+    return highestRole.name;
 }
 
 export default log;
