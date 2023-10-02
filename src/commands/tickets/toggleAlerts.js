@@ -65,7 +65,7 @@ export default {
             }
             ticket.isAlertOn = toggle === 'on';
             await ticket.save();
-            await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', `Alerts toggled ${toggle}`);
+            await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', `Alerts toggled ${toggle}`);
             await interaction.editReply(await ticketActionMessageObject(`Alerts toggled ${toggle}`, true));
         }
     }

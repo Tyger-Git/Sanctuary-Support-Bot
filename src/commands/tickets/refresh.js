@@ -22,7 +22,7 @@ export default {
             return; 
         }
         await handleTicketMessageUpdate(ticket);
-        await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Ticket refreshed.');
+        await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Ticket refreshed.');
         await interaction.editReply(await ticketActionMessageObject(`Ticket Refreshed`, true));
     }
 }

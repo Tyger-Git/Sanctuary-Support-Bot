@@ -58,7 +58,7 @@ const escalateWorkflow = async (interaction) => {
                     ticket.ticketLevel = 0;
                     await ticket.save();
                     await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
-                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Ticket De-Escalated to Helpers');
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Ticket De-Escalated to Helpers');
                 }
                 break;
             case "Moderators":
@@ -72,7 +72,7 @@ const escalateWorkflow = async (interaction) => {
                     ticket.ticketLevel = 1;
                     await ticket.save();
                     await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
-                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Ticket Escalated to Moderators');
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Ticket Escalated to Moderators');
                 }
                 break;
             case "Senior Moderators":
@@ -86,7 +86,7 @@ const escalateWorkflow = async (interaction) => {
                     ticket.ticketLevel = 2;
                     await ticket.save();
                     await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
-                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Ticket Escalated to Senior Moderators');
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Ticket Escalated to Senior Moderators');
                 }
                 break;
             case "Head Moderators":
@@ -100,7 +100,7 @@ const escalateWorkflow = async (interaction) => {
                     ticket.ticketLevel = 3;
                     await ticket.save();
                     await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
-                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Ticket Escalated to Head Moderators');
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Ticket Escalated to Head Moderators');
                 }
                 break;
             case "Server Support":
@@ -114,7 +114,7 @@ const escalateWorkflow = async (interaction) => {
                     ticket.ticketLevel = 5;
                     await ticket.save();
                     await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
-                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Ticket Escalated to Server Support');
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Ticket Escalated to Server Support');
                 }
                 break;
             case "Demonly":
@@ -128,14 +128,14 @@ const escalateWorkflow = async (interaction) => {
                     ticket.ticketLevel = 6;
                     await ticket.save();
                     await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
-                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Ticket Escalated to Demonly');
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Ticket Escalated to Demonly');
                 }
                 break;
             case "Ketraies":
                 ticket.ticketLevel = 7;
                 await ticket.save();
                     await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
-                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Ticket Escalated to Ketraies');
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Ticket Escalated to Ketraies');
                 break;
             case "Developers":
                 if (ticket.ticketType !== 'Technical Support') {
@@ -148,7 +148,7 @@ const escalateWorkflow = async (interaction) => {
                     ticket.ticketLevel = 8;
                     await ticket.save();
                     await deleteAndRecreateThread(interaction, ticket, interaction.user.id);
-                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Ticket Escalated to Developers');
+                    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Ticket Escalated to Developers');
                 }
                 break;
             default:

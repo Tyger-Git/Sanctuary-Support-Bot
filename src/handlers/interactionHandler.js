@@ -11,7 +11,7 @@ import emojis from '../emojis.json' assert { type: "json" };
 import { creatorInquiriesButton, generalSupportButton, reportButton, 
     technicalIssuesButton, submitAppealButton, snippetsButton, 
     claimButton, unclaimButton, escalateButton, closeButton,
-    confirmAttachButton, cancelAttachButton, logsButton } from './interactionTypeHandlers/buttonHandler.js';
+    confirmAttachButton, cancelAttachButton, logsButton, longLogsButton } from './interactionTypeHandlers/buttonHandler.js';
 import log from '../schemas/log.js';
 
 // Function handoffs for interaction types
@@ -89,6 +89,8 @@ const handleInteractionCreate = async (interaction) => {
         await escalateWorkflow(interaction);
       } else if (interaction.customId.startsWith('logs_button')){
         await logsButton(interaction);
+      } else if (interaction.customId.startsWith('long_logs_button')){
+        await longLogsButton(interaction);
       } else {
         const handler = buttonHandlers[interaction.customId];
         if (handler) {

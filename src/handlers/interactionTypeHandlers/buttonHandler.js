@@ -6,7 +6,7 @@ import { claimTicket, unclaimTicket, vibeCheck } from "../../functions/ticketFun
 import Ticket from "../../schemas/ticket.js";
 import { handleTicketMessageUpdate } from "../../functions/threadFunctions.js";
 import logger from "../../utils/logger.js";
-import { shortLogs } from "../../functions/logView.js";
+import { shortLogs, longLogs } from "../../functions/logView.js";
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 // Helper functions
@@ -259,9 +259,18 @@ const unclaimButton = async (interaction) => {
 /*------------------------------------------------------------------------------------------------------------------------*/
 const logsButton = async (interaction) => {
     await interaction.deferReply();
-    const [_, ticketID] = interaction.customId.split(':'); // Split the customId to retrieve the snippet value
+    const [_, ticketID] = interaction.customId.split(':'); // Split the customId to retrieve the ticketID
     const ticket = await Ticket.findOne({ ticketId: ticketID });
     await shortLogs(interaction, ticket);
+};
+
+// Long Logs Button (ModTicket)
+/*------------------------------------------------------------------------------------------------------------------------*/
+const longLogsButton = async (interaction) => {
+    await interaction.deferReply();
+    const [_, ticketID] = interaction.customId.split(':');
+    const ticket = await Ticket.findOne({ ticketId: ticketID });
+    await longLogs(interaction, ticket);
 };
 
 // Escalate Button (ModTicket)
@@ -354,7 +363,7 @@ const confirmAttachButton = async (interaction) => {
     await ticket.save();
 
     await handleTicketMessageUpdate(ticket);
-    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Attachment removed. Attachment: ' + selectedLink + '');
+    await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Attachment removed. Attachment: ' + selectedLink + '');
 
     await interaction.update({
         content: 'Attachment removed successfully!',
@@ -386,5 +395,6 @@ export {
     closeButton,
     confirmAttachButton,
     cancelAttachButton,
-    logsButton
+    logsButton,
+    longLogsButton
 };

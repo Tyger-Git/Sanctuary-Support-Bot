@@ -47,7 +47,7 @@ export default {
             await interaction.editReply({ embeds: [attachmentEmbed] });
             await ticket.save();
             await handleTicketMessageUpdate(ticket);
-            await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', 'Hyperlinks manually added to ticket.');
+            await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Hyperlinks manually added to ticket.');
         }
     }
 }

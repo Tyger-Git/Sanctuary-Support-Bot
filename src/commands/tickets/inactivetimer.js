@@ -4,21 +4,16 @@ import { ApplicationCommandOptionType } from 'discord.js';
 import Ticket from '../../schemas/ticket.js';
 import { handleTicketMessageUpdate } from '../../functions/threadFunctions.js';
 import logger from '../../utils/logger.js';
+import { checkPerms } from '../../functions/permissions.js';
 
 export default {
     name: 'inactivetimer',
     description: 'Change the inactivity timer for a ticket',
     options: [
         {
-            name: 'ticketid',
-            description: 'The ticket ID to be changed',
-            required: false,
-            type: ApplicationCommandOptionType.Integer
-        },
-        {
             name: 'time',
             description: 'The time in hours to change the inactivity timer to',
-            required: false,
+            required: true,
             type: ApplicationCommandOptionType.Integer,
             choices: [
                 {
@@ -39,6 +34,12 @@ export default {
                 }
             ]
         },
+        {
+            name: 'ticketid',
+            description: 'The ticket ID to be changed',
+            required: false,
+            type: ApplicationCommandOptionType.Integer
+        }
     ],
     callback: async (client, interaction) => {
         await interaction.deferReply();
@@ -63,9 +64,13 @@ export default {
         }
 
         // Permissions Check
+        const isSeniorMod = await checkPerms(interaction, 2);
+        if (interaction.user.id !== ticket.claimantModId && !isSeniorMod) {
+            await interaction.editReply(await ticketErrorMessageObject('You do not have permission to modify this ticket', true));
+            return;
+        }
         if(time === 0 || time === 48) {
-            const highestRole = interaction.member.roles.highest;
-            if (highestRole.name === 'Moderator' || highestRole.name === 'Helper') {
+            if (!isSeniorMod) {
                 await interaction.editReply(await ticketErrorMessageObject(`Only Senior Moderators and above may set inactivity timers to ${time}`, true));
                 return;
             }

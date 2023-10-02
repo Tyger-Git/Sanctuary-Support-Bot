@@ -10,9 +10,13 @@ async function shortLogs(interaction, ticket) {
     
     let emojiMap = new Map();
         emojiMap.set('User', emojis.user);
-        emojiMap.set('Staff', emojis.staff);
+        emojiMap.set('Staff', emojis.staff); // Change this to add based off of userRole
     
     let ticketLogs = logs.map(log => `**${emojis.whiteDashGlow}${emojis.whiteDashGlow}${emojis.whiteDashGlow}\n${emojiMap.get(log.classType)} - ${log.userName} - ${formatDate(log.timeStamp)}**\n${log.logMessage}`);
+    if (ticketLogs.length === 0) {
+        await interaction.editReply(await ticketErrorMessageObject('Conversational logs are empty.', true));
+        return;
+    }
     const logCounter = logs.length;
     const chunkedLogs = chunkArray(ticketLogs, 5); // This assumes around 800 characters per log. Adjust the chunk size accordingly.
     const allEmbeds = createEmbedsFromChunks(chunkedLogs, logCounter, ticket.ticketId);
@@ -35,7 +39,7 @@ async function shortLogs(interaction, ticket) {
         .setLabel('➡➡➡')
         .setStyle('Primary');
     const long_logs_button = new ButtonBuilder()
-        .setCustomId('long_logs_button')
+        .setCustomId(`long_logs_button:${ticket.ticketId}`)
         .setLabel('View Full Logs')
         .setStyle('Success');
     // Create Action Row

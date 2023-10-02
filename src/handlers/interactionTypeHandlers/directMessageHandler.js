@@ -39,7 +39,7 @@ const incomingDirectMessage = async (message) => {
                     .setTitle(`🔗 Hyperlinks Detected 🔗`)
                     .setDescription(`Added ${hyperlinks.length} link(s) to the ticket`);
                 thread.send({ embeds: [attachmentEmbed] });
-                await logger(ticket.ticketId, 'Event', message.author.id, message.author.username, 'Bot', 'Hyperlinks detected in user message. Added to ticket.');
+                await logger(ticket.ticketId, 'Event', client.user.id, client.user.username, 'Bot', 'Hyperlinks detected in user message. Added to ticket.');
             }
             // Update the lastUserResponse field
             ticket.lastUserResponse = new Date();
@@ -98,7 +98,7 @@ const outgoingTicketEvent = async (interaction, ticket, message) => {
             .setTitle(`Your ticket has been modified!`)
             .setDescription(`${message}`);
         await user.send({ embeds: [embed] }); // DM the user
-        await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Bot', message);
+        await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', message);
     } catch (error) {
         console.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error.message}`);
     }
