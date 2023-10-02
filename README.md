@@ -1,6 +1,6 @@
-# Lilith-Mail
+# Sanctuary-Support-Bot
 Ticket bot for Sanctuary
-Lilith-Mail is a Discord bot designed to provide a comprehensive ticketing system for the Sanctuary Discord Server. Built with node.js, discord.js v14 and MongoDB.
+Sanctuary-Support-Bot is a Discord bot designed to provide a comprehensive ticketing system for the Sanctuary Discord Server. Built with node.js, discord.js v14 and MongoDB.
 
 ## Usage
 
@@ -24,7 +24,7 @@ This discord bot collects support tickets from any number of discord servers dee
 
 1. Clone the repo:
    ```sh
-   git clone https://github.com/[Your-Username]/Lilith-Mail.git
+   git clone https://github.com/[Your-Username]/Sanctuary-Support-Bot.git
 2. Install NPM packages:
    ```sh
    npm install
