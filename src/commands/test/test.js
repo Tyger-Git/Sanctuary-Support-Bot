@@ -1,6 +1,8 @@
 // Flex Command: test
 /*---------- Will Not Be In Final Product ----------*/
 
+import winston from "winston/lib/winston/config";
+
 export default {
     name: 'test',
     description: 'Adjustable Testing Command',
@@ -9,7 +11,7 @@ export default {
         await interaction.deferReply();
         // Get the highest role from the user
         const highestRole = interaction.member.roles.highest;
-        console.log(highestRole.name);
+        winston.info(highestRole.name);
         await interaction.editReply({ content: 'Test Complete' });
     }
 };

@@ -8,7 +8,7 @@ import threadCreation from '../handlers/functionHandlers/handleThreadCreation.js
 async function connectToDatabase() {
     mongoose.set('strictQuery', false);
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
+    winston.info('Connected to MongoDB');
 }
 
 async function initializeTicketCounter() {
@@ -16,9 +16,9 @@ async function initializeTicketCounter() {
     if (!existingCounter) {
         const initialCounter = new TicketCounter();
         await initialCounter.save();
-        console.log("TicketCounter initialized!");
+        winston.info("TicketCounter initialized!");
     } else {
-        console.log("TicketCounter already exists!");
+        winston.info("TicketCounter already exists!");
     }
 }
 

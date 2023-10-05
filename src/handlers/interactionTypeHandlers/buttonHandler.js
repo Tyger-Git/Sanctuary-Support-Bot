@@ -58,14 +58,14 @@ const creatorInquiriesButton = async (interaction) => {
         // Add the components to the modal
         newCreatorTicketModal.addComponents(vipAppFirstActionRow, vipAppSecondActionRow, vipAppThirdActionRow);
     } catch (error) {
-        console.log("Something went wrong while building the VIP Applications modal. Error: " + error);
+        winston.error("Something went wrong while building the VIP Applications modal. Error: " + error);
     }
 
     // Try to send the modal
     try {
         await interaction.showModal(newCreatorTicketModal);
     } catch (error) {
-            console.log("Something went wrong while sending the modal. Error: " + error);
+        winston.error("Something went wrong while sending the modal. Error: " + error);
     }
 };
 
@@ -91,14 +91,14 @@ const generalSupportButton = async (interaction) => {
         // Add the components to the modal
         newGenSupTicketModal.addComponents(genSupportFirstActionRow);
     } catch (error) {
-        console.log("Something went wrong while building the General Support modal. Error: " + error);
+        winston.error("Something went wrong while building the General Support modal. Error: " + error);
     }
 
     // Try to send the modal
     try {
         await interaction.showModal(newGenSupTicketModal);
     } catch (error) {
-            console.log("Something went wrong while sending the modal. Error: " + error);
+        winston.error("Something went wrong while sending the modal. Error: " + error);
     }
 };
 
@@ -129,14 +129,14 @@ const reportButton = async (interaction) => {
         // Add the components to the modal
         newReportTicketModal.addComponents(reportFirstActionRow, reportSecondActionRow);
     } catch (error) {
-        console.log("Something went wrong while building the Report a User modal. Error: " + error);
+        winston.error("Something went wrong while building the Report a User modal. Error: " + error);
     }
 
     // Try to send the modal
     try {
         await interaction.showModal(newReportTicketModal);
     } catch (error) {
-            console.log("Something went wrong while sending the modal. Error: " + error);
+        winston.error("Something went wrong while sending the modal. Error: " + error);
     }
 };
 
@@ -167,14 +167,14 @@ const technicalIssuesButton = async (interaction) => {
         // Add the components to the modal
         newTechTicketModal.addComponents(techFirstActionRow, techSecondActionRow);
     } catch (error) {   
-        console.log("Something went wrong while building the Technical Support modal. Error: " + error);
+        winston.error("Something went wrong while building the Technical Support modal. Error: " + error);
     }
 
     // Try to send the modal
     try {
         await interaction.showModal(newTechTicketModal);
     } catch (error) {
-            console.log("Something went wrong while sending the modal. Error: " + error);
+        winston.error("Something went wrong while sending the modal. Error: " + error);
     }
 };
 
@@ -205,14 +205,14 @@ const submitAppealButton = async (interaction) => {
         // Add the components to the modal
         newAppealTicketModal.addComponents(reportFirstActionRow, reportSecondActionRow);
     } catch (error) {
-        console.log("Something went wrong while building the Appeal modal. Error: " + error);
+        winston.error("Something went wrong while building the Appeal modal. Error: " + error);
     }
 
     // Try to send the modal
     try {
         await interaction.showModal(newAppealTicketModal);
     } catch (error) {
-            console.log("Something went wrong while sending the modal. Error: " + error);
+        winston.error("Something went wrong while sending the modal. Error: " + error);
     }
 };
 
@@ -342,14 +342,14 @@ const closeButton = async (interaction) => {
         // Add the components to the modal
         closeTicketModal.addComponents(actionRow, actionRow2);
     } catch (error) {
-        console.log("Something went wrong while building the close ticket modal. Error: " + error);
+        winston.error("Something went wrong while building the close ticket modal. Error: " + error);
     }
 
     // Try to send the modal
     try {
         await interaction.showModal(closeTicketModal);
     } catch (error) {
-            console.log("Something went wrong while sending the modal. Error: " + error);
+        winston.error("Something went wrong while sending the modal. Error: " + error);
     }
 };
 

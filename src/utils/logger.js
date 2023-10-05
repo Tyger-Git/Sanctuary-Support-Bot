@@ -19,7 +19,7 @@ const log = async (ticketId, type, userId, userName, classType, message) => {
     try {
         await logEntry.save();
     } catch (error) {
-        console.error('Error saving log:', error);
+        winston.error('Error saving log:', error);
     }
 };
 

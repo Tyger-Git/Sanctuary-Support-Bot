@@ -23,9 +23,8 @@ export default {
         let parentChannel;
         try {
             parentChannel = await client.channels.fetch(parentChannelId);
-            console.log(parentChannel.type);
         } catch (error) {
-            console.error('Error fetching parent channel:', error);
+            winston.error('Error fetching parent channel:', error);
         }
         
         if (!parentChannel || parentChannel.type !== 15) {

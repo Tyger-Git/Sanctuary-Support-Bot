@@ -1,3 +1,5 @@
+import winston from "winston/lib/winston/config";
+
 const cacheFetch = async (client) => {
     for (const guild of client.guilds.cache.values()) {
         // Fetch roles only if they're not in the cache
@@ -14,9 +16,9 @@ const cacheFetch = async (client) => {
             }
         }
 
-        console.log(`Checked cache for guild: ${guild.name}`);
+        winston.info(`Checked cache for guild: ${guild.name}`);
     }
 
-    console.log('Finished checking and fetching missing cache data.');
+    winston.info('Finished checking and fetching missing cache data.');
 };
 export default cacheFetch;

@@ -15,7 +15,7 @@ export default {
         try {
             ticket = await Ticket.findOne({ ticketThread: threadId });
         } catch (error) {
-            console.error('Error finding ticket:', error);
+            winston.error('Error finding ticket:', error);
         }
         if (!ticket) {
             await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));

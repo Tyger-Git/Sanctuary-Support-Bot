@@ -67,7 +67,7 @@ export default {
             });
 
             } catch (error) {
-                console.log("Error using viewsnippets " + error);
+                winston.error("Error using viewsnippets " + error);
             }
     }
 }
@@ -79,7 +79,7 @@ async function fetchAllSnippets() {
     try {
         return await Snippet.find({});
     } catch (error) {
-        console.log("Failed to fetch snippets: " + error);
+        winston.error("Failed to fetch snippets: " + error);
         return [];
     }
 }

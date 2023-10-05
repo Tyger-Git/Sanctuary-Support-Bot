@@ -88,7 +88,7 @@ const claimTicket = async (interaction, iType) => {
         await outgoingTicketEvent(interaction, ticket, `Ticket claimed by a Staff Member. Please wait for a response.`);
         await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', `Ticket Claimed by **${claimantMod}**`);
     } catch (error) {
-        console.error('Error claiming ticket:', error);
+        winston.error('Error claiming ticket:', error);
     }
 };
 
@@ -99,7 +99,7 @@ const unclaimTicket = async (interaction, iType) => {
     try {
         ticket = await Ticket.findOne({ ticketThread: threadId });
     } catch (error) {
-        console.error('Error finding ticket:', error);
+        winston.error('Error finding ticket:', error);
     }
     // Vibe Checker
     const permissionCheck = await vibeCheck(ticket, 'unclaim', interaction);
@@ -135,7 +135,7 @@ const unclaimTicket = async (interaction, iType) => {
         if (iType === 'button') {await interaction.reply(msgObj);}
         await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', `Ticket Unclaimed by **${modUnclaiming}**`)
     } catch (error) {
-        console.error('Error unclaiming ticket:', error);
+        winston.error('Error unclaiming ticket:', error);
     }
 };
 

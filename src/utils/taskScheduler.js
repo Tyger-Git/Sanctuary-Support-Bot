@@ -17,7 +17,7 @@ async function fetchAndDeleteThread(ticket, client) {
             console.warn(`Thread with ID ${ticket.ticketThread} not found.`);
             return false;
         } else {
-            console.error('An error occurred fetching the thread:', error);
+            winston.error('An error occurred fetching the thread:', error);
             throw error; // This will halt the current operation and jump to the catch block in deleteOldThreads
         }
     }
@@ -29,7 +29,7 @@ async function deleteOldThreads() {
             closeTimer: { $exists: true, $ne: null }
         });
 
-        console.log(`Found ${allDyingTickets.length} dying tickets`);
+        winston.debug(`Found ${allDyingTickets.length} dying tickets`);
         const now = Date.now();
         const ticketsToDelete = allDyingTickets.filter(ticket => {
             const closeTimer = parseFloat(ticket.closeTimer) || 0.5;
@@ -37,7 +37,7 @@ async function deleteOldThreads() {
             return now > thresholdDate;
         });
 
-        console.log(`Found ${ticketsToDelete.length} threads to delete`);
+        winston.debug(`Found ${ticketsToDelete.length} threads to delete`);
 
         const client = clientSingleton.getClient();
 
@@ -50,18 +50,18 @@ async function deleteOldThreads() {
             
             if (!isThreadDeleted || (mainTicket && mainTicket.threadDeleted)) {
                 await DyingTicketModel.findByIdAndDelete(ticket._id);
-                console.log(`Deleted DyingTicketModel entry for ticket ID ${ticket.ticketId}`);
+                winston.info(`Deleted DyingTicketModel entry for ticket ID ${ticket.ticketId}`);
             } else {
-                console.log(`Check ticket DB for ticket ID ${ticket.ticketId}. Imbalance in dying tickets.`);
+                winston.error(`Check ticket DB for ticket ID ${ticket.ticketId}. Imbalance in dying tickets.`);
             }
 
             await logger(mainTicket.ticketId, 'Event', client.user.id, client.user.username, 'Bot', `Deleted thread for ticket ${mainTicket.ticketId}`);
         }
 
-        console.log('Done deleting threads');
+        winston.debug('Done deleting threads');
 
     } catch (error) {
-        console.error('Error during scheduled task:', error);
+        winston.error('Error during scheduled task:', error);
     }
 }
 

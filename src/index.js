@@ -5,6 +5,7 @@ import { handleInteractionCreate, handleMessageCreate } from './handlers/interac
 import slashCommandHandler from './handlers/commandHandlers/slashCommandHandler.js';
 import { deleteOldThreads } from './utils/taskScheduler.js';
 import { ticketActionMessageObject, ticketErrorMessageObject } from './functions/responseFunctions.js';
+import winston from './utils/winston.js';
 
 // Execute dotenv config
 config();
@@ -32,3 +33,4 @@ setInterval(deleteOldThreads, 60 * 1000); // Run every minute
 // Global variables
 global.ticketActionMessageObject = ticketActionMessageObject;
 global.ticketErrorMessageObject = ticketErrorMessageObject;
+global.winston = winston;

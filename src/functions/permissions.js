@@ -22,8 +22,6 @@ const getUserLevel = async (interaction) => {
 
 const checkPerms = async (interaction, requiredLevel) => {
     const userLevel = await getUserLevel(interaction);
-    console.log(userLevel);
-    console.log(requiredLevel);
     return userLevel >= requiredLevel;
 };
 

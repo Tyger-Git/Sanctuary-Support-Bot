@@ -20,7 +20,7 @@ const registerCommands = async (client) => {
       if (existingCommand) {
         if (localCommand.deleted) {
           await applicationCommands.delete(existingCommand.id);
-          console.log(`🗑 Deleted command "${name}".`);
+          winston.info(`🗑 Deleted command "${name}".`);
           continue;
         }
 
@@ -30,11 +30,11 @@ const registerCommands = async (client) => {
             options,
           });
 
-          console.log(`🔁 Edited command "${name}".`);
+          winston.info(`🔁 Edited command "${name}".`);
         }
       } else {
         if (localCommand.deleted) {
-          console.log(
+          winston.info(
             `⏩ Skipping registering command "${name}" as it's set to disabled.`
           );
           continue;
@@ -46,15 +46,15 @@ const registerCommands = async (client) => {
           options,
         });
 
-        console.log(`👍 Registered command "${name}."`);
+        winston.info(`👍 Registered command "${name}."`);
       }
-      console.log(`👍 Command ${name} already registered.`)
+      winston.info(`👍 Command ${name} already registered.`)
     }
   } catch (error) {
-    console.log(`There was an error: ${error}`);
+    winston.error(`There was an error: ${error}`);
   }
 
-  console.log('👍 Registered all commands.');
+  winston.info('👍 Registered all commands.');
 };
 
 export default registerCommands;

@@ -50,7 +50,7 @@ const checkCommands = async (client, interaction) => {
 
     await commandObject.callback(client, interaction);
   } catch (error) {
-    console.log(`There was an error running this command: ${error}`);
+    winston.error(`There was an error running this command: ${error}`);
   }
 };
 

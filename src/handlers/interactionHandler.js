@@ -56,7 +56,7 @@ async function handleTicketCreation(interaction, ticketType, successMessage) {
         createTicket(interaction, ticketType);
         await interaction.reply({ content: successMessage, ephemeral: true });
     } catch (error) {
-        console.error('Error creating a ticket:', error);
+      winston.error('Error creating a ticket:', error);
         await interaction.reply({ content: 'An error occurred while creating the ticket. Please try again later, or contact a staff member for assistance.', ephemeral: true });
     }
   }
@@ -116,12 +116,12 @@ const handleInteractionCreate = async (interaction) => {
         try {
           await message.fetch();  // Fetch the full message data
         } catch (error) {
-          console.error('Error fetching the message:', error);
+          winston.error('Error fetching the message:', error);
           return;
         }
       }
       if (message.author.bot){
-        console.log(`Got message from a bot: ${message.author.tag}`);
+        winston.info(`Got message from a bot: ${message.author.tag}`);
         return;  // Ignore messages from other bots
       }
       // Check if the bot was mentioned
@@ -139,9 +139,9 @@ const handleInteractionCreate = async (interaction) => {
       const parentChannelId = message.channel.parentId;
       // Handle message based on channel type
       if (message.channel.type === 1){ // Check if message is a DM
-        await incomingDirectMessage(message).catch(err => console.error("Error in directMessageHandler: ", err));
+        await incomingDirectMessage(message).catch(err => winston.error("Error in directMessageHandler: ", err));
       } else if (channelIDs.includes(parentChannelId)){ // Check if message is within a ticket forum
-        await watchedMessage(message).catch(err => console.error("Error in messageHandler: ", err));
+        await watchedMessage(message).catch(err => winston.error("Error in messageHandler: ", err));
       } else {
         return;
       }

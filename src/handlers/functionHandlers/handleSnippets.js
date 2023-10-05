@@ -14,7 +14,7 @@ const snippetWorkflow = async (interaction) => {
         const selectedSnippet = await Snippet.findOne({ snippetName: selectedValue });
 
         if (!selectedSnippet) {
-            console.log("Selected snippet is undefined.");
+            winston.error("Selected snippet is undefined.");
             return;
         }
 

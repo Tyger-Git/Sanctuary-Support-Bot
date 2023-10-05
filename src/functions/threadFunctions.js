@@ -20,7 +20,7 @@ async function handleTicketMessageUpdate(ticket) {
     const thread = await parentChannel.threads.fetch(threadId);
     // Check if the thread exists and is not partial
     if (!thread || thread.partial) {
-        console.error('Thread not found or partial.');
+        winston.error('Thread not found or partial.');
         return;
     }
     try {
@@ -30,7 +30,7 @@ async function handleTicketMessageUpdate(ticket) {
         const messageObject = await modTicket(ticket);
         await message.edit(messageObject);
     } catch (error) {
-        console.error('Error modifying ticket thread message:', error);
+        winston.error('Error modifying ticket thread message:', error);
     }
 };
 
@@ -82,7 +82,7 @@ async function getParentChannelID(ticket) {
     const levelMapping = threadMapping[ticket.ticketLevel];
     
     if (!levelMapping) {
-        console.error('Issue getting parent channel ID.');
+        winston.error('Issue getting parent channel ID.');
         return null;
     }
 
@@ -92,7 +92,7 @@ async function getParentChannelID(ticket) {
 
     const channelID = levelMapping[ticket.ticketType];
     if (!channelID) {
-        console.error('Issue getting parent channel ID.');
+        winston.error('Issue getting parent channel ID.');
         return null;
     }
 
@@ -220,7 +220,7 @@ async function getThreadTag(ticket) {
     }
 
     if (!mapping) {
-        console.error('Error getting thread tag.');
+        winston.error('Error getting thread tag.');
         return null;
     }
 
@@ -282,7 +282,7 @@ async function closeThread(interaction) {
         }
         await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', `Ticket closed by **${interaction.user.username}**`);
     } catch (error) {
-        console.error('Error ending thread:', error);
+        winston.error('Error ending thread:', error);
     }
 }
 

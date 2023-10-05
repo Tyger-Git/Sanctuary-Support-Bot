@@ -1,6 +1,8 @@
 // Command to get the forum tag IDs for the parent forums
 /*---- Dev Only ----*/
 
+import winston from "winston/lib/winston/config";
+
 export default {
     name: 'getforumtags',
     description: 'Gets the forum tag IDs for the parent forums',
@@ -20,7 +22,7 @@ export default {
             }
 
         } catch (error) {
-            console.error('Error fetching parent channel or accessing tags:', error);
+            winston.error('Error fetching parent channel or accessing tags:', error);
             interaction.channel.send('Error fetching tags.');
         }
     }

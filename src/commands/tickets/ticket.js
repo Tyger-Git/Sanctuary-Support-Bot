@@ -59,7 +59,7 @@ export default {
                     return;
                 }
             } catch (err) {
-                console.error(err);
+                winston.error(err);
                 await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the ticket.', true));
             }
             if (await checkPerms(interaction, ticket.ticketLevel)) {
@@ -79,7 +79,7 @@ export default {
                     return;
                 }
             } catch (error) {
-                console.error(error);
+                winston.error(error);
                 await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the tickets.', true));
             }
             const type = providedUserId ? 'user' : 'mod';
@@ -140,8 +140,8 @@ export default {
                     await interaction.editReply(await ticketErrorMessageObject('No ticket found.', true));
                     return;
                 }
-            } catch (err) {
-                console.error(err);
+            } catch (error) {
+                winston.error(error);
                 await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the ticket.', true));
             }
             // Construct the ticket

@@ -7,7 +7,7 @@ import { handleTicketMessageUpdate } from '../../functions/threadFunctions.js';
 import emojis from '../../emojis.json' assert { type: 'json' };
 
 const incomingDirectMessage = async (message) => {
-    console.log(`Got DM from ${message.author.tag}`);
+    winston.info(`Got DM from ${message.author.tag}`);
 
     // Check if the user has an open ticket
     const ticket = await Ticket.findOne({ userId: message.author.id, isOpen: true });
@@ -67,7 +67,7 @@ const incomingDirectMessage = async (message) => {
 
 const outgoingDirectMessage = async (interaction, ticket, message) => {
     if (!ticket.userId || !message) {
-        console.error('Invalid parameters provided for messageUser function');
+        winston.error('Invalid parameters provided for messageUser function');
         return;
     }
     // Use the client singleton to get the Discord client
@@ -86,13 +86,13 @@ const outgoingDirectMessage = async (interaction, ticket, message) => {
         await user.send({ embeds: [embed], files: [{attachment: './resources/ContactStaff.gif', name: 'ContactStaff.gif' }] }); // DM the user
         await logger(ticket.ticketId, 'Primary', interaction.user.id, interaction.user.username, 'Staff', message);
     } catch (error) {
-        console.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error.message}`);
+        winston.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error.message}`);
     }
 };
 
 const outgoingTicketEvent = async (interaction, ticket, message) => {
     if (!ticket.userId || !message) {
-        console.error('Invalid parameters provided for messageUser function');
+        winston.error('Invalid parameters provided for messageUser function');
         return;
     }
     // Use the client singleton to get the Discord client
@@ -106,7 +106,7 @@ const outgoingTicketEvent = async (interaction, ticket, message) => {
         await user.send({ embeds: [embed] }); // DM the user
         await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', message);
     } catch (error) {
-        console.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error.message}`);
+        winston.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error.message}`);
     }
 };
 
