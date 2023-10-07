@@ -12,7 +12,6 @@ import { creatorInquiriesButton, generalSupportButton, reportButton,
     technicalIssuesButton, submitAppealButton, snippetsButton, 
     claimButton, unclaimButton, escalateButton, closeButton,
     confirmAttachButton, cancelAttachButton, logsButton, longLogsButton } from './interactionTypeHandlers/buttonHandler.js';
-import log from '../schemas/log.js';
 
 // Function handoffs for interaction types
 /*------------------------------------------------------------------------------------------------------------------------*/

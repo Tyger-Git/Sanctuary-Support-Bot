@@ -1,7 +1,6 @@
 // Command to get the forum tag IDs for the parent forums
 /*---- Dev Only ----*/
 
-import winston from "winston/lib/winston/config";
 
 export default {
     name: 'getforumtags',

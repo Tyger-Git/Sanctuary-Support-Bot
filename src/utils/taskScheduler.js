@@ -14,14 +14,15 @@ async function fetchAndDeleteThread(ticket, client) {
         return true;
     } catch (error) {
         if (error.code === 10008) { // "Unknown Channel"
-            console.warn(`Thread with ID ${ticket.ticketThread} not found.`);
+            winston.warn(`Thread with ID ${ticket.ticketThread} not found.`);
             return false;
         } else {
-            winston.error('An error occurred fetching the thread:', error);
-            throw error; // This will halt the current operation and jump to the catch block in deleteOldThreads
+            winston.error('An error occurred fetching or deleting the thread:', error);
+            return false; // You can choose to return false or some other value to indicate the operation didn't succeed.
         }
     }
 }
+
 
 async function deleteOldThreads() {
     try {

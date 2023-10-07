@@ -1,7 +1,6 @@
 // Flex Command: test
 /*---------- Will Not Be In Final Product ----------*/
 
-import winston from "winston/lib/winston/config";
 
 export default {
     name: 'test',
