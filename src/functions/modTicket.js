@@ -26,11 +26,14 @@ const modTicket = async (ticket) => {
     let ticketAttachments = ``;
     if (ticket.ticketAttachments.length === 0) {
         ticketAttachments = `No attachments`;
-    } else {
+    } else if (ticket.ticketAttachments.length <= 5) { // Only display 5 or less attachments - safeguard embed limits
         ticket.ticketAttachments.forEach(attachment => {
             ticketAttachments += emojis.redDot + attachment + `\n`;
         });
+    } else {
+        ticketAttachments = `Too many attachments to display, please use the \`/viewattach\` command.`;
     }
+    
     let socialLinks = ``;
     if (ticket.socialMediaLinks.length === 0) {
         socialLinks = `No links provided`;

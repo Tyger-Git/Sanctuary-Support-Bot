@@ -9,7 +9,7 @@ const winston = createLogger({
       format: 'YYYY-MM-DD HH:mm:ss'
     }),
     format.printf(({ timestamp, level, message }) => {
-      return `${timestamp} [${level}]: ${message}`;
+      return `${timestamp} [${level.toUpperCase()}]: ${message}`;
     })
   ),
   transports: [
@@ -32,12 +32,26 @@ const winston = createLogger({
 // If not in production, also log to the console with winston's simple format, and show debug logs
 if (process.env.NODE_ENV !== 'production') {
     winston.add(new transports.Console({
-        format: format.simple(),
+      format: format.combine(
+        format.timestamp({
+          format: 'YYYY-MM-DD HH:mm:ss'
+        }),
+        format.printf(({ timestamp, level, message }) => {
+          return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+        })
+      ),
         level: 'debug',
     }));
 } else {
     winston.add(new transports.Console({
-        format: format.simple(),
+      format: format.combine(
+        format.timestamp({
+          format: 'YYYY-MM-DD HH:mm:ss'
+        }),
+        format.printf(({ timestamp, level, message }) => {
+          return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+        })
+      ),
         level: 'info',
     }));
 }
