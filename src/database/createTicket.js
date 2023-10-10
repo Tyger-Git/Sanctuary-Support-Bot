@@ -22,7 +22,7 @@ async function getNewTicketID() {
 const getUserTicketCount = async (userId) => {
   try {
       const count = await Ticket.countDocuments({ userId: userId });
-      return count + 1;
+      return count + 1; // Add one for the newly created ticket
   } catch (error) {
     winston.error("Error fetching user ticket count:", error);
       return 0; // default to 0 in case of an error

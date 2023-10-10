@@ -33,7 +33,9 @@ async function deleteOldThreads() {
         winston.debug(`Found ${allDyingTickets.length} dying tickets`);
         const now = Date.now();
         const ticketsToDelete = allDyingTickets.filter(ticket => {
-            const closeTimer = parseFloat(ticket.closeTimer) || 0.5;
+            const closeTimerValue = parseFloat(ticket.closeTimer);
+            const closeTimer = (isNaN(closeTimerValue) ? 0.5 : closeTimerValue); // Extra steps because "0" is falsy
+
             const thresholdDate = ticket.closeDate.getTime() + (closeTimer * 60 * 60 * 1000);
             return now > thresholdDate;
         });
