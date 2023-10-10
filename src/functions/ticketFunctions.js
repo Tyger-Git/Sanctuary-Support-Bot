@@ -16,10 +16,10 @@ const canClaim = (ticket, interaction) => {
         case 'User Report':
             return hasRole(interaction, ['Helper']) ? 'Helpers cannot claim User Report tickets.' : '✅';
         case 'Appeal':
-            const staffRoles = ['Senior Moderator', 'Head Moderator', 'Administrator', 'Developers'];
+            const staffRoles = ['Senior Moderator', 'Head Moderator', 'Administrator', 'Developer'];
             return hasRole(interaction, staffRoles) ? '✅' : 'You do not have permissions to claim Appeal tickets.';
         case 'VIP Application':
-            return hasRole(interaction, ['Administrator', 'Developers']) ? '✅' : 'You do not have permissions to claim VIP Application tickets.';
+            return hasRole(interaction, ['Administrator', 'Developer']) ? '✅' : 'You do not have permissions to claim VIP Application tickets.';
         default:
             return '✅';
     }
@@ -31,7 +31,7 @@ const canUnclaim = (ticket, interaction) => {
 
     if (ticket.claimantModId === interaction.user.id) return '✅';
 
-    const higherRoles = ['Senior Moderator', 'Head Moderator', 'Administrator', 'Developers'];
+    const higherRoles = ['Senior Moderator', 'Head Moderator', 'Administrator', 'Developer'];
     return hasRole(interaction, higherRoles) ? '✅' : 'You cannot unclaim a ticket that you have not claimed.';
 };
 
