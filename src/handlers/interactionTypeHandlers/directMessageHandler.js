@@ -5,6 +5,7 @@ import { EmbedBuilder } from "discord.js";
 import logger from '../../utils/logger.js';
 import { handleTicketMessageUpdate } from '../../functions/threadFunctions.js';
 import emojis from '../../emojis.json' assert { type: 'json' };
+import winston from '../../utils/winston.js';
 
 const incomingDirectMessage = async (message) => {
     winston.info(`Got DM from ${message.author.tag}`);
@@ -22,11 +23,32 @@ const incomingDirectMessage = async (message) => {
         const hyperlinks = message.content.match(regex) || [];
         // Spin up an embed to send to the thread
         let modToPing = '';
-        const embed = new EmbedBuilder();
         if (thread) {
-            embed
+            // Check if the message contains content or attachments, or both
+            let content = message.content;
+            if (!content && message.attachments.size > 0) {
+                content = 'Attachment(s) received, with no message content. See ticket for details.';
+            }
+            if (message.attachments.size > 0) {
+                let attachCount = 0;
+                message.attachments.forEach(attachment => {
+                    ticket.ticketAttachments.push(attachment.url);
+                    winston.debug(`Attachment URL: ${attachment.url} added to ticket ${ticket.ticketId}`);
+                    attachCount++;
+                });
+                // Remove duplicates from the ticketAttachments array
+                ticket.ticketAttachments = [...new Set(ticket.ticketAttachments)];
+                await logger(ticket.ticketId, 'Event', client.user.id, client.user.username, 'Bot', `${attachCount} attachments detected in user message. Added to ticket.`)
+                let attachmentEmbed = new EmbedBuilder()
+                    .setTitle(`🔗 Attachments Detected 🔗`)
+                    .setDescription(`Added ${attachCount} link(s) to the ticket`);
+                thread.send({ embeds: [attachmentEmbed] });
+
+            }
+            
+            let embed = new EmbedBuilder()
                 .setTitle(`🗣️ ${ticket.userDisplayName} (${ticket.userName}) replied to their ticket 🗣️`)
-                .setDescription(`${message.content}`)
+                .setDescription(`${content}`)
                 .setColor([255,255,255]);
             // Ping Mods if the ticket is claimed and alerts are on
             if (ticket.isClaimed && ticket.isAlertOn) { modToPing = `<@${ticket.claimantModId}>`; } // Add perm check too
@@ -48,9 +70,9 @@ const incomingDirectMessage = async (message) => {
             await ticket.save();
             await handleTicketMessageUpdate(ticket);
             if (hyperlinks.length) { // I don't like this, going to change later
-                await logger(ticket.ticketId, 'Primary', message.author.id, message.author.username, 'User', `<${message.content}>`);
+                await logger(ticket.ticketId, 'Primary', message.author.id, message.author.username, 'User', `<${content}>`);
             } else {
-                await logger(ticket.ticketId, 'Primary', message.author.id, message.author.username, 'User', message.content);
+                await logger(ticket.ticketId, 'Primary', message.author.id, message.author.username, 'User', content);
             }
         } else {
             // This is just a safety check in case the thread doesn't exist for some reason.
