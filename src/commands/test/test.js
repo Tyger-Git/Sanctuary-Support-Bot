@@ -1,5 +1,6 @@
 // Flex Command: test
 /*---------- Will Not Be In Final Product ----------*/
+import { EmbedBuilder } from "discord.js";
 
 
 export default {
@@ -11,6 +12,10 @@ export default {
         // Get the highest role from the user
         const highestRole = interaction.member.roles.highest;
         winston.info(highestRole.name);
-        await interaction.editReply({ content: 'Test Complete' });
+        let text = `[Test](https://old.discordjs.dev/#/docs/discord.js/main/class/Message?scrollTo=attachments)`;
+        const embed = new EmbedBuilder()
+            .setTitle(`Test`)
+            .setDescription(text);
+        await interaction.editReply({ embeds: [embed]});
     }
 };
