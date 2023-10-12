@@ -26,14 +26,23 @@ const modTicket = async (ticket) => {
     let ticketAttachments = ``;
     if (ticket.ticketAttachments.length === 0) {
         ticketAttachments = `No attachments`;
-    } else if (ticket.ticketAttachments.length <= 25) { // Only display 25 or less attachments - safeguard embed limits
-        let attachmentCount = 0;
-        ticket.ticketAttachments.forEach(attachment => {
-            attachmentCount++;
-            ticketAttachments += emojis.redDot + `[Link #${attachmentCount}](${attachment})` + `\n`;
-        });
     } else {
-        ticketAttachments = `Too many attachments to display, please use the \`/viewattach\` command.`;
+        let attachmentCount = 0;
+        let totalChars = 0; // Track the total characters
+
+        for (const attachment of ticket.ticketAttachments) {
+            let entry = emojis.redDot + `[Link #${attachmentCount + 1}](${attachment})` + `\n`;
+            totalChars += entry.length;
+
+            // Check if the next entry will exceed the field's character limit
+            if (totalChars > 800) {  // Using 1000 as a safety margin
+                ticketAttachments += `... and more. Use the \`/viewattach\` command to view all.`;
+                break;
+            }
+
+            ticketAttachments += entry;
+            attachmentCount++;
+        }
     }
     
     let socialLinks = ``;

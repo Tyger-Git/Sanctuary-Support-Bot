@@ -167,7 +167,7 @@ function createEmbedsFromChunks(chunks, logCounter, ticketId) {
     return chunks.map((chunk, index) => {
         let totalPages = chunks.length;
         const embed = new EmbedBuilder()
-            .setColor([255, 255, 255]) // White
+            .setColor([69, 245, 227]) // Color testing
             .setTitle(`📜 Ticket Logs #${ticketId} - Total Entries: ${logCounter} 📜`)
             .setDescription(chunk.join('\n'))
             .setFooter({ text: `\n -- Page ${index + 1} of ${totalPages} --` });

@@ -7,84 +7,94 @@ import { handleTicketMessageUpdate } from '../../functions/threadFunctions.js';
 import emojis from '../../emojis.json' assert { type: 'json' };
 import winston from '../../utils/winston.js';
 
+const handleAttachments = async (message, ticket, client, thread) => {
+    if (!message.attachments.size) return;
+
+    const attachCount = message.attachments.reduce((acc, attachment) => {
+        ticket.ticketAttachments.push(attachment.url);
+        winston.debug(`Attachment URL: ${attachment.url} added to ticket ${ticket.ticketId}`);
+        return acc + 1;
+    }, 0);
+
+    ticket.ticketAttachments = [...new Set(ticket.ticketAttachments)];
+    
+    await logger(ticket.ticketId, 'Event', client.user.id, client.user.username, 'Bot', `${attachCount} attachments detected in user message. Added to ticket.`);
+
+    const attachmentEmbed = new EmbedBuilder()
+        .setTitle(`🔗 Attachments Detected 🔗`)
+        .setDescription(`Added ${attachCount} link(s) to the ticket`);
+    await thread.send({ embeds: [attachmentEmbed] });
+}
+
+const handleHyperlinks = async (message, ticket, client, thread) => {
+    const regex = /https?:\/\/[^\s]+/g;
+    const hyperlinks = message.content.match(regex) || [];
+
+    if (!hyperlinks.length) return;
+
+    ticket.ticketAttachments = [...ticket.ticketAttachments, ...hyperlinks];
+    ticket.ticketAttachments = [...new Set(ticket.ticketAttachments)];
+
+    const hyperlinkEmbed = new EmbedBuilder()
+        .setTitle(`🔗 Hyperlinks Detected 🔗`)
+        .setDescription(`Added ${hyperlinks.length} link(s) to the ticket`);
+    await thread.send({ embeds: [hyperlinkEmbed] });
+    await logger(ticket.ticketId, 'Event', client.user.id, client.user.username, 'Bot', 'Hyperlinks detected in user message. Added to ticket.');
+}
+
 const incomingDirectMessage = async (message) => {
     winston.info(`Got DM from ${message.author.tag}`);
 
     // Check if the user has an open ticket
     const ticket = await Ticket.findOne({ userId: message.author.id, isOpen: true });
-    if (ticket) {
-        // Use the client singleton to get the Discord client
-        const client = clientSingleton.getClient();
-        // Fetch the associated thread using the stored ticketThread ID
-        const thread = await client.channels.fetch(ticket.ticketThread);
-        // Prep the regex for hyperlink detection
-        const regex = /https?:\/\/[^\s]+/g;
-        // Check if the message contains a hyperlink, array of hyperlinks, or null
-        const hyperlinks = message.content.match(regex) || [];
-        // Spin up an embed to send to the thread
-        let modToPing = '';
-        if (thread) {
-            // Check if the message contains content or attachments, or both
-            let content = message.content;
-            if (!content && message.attachments.size > 0) {
-                content = 'Attachment(s) received, with no message content. See ticket for details.';
-            }
-            if (message.attachments.size > 0) {
-                let attachCount = 0;
-                message.attachments.forEach(attachment => {
-                    ticket.ticketAttachments.push(attachment.url);
-                    winston.debug(`Attachment URL: ${attachment.url} added to ticket ${ticket.ticketId}`);
-                    attachCount++;
-                });
-                // Remove duplicates from the ticketAttachments array
-                ticket.ticketAttachments = [...new Set(ticket.ticketAttachments)];
-                await logger(ticket.ticketId, 'Event', client.user.id, client.user.username, 'Bot', `${attachCount} attachments detected in user message. Added to ticket.`)
-                let attachmentEmbed = new EmbedBuilder()
-                    .setTitle(`🔗 Attachments Detected 🔗`)
-                    .setDescription(`Added ${attachCount} link(s) to the ticket`);
-                thread.send({ embeds: [attachmentEmbed] });
-
-            }
-            
-            let embed = new EmbedBuilder()
-                .setTitle(`🗣️ ${ticket.userDisplayName} (${ticket.userName}) replied to their ticket 🗣️`)
-                .setDescription(`${content}`)
-                .setColor([255,255,255]);
-            // Ping Mods if the ticket is claimed and alerts are on
-            if (ticket.isClaimed && ticket.isAlertOn) { modToPing = `<@${ticket.claimantModId}>`; } // Add perm check too
-            if (modToPing !== '') { await thread.send({content: modToPing}); }
-            // Send the user's message to the thread
-            await thread.send({ embeds: [embed] });
-            if (hyperlinks.length) {
-                // Spread Operator to add the hyperlinks to the ticketAttachments array, then remove duplicates
-                ticket.ticketAttachments = [...ticket.ticketAttachments, ...hyperlinks];
-                ticket.ticketAttachments = [...new Set(ticket.ticketAttachments)];
-                let attachmentEmbed = new EmbedBuilder()
-                    .setTitle(`🔗 Hyperlinks Detected 🔗`)
-                    .setDescription(`Added ${hyperlinks.length} link(s) to the ticket`);
-                thread.send({ embeds: [attachmentEmbed] });
-                await logger(ticket.ticketId, 'Event', client.user.id, client.user.username, 'Bot', 'Hyperlinks detected in user message. Added to ticket.');
-            }
-            // Update the lastUserResponse field
-            ticket.lastUserResponse = new Date();
-            await ticket.save();
-            await handleTicketMessageUpdate(ticket);
-            if (hyperlinks.length) { // I don't like this, going to change later
-                await logger(ticket.ticketId, 'Primary', message.author.id, message.author.username, 'User', `<${content}>`);
-            } else {
-                await logger(ticket.ticketId, 'Primary', message.author.id, message.author.username, 'User', content);
-            }
-        } else {
-            // This is just a safety check in case the thread doesn't exist for some reason.
-            await message.reply(await ticketErrorMessageObject('An error occurred while sending your message. Please try again later, or contact a staff member for assistance.', true));
-        }
-    } else {
-        embed
+    if (!ticket) {
+        const noTicketEmbed = new EmbedBuilder()
             .setTitle("Uh oh!")
             .setDescription(`You don't have an open ticket. If you wish to create one, please fill out a ticket form here: ${config.supportmessagelink}`);
-        // Reply to the user if they don't have an open ticket
-        await message.reply({ embeds: [embed] });
+        return await message.reply({ embeds: [noTicketEmbed] });
     }
+    // Get the thread associated with the ticket
+    const client = clientSingleton.getClient();
+    const thread = await client.channels.fetch(ticket.ticketThread);
+    if (!thread) {
+        return await message.reply(await ticketErrorMessageObject('An error occurred while sending your message. Please try again later, or contact a staff member for assistance.', true));
+    }
+
+    await handleAttachments(message, ticket, client, thread);
+    await handleHyperlinks(message, ticket, client, thread);
+    
+    let content = `${message.content}\n`;
+    let attachCount = 0;
+
+    // Handle attachments regardless of whether the original message has content
+    if (message.attachments.size > 0) {
+        message.attachments.forEach(attachment => {
+            attachCount++;
+            content += `${emojis.redDot} [User Attachment #${attachCount}](${attachment.url})\n`;
+        });
+    }
+
+    let embed = new EmbedBuilder()
+        .setTitle(`🗣️ ${ticket.userDisplayName} (${ticket.userName}) replied to their ticket 🗣️`)
+        .setDescription(`${content}`)
+        .setColor([255, 235, 13]);
+    
+    let modToPing = '';
+    if (ticket.isClaimed && ticket.isAlertOn) { 
+        modToPing = `<@${ticket.claimantModId}>`; 
+    }
+    if (modToPing !== '') { 
+        await thread.send({content: modToPing}); 
+    }
+
+    await thread.send({ embeds: [embed] });
+    
+    ticket.lastUserResponse = new Date();
+    await ticket.save();
+    await handleTicketMessageUpdate(ticket);
+    
+    const logContent = (message.content.match(/https?:\/\/[^\s]+/g)) ? `<${content}>` : content;
+    await logger(ticket.ticketId, 'Primary', message.author.id, message.author.username, 'User', logContent);
 };
 
 const outgoingDirectMessage = async (interaction, ticket, message) => {
