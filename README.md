@@ -1,5 +1,6 @@
 # Sanctuary-Support-Bot
 Ticket bot for Sanctuary
+
 Sanctuary-Support-Bot is a Discord bot designed to provide a comprehensive ticketing system for the Sanctuary Discord Server. Built with node.js, discord.js v14 and MongoDB.
 
 ## Usage
