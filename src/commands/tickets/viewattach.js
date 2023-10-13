@@ -1,7 +1,6 @@
 import Ticket from '../../schemas/ticket.js';
 import emojis from '../../emojis.json' assert { type: "json" };
 import { EmbedBuilder, ApplicationCommandOptionType, ButtonBuilder, ActionRowBuilder } from 'discord.js';
-import winston from '../../utils/winston.js';
 
 export default {
     name: 'viewattach',
@@ -81,7 +80,7 @@ export default {
             await interaction.update({ embeds: [allEmbeds[currentPage]], components: [row] });
         });
         
-        collector.on('end', (collected, reason) => {
+        collector.on('end', () => {
             interaction.fetchReply().then(reply => reply.delete());
         });
     }
