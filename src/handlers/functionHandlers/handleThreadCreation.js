@@ -9,7 +9,7 @@ const handleThreadCreation = async (client, ticketData) => {
     // Fetch the ticket as a Mongoose model instance
     const ticket = await Ticket.findById(ticketData._id);
     if (!ticket) {
-        winston.error('Ticket not found in the database.');
+        winston.debug('Ticket not found in the database.');
         return null;
     }
     // Get the correct parent forum ID based on ticket type
@@ -20,12 +20,12 @@ const handleThreadCreation = async (client, ticketData) => {
     try {
         parentChannel = await client.channels.fetch(parentChannelId);
     } catch (error) {
-        winston.error('Error fetching parent channel:', error);
+        winston.error(`Error fetching parent channel: ${error}\n Stack Trace: \n${error.stack}`);
         return null;
     }
     
     if (!parentChannel || parentChannel.type !== 15) {
-        winston.error('Parent channel not found or not a text channel.');
+        winston.debug('Parent channel not found or not a text channel.');
         return null;
     }
 

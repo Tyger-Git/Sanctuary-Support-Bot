@@ -98,7 +98,7 @@ const modTicket = async (ticket) => {
             contentValue1 = ticket.generalSupportDescription;
             break;
         default:
-            winston.error(`Unsupported ticket type.`);
+            winston.debug(`Unsupported ticket type.`);
             return null;
     }
     const modTicketEmbedTop = new EmbedBuilder()

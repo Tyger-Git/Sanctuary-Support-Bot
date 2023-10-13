@@ -67,7 +67,7 @@ export default {
             });
 
             } catch (error) {
-                winston.error("Error using viewsnippets " + error);
+                winston.error(`Error using viewsnippets: ${error}\n Stack Trace: \n${error.stack}`);
             }
     }
 }
@@ -79,7 +79,7 @@ async function fetchAllSnippets() {
     try {
         return await Snippet.find({});
     } catch (error) {
-        winston.error("Failed to fetch snippets: " + error);
+        winston.error(`Failed to fetch snippets: ${error}\n Stack Trace: \n${error.stack}`);
         return [];
     }
 }

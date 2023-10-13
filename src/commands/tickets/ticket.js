@@ -3,7 +3,7 @@
 import { ApplicationCommandOptionType, ButtonBuilder, ActionRowBuilder } from 'discord.js';
 import {modTicket, ticketList} from '../../functions/modTicket.js';
 import Ticket from '../../schemas/ticket.js';
-import { ticketErrorMessageObject } from '../../functions/responseFunctions.js';
+import { messageObjectError } from '../../functions/responseFunctions.js';
 import { checkPerms } from '../../functions/permissions.js';
 
 export default {
@@ -55,19 +55,19 @@ export default {
             try {
                 ticket = await Ticket.findOne(query);
                 if (!ticket) {
-                    await interaction.editReply(await ticketErrorMessageObject('No ticket found.', true));
+                    await interaction.editReply(await messageObjectError('No ticket found.', true));
                     return;
                 }
             } catch (err) {
-                winston.error(err);
-                await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the ticket.', true));
+                winston.error(`An error occurred while fetching the ticket: ${err}\n Stack Trace: \n${err.stack}`);
+                await interaction.editReply(await messageObjectError('An error occurred while fetching the ticket.', true));
             }
             if (await checkPerms(interaction, ticket.ticketLevel)) {
                 // Construct the ticket
                 const messageObj = await modTicket(ticket);
                 await interaction.editReply(messageObj);
             } else {
-                await interaction.editReply(await ticketErrorMessageObject('You do not have permission to view this ticket.', true));
+                await interaction.editReply(await messageObjectError('You do not have permission to view this ticket.', true));
             }
         } else if (providedUserId || providedModId) {
             // Return a table of contents of tickets
@@ -75,12 +75,12 @@ export default {
             try {
                 tickets = await Ticket.find(query);
                 if (!tickets) {
-                    await interaction.editReply(await ticketErrorMessageObject('No tickets found.', true));
+                    await interaction.editReply(await messageObjectError('No tickets found.', true));
                     return;
                 }
             } catch (error) {
-                winston.error(error);
-                await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the tickets.', true));
+                winston.error(`An error occurred while fetching the tickets: ${error}\n Stack Trace: \n${error.stack}`);
+                await interaction.editReply(await messageObjectError('An error occurred while fetching the tickets.', true));
             }
             const type = providedUserId ? 'user' : 'mod';
             const id = providedUserId || providedModId;
@@ -137,12 +137,12 @@ export default {
             try {
                 ticket = await Ticket.findOne(query);
                 if (!ticket) {
-                    await interaction.editReply(await ticketErrorMessageObject('No ticket found.', true));
+                    await interaction.editReply(await messageObjectError('No ticket found.', true));
                     return;
                 }
             } catch (error) {
-                winston.error(error);
-                await interaction.editReply(await ticketErrorMessageObject('An error occurred while fetching the ticket.', true));
+                winston.error(`An error occurred while fetching the ticket: ${error}\n Stack Trace: \n${error.stack}`);
+                await interaction.editReply(await messageObjectError('An error occurred while fetching the ticket.', true));
             }
             // Construct the ticket
             const messageObj = await modTicket(ticket);

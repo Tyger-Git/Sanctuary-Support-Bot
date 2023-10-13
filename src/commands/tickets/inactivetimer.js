@@ -52,13 +52,13 @@ export default {
             const threadId = interaction.channel.id;
             ticket = await Ticket.findOne({ ticketThread: threadId });
             if (!ticket) {
-                await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));
+                await interaction.editReply(await messageObjectError('Ticket not found', true));
                 return;
             }
         } else { // Find by ticket ID
             ticket = await Ticket.findOne({ ticketId: ticketId });
             if (!ticket) {
-                await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));
+                await interaction.editReply(await messageObjectError('Ticket not found', true));
                 return;
             }
         }
@@ -66,12 +66,12 @@ export default {
         // Permissions Check
         const isSeniorMod = await checkPerms(interaction, 2);
         if (interaction.user.id !== ticket.claimantModId && !isSeniorMod) {
-            await interaction.editReply(await ticketErrorMessageObject('You do not have permission to modify this ticket', true));
+            await interaction.editReply(await messageObjectError('You do not have permission to modify this ticket', true));
             return;
         }
         if(time === 0 || time === 48) {
             if (!isSeniorMod) {
-                await interaction.editReply(await ticketErrorMessageObject(`Only Senior Moderators and above may set inactivity timers to ${time}`, true));
+                await interaction.editReply(await messageObjectError(`Only Senior Moderators and above may set inactivity timers to ${time}`, true));
                 return;
             }
         }
@@ -80,7 +80,7 @@ export default {
         ticket.inactivityTimer = time;
         await ticket.save();
         await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', `Inactivity timer modified. Timer set to ${time}`);
-        await interaction.editReply(await ticketActionMessageObject(`Inactivity timer modified. Timer set to ${time}`, false));
+        await interaction.editReply(await messageObjectAction(`Inactivity timer modified. Timer set to ${time}`, false));
         await handleTicketMessageUpdate(ticket);
     }
 }

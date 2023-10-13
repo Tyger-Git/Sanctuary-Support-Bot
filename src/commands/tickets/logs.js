@@ -23,7 +23,7 @@ export default {
         } else {
             ticket = await Ticket.findOne({ ticketThread: interaction.channelId });
         }
-        if (!ticket) return await interaction.editReply(await ticketErrorMessageObject(`Ticket not found.`));
+        if (!ticket) return await interaction.editReply(await messageObjectError(`Ticket not found.`));
 
         await shortLogs(interaction, ticket);
     }

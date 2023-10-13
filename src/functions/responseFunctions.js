@@ -3,7 +3,7 @@
 import { EmbedBuilder } from "discord.js";
 import emojis from "../emojis.json" assert { type: "json" };
 
-const ticketActionMessageObject = async (message, bool) => {
+const messageObjectAction = async (message, bool) => {
     let messageObj = {};
     const embed = new EmbedBuilder()
         .setTitle(`${emojis.bolt} Ticket Action ${emojis.bolt}`)
@@ -13,7 +13,7 @@ const ticketActionMessageObject = async (message, bool) => {
     return messageObj;
 };
 
-const ticketErrorMessageObject = async (message) => {
+const messageObjectError = async (message) => {
     let messageObj = {};
     const embed = new EmbedBuilder()
         .setTitle(`${emojis.outage} Ticket Error ${emojis.outage}`)
@@ -24,6 +24,6 @@ const ticketErrorMessageObject = async (message) => {
 };
 
 export {
-    ticketActionMessageObject,
-    ticketErrorMessageObject
+    messageObjectAction,
+    messageObjectError
 }

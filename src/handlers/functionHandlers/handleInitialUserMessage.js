@@ -9,7 +9,7 @@ async function handleInitialUserMessage(client, ticket) {
         const user = await client.users.fetch(ticket.userId);
         // If the user doesn't exist, log an error and return
         if (!user) {
-            winston.error(`Failed to find user with ID: ${ticket.userId}`);
+            winston.debug(`Failed to find user with ID: ${ticket.userId}`);
             return;
         }
         const date = new Date();
@@ -23,7 +23,7 @@ async function handleInitialUserMessage(client, ticket) {
         await user.send({ embeds: [embed] });
 
     } catch (error) {
-        winston.error('Error sending DM:', error);
+        winston.error(`Error sending DM: ${error}\n Stack Trace: \n${error.stack}`);
     }
 }
 

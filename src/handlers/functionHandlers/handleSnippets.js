@@ -4,7 +4,7 @@ import { ButtonBuilder, ActionRowBuilder } from "discord.js";
 import { outgoingDirectMessage } from "../interactionTypeHandlers/directMessageHandler.js";
 import Ticket from "../../schemas/ticket.js";
 import Snippet from "../../schemas/snippet.js";
-import { ticketActionMessageObject, ticketErrorMessageObject } from "../../functions/responseFunctions.js";
+import { messageObjectAction, messageObjectError } from "../../functions/responseFunctions.js";
 
 const snippetWorkflow = async (interaction) => {
     if (interaction.customId === "snippet_menu") {
@@ -14,7 +14,7 @@ const snippetWorkflow = async (interaction) => {
         const selectedSnippet = await Snippet.findOne({ snippetName: selectedValue });
 
         if (!selectedSnippet) {
-            winston.error("Selected snippet is undefined.");
+            winston.debug("Selected snippet is undefined.");
             return;
         }
 
@@ -53,9 +53,9 @@ const snippetWorkflow = async (interaction) => {
                 components: [],  // Remove all components to disable further interactions
                 ephemeral: true
             });
-            await interaction.channel.send(await ticketActionMessageObject(`A Snippet was sent to the user:\n\`\`\`${selectedSnippet.snippetContent}\`\`\``, false));
+            await interaction.channel.send(await messageObjectAction(`A Snippet was sent to the user:\n\`\`\`${selectedSnippet.snippetContent}\`\`\``, false));
         } else {
-            await interaction.reply(await ticketErrorMessageObject(`Snippet not found.`, true));
+            await interaction.reply(await messageObjectError(`Snippet not found.`, true));
         }
     } else if (interaction.customId === "cancel_snippet_reply_button") {
         await interaction.update({

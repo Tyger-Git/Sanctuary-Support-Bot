@@ -14,12 +14,12 @@ const handleThreadReCreation = async (interaction, ticket, escalatorId) => {
     try {
         parentChannel = await client.channels.fetch(parentChannelId);
     } catch (error) {
-        winston.error('Error fetching parent channel:', error);
+        winston.error(`Error fetching parent channel: ${error}\n Stack Trace: \n${error.stack}`);
         return null;
     }
     
     if (!parentChannel || parentChannel.type !== 15) {
-        winston.error('Parent channel not found or not a text channel.');
+        winston.debug('Parent channel not found or not a text channel.');
         return null;
     }
 

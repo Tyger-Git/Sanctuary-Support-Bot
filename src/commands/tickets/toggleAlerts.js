@@ -43,30 +43,30 @@ export default {
             try {
                 ticket = await Ticket.findOne({ ticketThread: threadId });
             } catch (error) {
-                winston.error('Error finding ticket:', error);
+                winston.error(`An error occurred while fetching the ticket: ${error}\n Stack Trace: \n${error.stack}`);
             }
             if (!ticket) {
-                await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));
+                await interaction.editReply(await messageObjectError('Ticket not found', true));
                 return;
             }
             ticket.isAlertOn = toggle === 'on';
             await ticket.save();
-            await interaction.editReply(await ticketActionMessageObject(`Alerts toggled ${toggle}`, false));
+            await interaction.editReply(await messageObjectAction(`Alerts toggled ${toggle}`, false));
             await handleTicketMessageUpdate(ticket);
         } else { // Find by ticket ID
             try {
                 ticket = await Ticket.findOne({ ticketId: ticketId });
             } catch (error) {
-                winston.error('Error finding ticket:', error);
+                winston.error(`An error occurred while fetching the ticket: ${error}\n Stack Trace: \n${error.stack}`);
             }
             if (!ticket) {
-                await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));
+                await interaction.editReply(await messageObjectError('Ticket not found', true));
                 return;
             }
             ticket.isAlertOn = toggle === 'on';
             await ticket.save();
             await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', `Alerts toggled ${toggle}`);
-            await interaction.editReply(await ticketActionMessageObject(`Alerts toggled ${toggle}`, true));
+            await interaction.editReply(await messageObjectAction(`Alerts toggled ${toggle}`, true));
         }
     }
 }

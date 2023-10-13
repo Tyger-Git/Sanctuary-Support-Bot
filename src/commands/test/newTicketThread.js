@@ -24,7 +24,7 @@ export default {
         try {
             parentChannel = await client.channels.fetch(parentChannelId);
         } catch (error) {
-            winston.error('Error fetching parent channel:', error);
+            winston.error(`Error fetching parent channel: ${error}\n Stack Trace: \n${error.stack}`);
         }
         
         if (!parentChannel || parentChannel.type !== 15) {

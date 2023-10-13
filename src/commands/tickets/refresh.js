@@ -15,14 +15,14 @@ export default {
         try {
             ticket = await Ticket.findOne({ ticketThread: threadId });
         } catch (error) {
-            winston.error('Error finding ticket:', error);
+            winston.error(`Error finding ticket: ${error}\n Stack Trace: \n${error.stack}`);
         }
         if (!ticket) {
-            await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));
+            await interaction.editReply(await messageObjectError('Ticket not found', true));
             return; 
         }
         await handleTicketMessageUpdate(ticket);
         await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', 'Ticket refreshed.');
-        await interaction.editReply(await ticketActionMessageObject(`Ticket Refreshed`, true));
+        await interaction.editReply(await messageObjectAction(`Ticket Refreshed`, true));
     }
 }

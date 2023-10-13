@@ -1,6 +1,7 @@
 // Command to get the forum tag IDs for the parent forums
 /*---- Dev Only ----*/
 
+import { messageObjectError } from "../../functions/responseFunctions";
 
 export default {
     name: 'getforumtags',
@@ -19,10 +20,10 @@ export default {
             } else {
                 interaction.channel.send('No available tags found.');
             }
-
+            winston.info(`Forum tags fetched by ${interaction.user.username} for parent channel ${parentChannel.id}.`);
         } catch (error) {
-            winston.error('Error fetching parent channel or accessing tags:', error);
-            interaction.channel.send('Error fetching tags.');
+            winston.error(`Error fetching parent channel or accessing tags: ${error}\n Stack Trace: \n${error.stack}`);
+            interaction.channel.send(messageObjectError('Error fetching tags.'));
         }
     }
 }

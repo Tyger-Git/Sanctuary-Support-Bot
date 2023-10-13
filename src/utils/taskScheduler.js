@@ -17,7 +17,7 @@ async function fetchAndDeleteThread(ticket, client) {
             winston.warn(`Thread with ID ${ticket.ticketThread} not found.`);
             return false;
         } else {
-            winston.error('An error occurred fetching or deleting the thread:', error);
+            winston.error(`An error occurred fetching or deleting the thread: ${error}\n Stack Trace: \n${error.stack}`);
             return false; // You can choose to return false or some other value to indicate the operation didn't succeed.
         }
     }
@@ -55,7 +55,7 @@ async function deleteOldThreads() {
                 await DyingTicketModel.findByIdAndDelete(ticket._id);
                 winston.info(`Deleted DyingTicketModel entry for ticket ID ${ticket.ticketId}`);
             } else {
-                winston.error(`Check ticket DB for ticket ID ${ticket.ticketId}. Imbalance in dying tickets.`);
+                winston.debug(`Check ticket DB for ticket ID ${ticket.ticketId}. Imbalance in dying tickets.`);
             }
 
             await logger(mainTicket.ticketId, 'Event', client.user.id, client.user.username, 'Bot', `Deleted thread for ticket ${mainTicket.ticketId}`);
@@ -64,7 +64,7 @@ async function deleteOldThreads() {
         winston.debug('Done deleting threads');
 
     } catch (error) {
-        winston.error('Error during scheduled task:', error);
+        winston.error(`Error during scheduled task: ${error}\n Stack Trace: \n${error.stack}`);
     }
 }
 

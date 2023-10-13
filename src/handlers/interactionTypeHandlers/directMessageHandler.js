@@ -57,7 +57,7 @@ const incomingDirectMessage = async (message) => {
     const client = clientSingleton.getClient();
     const thread = await client.channels.fetch(ticket.ticketThread);
     if (!thread) {
-        return await message.reply(await ticketErrorMessageObject('An error occurred while sending your message. Please try again later, or contact a staff member for assistance.', true));
+        return await message.reply(await messageObjectError('An error occurred while sending your message. Please try again later, or contact a staff member for assistance.', true));
     }
 
     await handleAttachments(message, ticket, client, thread);
@@ -99,7 +99,7 @@ const incomingDirectMessage = async (message) => {
 
 const outgoingDirectMessage = async (interaction, ticket, message) => {
     if (!ticket.userId || !message) {
-        winston.error('Invalid parameters provided for messageUser function');
+        winston.debug('Invalid parameters provided for messageUser function');
         return;
     }
     // Use the client singleton to get the Discord client
@@ -118,13 +118,13 @@ const outgoingDirectMessage = async (interaction, ticket, message) => {
         await user.send({ embeds: [embed], files: [{attachment: './resources/ContactStaff.gif', name: 'ContactStaff.gif' }] }); // DM the user
         await logger(ticket.ticketId, 'Primary', interaction.user.id, interaction.user.username, 'Staff', message);
     } catch (error) {
-        winston.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error.message}`);
+        winston.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error}\n Stack Trace: \n${error.stack}`);
     }
 };
 
 const outgoingTicketEvent = async (interaction, ticket, message) => {
     if (!ticket.userId || !message) {
-        winston.error('Invalid parameters provided for messageUser function');
+        winston.debug('Invalid parameters provided for messageUser function');
         return;
     }
     // Use the client singleton to get the Discord client
@@ -138,7 +138,7 @@ const outgoingTicketEvent = async (interaction, ticket, message) => {
         await user.send({ embeds: [embed] }); // DM the user
         await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', message);
     } catch (error) {
-        winston.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error.message}`);
+        winston.error(`Failed to send a message to user with ID ${ticket.userId}. Error: ${error}\n Stack Trace: \n${error.stack}`);
     }
 };
 

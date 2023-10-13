@@ -20,7 +20,7 @@ async function handleTicketMessageUpdate(ticket) {
     const thread = await parentChannel.threads.fetch(threadId);
     // Check if the thread exists and is not partial
     if (!thread || thread.partial) {
-        winston.error('Thread not found or partial.');
+        winston.debug('Thread not found or partial.');
         return;
     }
     try {
@@ -30,7 +30,7 @@ async function handleTicketMessageUpdate(ticket) {
         const messageObject = await modTicket(ticket);
         await message.edit(messageObject);
     } catch (error) {
-        winston.error('Error modifying ticket thread message:', error);
+        winston.error(`Error modifying ticket thread message: ${error}\n Stack Trace: \n${error.stack}`);
     }
 };
 
@@ -82,7 +82,7 @@ async function getParentChannelID(ticket) {
     const levelMapping = threadMapping[ticket.ticketLevel];
     
     if (!levelMapping) {
-        winston.error('Issue getting parent channel ID.');
+        winston.debug('Issue getting parent channel ID.');
         return null;
     }
 
@@ -92,7 +92,7 @@ async function getParentChannelID(ticket) {
 
     const channelID = levelMapping[ticket.ticketType];
     if (!channelID) {
-        winston.error('Issue getting parent channel ID.');
+        winston.debug('Issue getting parent channel ID.');
         return null;
     }
 
@@ -220,7 +220,7 @@ async function getThreadTag(ticket) {
     }
 
     if (!mapping) {
-        winston.error('Error getting thread tag.');
+        winston.debug('Error getting thread tag.');
         return null;
     }
 
@@ -276,13 +276,13 @@ async function closeThread(interaction) {
 
         // Reply to the interaction
         if (closeTimer === 0) {
-            await interaction.reply(await ticketActionMessageObject("Ticket Closed...Thread scheduled for deletion **immediately.**", false));
+            await interaction.reply(await messageObjectAction("Ticket Closed...Thread scheduled for deletion **immediately.**", false));
         } else {
-            await interaction.reply(await ticketActionMessageObject("Ticket Closed...Thread scheduled for deletion in **" + closeTimer + " hour(s).**", false));
+            await interaction.reply(await messageObjectAction("Ticket Closed...Thread scheduled for deletion in **" + closeTimer + " hour(s).**", false));
         }
         await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', `Ticket closed by **${interaction.user.username}**`);
     } catch (error) {
-        winston.error('Error ending thread:', error);
+        winston.error(`Error ending thread: ${error}\n Stack Trace: \n${error.stack}`);
     }
 }
 
