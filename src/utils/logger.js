@@ -1,6 +1,7 @@
 import Log from '../schemas/log.js';
 import clientSingleton from '../utils/DiscordClientInstance.js';
 import config from '../../config.json' assert { type: 'json' };
+import winston from './winston.js';
 
 const log = async (ticketId, type, userId, userName, classType, message) => {
     // Get the highest role of the user
@@ -18,6 +19,7 @@ const log = async (ticketId, type, userId, userName, classType, message) => {
     // Save the log entry to the database
     try {
         await logEntry.save();
+        winston.debug(`Saved log to database: ${logEntry}`);
     } catch (error) {
         winston.error('Error saving log:', error);
     }
