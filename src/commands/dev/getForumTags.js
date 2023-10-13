@@ -1,8 +1,6 @@
 // Command to get the forum tag IDs for the parent forums
 /*---- Dev Only ----*/
 
-import { messageObjectError } from "../../functions/responseFunctions";
-
 export default {
     name: 'getforumtags',
     description: 'Gets the forum tag IDs for the parent forums',
