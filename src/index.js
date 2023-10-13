@@ -4,7 +4,7 @@ import { connectToDatabase, initializeTicketCounter, watchTickets } from './data
 import { handleInteractionCreate, handleMessageCreate } from './handlers/interactionHandler.js';
 import slashCommandHandler from './handlers/commandHandlers/slashCommandHandler.js';
 import { deleteOldThreads } from './utils/taskScheduler.js';
-import { ticketActionMessageObject, ticketErrorMessageObject } from './functions/responseFunctions.js';
+import { messageObjectAction, messageObjectError } from './functions/responseFunctions.js';
 import winston from './utils/winston.js';
 
 // Execute dotenv config
@@ -31,6 +31,6 @@ initBot();
 setInterval(deleteOldThreads, 60 * 1000); // Run every minute
 
 // Global variables
-global.ticketActionMessageObject = ticketActionMessageObject;
-global.ticketErrorMessageObject = ticketErrorMessageObject;
+global.messageObjectAction = messageObjectAction;
+global.messageObjectError = messageObjectError;
 global.winston = winston;

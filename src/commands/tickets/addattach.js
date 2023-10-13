@@ -2,7 +2,7 @@ import Ticket from '../../schemas/ticket.js';
 import { EmbedBuilder, ApplicationCommandOptionType } from 'discord.js';
 import logger from '../../utils/logger.js';
 import { handleTicketMessageUpdate } from '../../functions/threadFunctions.js';
-import { ticketErrorMessageObject } from '../../functions/responseFunctions.js';
+import { messageObjectError } from '../../functions/responseFunctions.js';
 
 export default {
     name: 'addattach',
@@ -30,7 +30,7 @@ export default {
             ticket = await Ticket.findOne({ ticketThread: interaction.channel.id, isOpen: true });
         }
         if (!ticket) {
-            await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));
+            await interaction.editReply(await messageObjectError('Ticket not found', true));
             return;
         }
         const attachment = interaction.options.get('attachment').value;

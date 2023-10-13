@@ -1,6 +1,6 @@
 import Ticket from '../../schemas/ticket.js';
 import { ActionRowBuilder, ApplicationCommandOptionType, StringSelectMenuBuilder } from 'discord.js';
-import { ticketErrorMessageObject } from '../../functions/responseFunctions.js';
+import { messageObjectError } from '../../functions/responseFunctions.js';
 
 export default {
     name: 'removeattach',
@@ -22,12 +22,12 @@ export default {
             ticket = await Ticket.findOne({ ticketThread: interaction.channel.id});
         }
         if (!ticket) {
-            await interaction.editReply(await ticketErrorMessageObject('Ticket not found', true));
+            await interaction.editReply(await messageObjectError('Ticket not found', true));
             return;
         }
 
         if (ticket.ticketAttachments.length === 0) {
-            await interaction.editReply(await ticketErrorMessageObject('This ticket has no attachments', true));
+            await interaction.editReply(await messageObjectError('This ticket has no attachments', true));
             return;
         }
 

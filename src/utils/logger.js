@@ -21,7 +21,7 @@ const log = async (ticketId, type, userId, userName, classType, message) => {
         await logEntry.save();
         winston.debug(`Saved log to database: ${logEntry}`);
     } catch (error) {
-        winston.error('Error saving log:', error);
+        winston.error(`Error saving log: ${error}\n Stack Trace: \n${error.stack}`);
     }
 };
 

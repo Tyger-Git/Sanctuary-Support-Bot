@@ -50,14 +50,14 @@ const claimTicket = async (interaction, iType) => {
     try {
         ticket = await Ticket.findOne({ ticketThread: threadId });
     } catch (error) {
-        await interaction.editReply(await ticketErrorMessageObject('Error finding ticket', true));
+        await interaction.editReply(await messageObjectError('Error finding ticket', true));
         return;
     }
 
     // Vibe Checker
     const permissionCheck = await vibeCheck(ticket, 'claim', interaction);
     if (permissionCheck !== '✅') {
-        const msgObj = await ticketErrorMessageObject(permissionCheck);
+        const msgObj = await messageObjectError(permissionCheck);
         if (iType === 'slash') {await interaction.editReply(msgObj);}
         if (iType === 'button') {await interaction.reply(msgObj);}
         return; // Exit early since the check failed
@@ -82,13 +82,13 @@ const claimTicket = async (interaction, iType) => {
         await handleTicketMessageUpdate(ticket);
 
         // Reply to the interaction
-        const msgObj = await ticketActionMessageObject(`Ticket claimed by **${claimantMod}**`, false);
+        const msgObj = await messageObjectAction(`Ticket claimed by **${claimantMod}**`, false);
         if (iType === 'slash') {await interaction.editReply(msgObj);}
         if (iType === 'button') {await interaction.reply(msgObj);}
         await outgoingTicketEvent(interaction, ticket, `Ticket claimed by a Staff Member. Please wait for a response.`);
         await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', `Ticket Claimed by **${claimantMod}**`);
     } catch (error) {
-        winston.error('Error claiming ticket:', error);
+        winston.error(`Error claiming ticket: ${error}\n Stack Trace: \n${error.stack}`);
     }
 };
 
@@ -99,12 +99,12 @@ const unclaimTicket = async (interaction, iType) => {
     try {
         ticket = await Ticket.findOne({ ticketThread: threadId });
     } catch (error) {
-        winston.error('Error finding ticket:', error);
+        winston.error(`Error finding ticket: ${error}\n Stack Trace: \n${error.stack}`);
     }
     // Vibe Checker
     const permissionCheck = await vibeCheck(ticket, 'unclaim', interaction);
     if (permissionCheck !== '✅') {
-        const msgObj = await ticketErrorMessageObject(permissionCheck);
+        const msgObj = await messageObjectError(permissionCheck);
         if (iType === 'slash') {await interaction.editReply(msgObj);}
         if (iType === 'button') {await interaction.reply(msgObj);}
         return; // Exit early since the check failed
@@ -130,12 +130,12 @@ const unclaimTicket = async (interaction, iType) => {
         await handleTicketMessageUpdate(ticket);
 
         // Reply to the interaction
-        const msgObj = await ticketActionMessageObject(`Ticket unclaimed by **${modUnclaiming}**`, false);
+        const msgObj = await messageObjectAction(`Ticket unclaimed by **${modUnclaiming}**`, false);
         if (iType === 'slash') {await interaction.editReply(msgObj);}
         if (iType === 'button') {await interaction.reply(msgObj);}
         await logger(ticket.ticketId, 'Event', interaction.user.id, interaction.user.username, 'Staff', `Ticket Unclaimed by **${modUnclaiming}**`)
     } catch (error) {
-        winston.error('Error unclaiming ticket:', error);
+        winston.error(`Error unclaiming ticket: ${error}\n Stack Trace: \n${error.stack}`);
     }
 };
 

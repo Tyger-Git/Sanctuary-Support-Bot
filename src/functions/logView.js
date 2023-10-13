@@ -14,7 +14,7 @@ async function shortLogs(interaction, ticket) {
     
     let ticketLogs = logs.map(log => `**${emojis.whiteDashGlow}${emojis.whiteDashGlow}${emojis.whiteDashGlow}\n${emojiMap.get(log.classType)} - ${log.userName} - ${formatDate(log.timeStamp)}**\n${log.logMessage}`);
     if (ticketLogs.length === 0) {
-        await interaction.editReply(await ticketErrorMessageObject('Conversational logs are empty.', true));
+        await interaction.editReply(await messageObjectError('Conversational logs are empty.', true));
         return;
     }
     const logCounter = logs.length;

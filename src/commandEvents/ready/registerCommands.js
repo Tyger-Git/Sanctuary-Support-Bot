@@ -51,7 +51,7 @@ const registerCommands = async (client) => {
       winston.info(`👍 Command ${name} already registered.`)
     }
   } catch (error) {
-    winston.error(`There was an error: ${error}`);
+    winston.error(`There was an error: ${error}\n Stack Trace: \n${error.stack}`);
   }
 
   winston.info('👍 Registered all commands.');

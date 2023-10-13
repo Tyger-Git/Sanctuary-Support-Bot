@@ -14,7 +14,7 @@ async function getNewTicketID() {
 
     return ticketCounter.currentTicketID;
   } catch (error) {
-    winston.error('Error fetching latest ticket:', error);
+    winston.error(`An error occurred while fetching the ticket: ${error}\n Stack Trace: \n${error.stack}`);
     throw new Error('Cannot generate a new ticket ID');
   }
 }
@@ -24,7 +24,7 @@ const getUserTicketCount = async (userId) => {
       const count = await Ticket.countDocuments({ userId: userId });
       return count + 1; // Add one for the newly created ticket
   } catch (error) {
-    winston.error("Error fetching user ticket count:", error);
+    winston.error(`Error fetching user ticket count: ${error}\n Stack Trace: \n${error.stack}`);
       return 0; // default to 0 in case of an error
   }
 }
@@ -119,7 +119,7 @@ const createTicket = async (interaction, ticketType) => {
     await newTicket.save();
     await logger(ticketId, 'Event', userId, interaction.user.username, 'Bot', `Ticket created by ${userDisplayName} (${userName}) with ID ${ticketId}`)
   } catch (error) {
-    winston.error("Error creating ticket:", error);
+    winston.error(`Error creating ticket: ${error}\n Stack Trace: \n${error.stack}`);
   }
 };
 
